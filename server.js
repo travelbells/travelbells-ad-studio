@@ -2057,12 +2057,12 @@ async function renderBannerWithPuppeteer(bannerData) {
       background: #002B49;
       color: #FFFFFF;
       border-radius: 4px 4px 12px 12px;
-      padding: ${isLandscape ? '8px 14px' : isStory ? '16px 20px' : '10px 14px'};
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: ${isLandscape ? '6px 12px' : isStory ? '12px 18px' : '8px 14px'};
+      padding: ${isLandscape ? '6px 14px' : isStory ? '16px 20px' : '10px 14px'};
+      display: ${isLandscape ? 'flex' : 'grid'};
+      ${isLandscape ? 'flex-direction: row; justify-content: space-between; align-items: center; width: 100%;' : 'grid-template-columns: repeat(2, 1fr);'}
+      gap: ${isLandscape ? '8px' : isStory ? '12px 18px' : '8px 14px'};
       border-top: 3px solid #C8102E;
-      font-size: ${isLandscape ? '13px' : isStory ? '20px' : '15px'};
+      font-size: ${isLandscape ? '12.5px' : isStory ? '20px' : '15px'};
       font-weight: 700;
     }
     .contact-item {
@@ -2073,20 +2073,13 @@ async function renderBannerWithPuppeteer(bannerData) {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: rgba(255, 255, 255, 0.08);
-      padding: ${isLandscape ? '4px 8px' : isStory ? '8px 14px' : '6px 12px'};
+      background: rgba(200, 16, 46, 0.28);
+      padding: ${isLandscape ? '4px 10px' : isStory ? '8px 14px' : '6px 12px'};
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .contact-item-highlight {
-      font-size: ${isLandscape ? '16px' : isStory ? '26px' : '22px'};
-      font-weight: 900;
+      border: 1px solid rgba(255, 255, 255, 0.25);
       color: #FFFFFF;
-      background: rgba(200, 16, 46, 0.35);
-      padding: 4px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      letter-spacing: 0.5px;
+      font-weight: 800;
+      ${isLandscape ? 'flex: 1;' : ''}
     }
   </style>
 </head>
@@ -2157,8 +2150,8 @@ async function renderBannerWithPuppeteer(bannerData) {
     </a>
     <div class="contact-info-strip">
       <div class="contact-item">🌐 <strong>${websiteText}</strong></div>
-      <div class="contact-item contact-item-highlight">📧 <strong>${emailText}</strong></div>
-      <div class="contact-item contact-item-highlight">📞 <strong>${phoneText}</strong></div>
+      <div class="contact-item">📧 <strong>${emailText}</strong></div>
+      <div class="contact-item">📞 <strong>${phoneText}</strong></div>
       <div class="contact-item">📍 <strong>${locationText}</strong></div>
     </div>
   </div>` : ''}
