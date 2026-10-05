@@ -20,6 +20,24 @@ function setVal(id, val) {
 
 // Interactive Graphic Preview Wrapper with Clickable Hotspot
 function renderInteractiveGraphicHtml(dataUri) {
+  const fmt = document.getElementById('canvas-format')?.value || 'vertical';
+  let bottomPos = '11.8%';
+  let heightPos = '4.2%';
+  let leftPos = '3.5%';
+  let rightPos = '3.5%';
+
+  if (fmt === 'story') {
+    bottomPos = '9.8%';
+    heightPos = '3.2%';
+    leftPos = '4.5%';
+    rightPos = '4.5%';
+  } else if (fmt === 'landscape') {
+    bottomPos = '12.2%';
+    heightPos = '5.4%';
+    leftPos = '3.5%';
+    rightPos = '3.5%';
+  }
+
   return `
   <div class="interactive-canvas-wrapper" style="position: relative; width: 100%; display: block; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,43,73,0.15); border: 1px solid #E2E8F0;">
     <img id="main-canvas-img" src="${dataUri}" alt="Generated 300 DPI Creative" style="width: 100%; height: auto; display: block;" onerror="console.warn('Canvas img preview note');" />
@@ -27,7 +45,7 @@ function renderInteractiveGraphicHtml(dataUri) {
     <!-- Interactive Glass Shine Hotspot Overlay for the CTA Bar -->
     <a href="https://bookings.travelbellsimmigration.com" target="_blank" rel="noopener noreferrer" 
        class="cta-hotspot-link"
-       style="position: absolute; bottom: 9.6%; left: 2.2%; right: 2.2%; height: 5.2%; cursor: pointer; border-radius: 8px; z-index: 10; display: block; text-decoration: none;">
+       style="position: absolute; bottom: ${bottomPos}; left: ${leftPos}; right: ${rightPos}; height: ${heightPos}; cursor: pointer; border-radius: 8px; z-index: 10; display: block; text-decoration: none;">
     </a>
   </div>`;
 }
@@ -718,10 +736,32 @@ async function generate1ClickBilingualCampaign() {
 
   // STEP 2: FULL BILINGUAL & 300 DPI HIGH-RES GENERATION (~3-4s)
   try {
+    const customTitle = document.getElementById('canvas-headline')?.value;
+    const customSubtitle = document.getElementById('canvas-subtitle')?.value;
+    const customBadge = document.getElementById('canvas-badge-input')?.value;
+    const customB1 = document.getElementById('canvas-b1')?.value;
+    const customB2 = document.getElementById('canvas-b2')?.value;
+    const customB3 = document.getElementById('canvas-b3')?.value;
+    const customB4 = document.getElementById('canvas-b4')?.value;
+
     const res = await fetch('/api/auto-generate-campaign', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tagline, prompt: tagline, category, highRes: true, usePuppeteer: true, customPhotoUrl: photoToUse })
+      body: JSON.stringify({
+        tagline,
+        prompt: tagline,
+        category,
+        highRes: true,
+        usePuppeteer: true,
+        customPhotoUrl: photoToUse,
+        title: customTitle,
+        subtitle: customSubtitle,
+        badgeText: customBadge,
+        b1: customB1,
+        b2: customB2,
+        b3: customB3,
+        b4: customB4
+      })
     });
     const data = await res.json();
     if (data.success && (data.campaign || data.graphics)) {
@@ -1080,10 +1120,42 @@ function updateFooterFromInput() {
   if (activeBilingualData && activeBilingualData.graphics) {
     activeBilingualData.graphics = { en: {}, fr: {} };
   }
+
+  // Persist updated input values to activeBilingualData
+  if (activeBilingualData && activeBilingualData.campaign) {
+    const lang = activeGraphicLang || 'en';
+    const langObj = lang === 'fr' ? activeBilingualData.campaign.fr : activeBilingualData.campaign.en;
+    if (langObj) {
+      langObj.title = document.getElementById('canvas-headline')?.value || langObj.title;
+      langObj.subtitle = document.getElementById('canvas-subtitle')?.value || langObj.subtitle;
+      langObj.badgeText = document.getElementById('canvas-badge-input')?.value || langObj.badgeText;
+      langObj.bullets = [
+        document.getElementById('canvas-b1')?.value || '',
+        document.getElementById('canvas-b2')?.value || '',
+        document.getElementById('canvas-b3')?.value || '',
+        document.getElementById('canvas-b4')?.value || ''
+      ];
+    }
+  }
+
+  if (typeof saveDraftStateToLocalStorage === 'function') {
+    saveDraftStateToLocalStorage(false);
+  }
+
   if (footerDebounceTimer) clearTimeout(footerDebounceTimer);
   footerDebounceTimer = setTimeout(() => {
     reRenderSingleGraphic();
-  }, 400);
+  }, 300);
+}
+
+function toggleHeadlineEditorAccordion() {
+  const grid = document.getElementById('headline-editor-fields');
+  const label = document.getElementById('headline-toggle-label');
+  if (grid) {
+    const isHidden = grid.style.display === 'none';
+    grid.style.display = isHidden ? 'grid' : 'none';
+    if (label) label.innerText = isHidden ? '✏️ Edit Headline & Subtitle Live' : '👁️ Hide Editor';
+  }
 }
 
 function toggleFooterEditorAccordion() {

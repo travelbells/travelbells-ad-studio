@@ -131,6 +131,24 @@
             <button class="photo-chip watermark-chip" onclick="switchWatermarkStyle('none', this)">⚪ Plain White</button>
           </div>
 
+          <!-- Headline & Subtitle Live Editor Bar -->
+          <div class="footer-editor-bar" style="border-color: #C8102E; background: #FFF5F5;">
+            <div class="footer-editor-header" onclick="toggleHeadlineEditorAccordion()">
+              <span class="badge-editor-label" style="color: #991B1B;">📢 ✏️ Headline & Subtitle Live Editor:</span>
+              <span class="footer-toggle-icon" id="headline-toggle-label" style="color: #991B1B;">✏️ Edit Headline & Subtitle Live</span>
+            </div>
+            <div class="footer-editor-grid" id="headline-editor-fields">
+              <div class="footer-field">
+                <label class="field-label-sm">📢 Creative Main Headline (Title):</label>
+                <input type="text" id="canvas-headline" value="Work Permit Ending? Don't Exit, Upgrade" placeholder="Type custom headline..." oninput="updateFooterFromInput()" class="badge-text-input" style="font-weight: 700; color: #002B49;" />
+              </div>
+              <div class="footer-field">
+                <label class="field-label-sm">📝 Subtitle / Tagline Description:</label>
+                <input type="text" id="canvas-subtitle" value="Your time in Canada doesn't have to stop here • Regulated RCIC Support" placeholder="Type custom subtitle..." oninput="updateFooterFromInput()" class="badge-text-input" />
+              </div>
+            </div>
+          </div>
+
           <!-- Category Badge Pill Editor & Quick Selector Bar -->
           <div class="badge-editor-bar">
             <span class="badge-editor-label">🏷️ Category Pill Badge:</span>
@@ -253,8 +271,6 @@
           <input type="hidden" id="toggle-footer" value="true" />
           <input type="hidden" id="canvas-format" value="vertical" />
           <input type="hidden" id="canvas-theme" value="travelbells-signature-light" />
-          <input type="hidden" id="canvas-headline" value="Work Permit Ending? Don't Exit, Upgrade" />
-          <input type="hidden" id="canvas-subtitle" value="Your time in Canada doesn't have to stop here" />
 
           <!-- Live Canvas / Graphic Render Box -->
           <div class="canvas-render-container" id="canvas-render-box">
