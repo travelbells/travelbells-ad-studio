@@ -1986,17 +1986,24 @@ function toggleConversionBoostersAccordion() {
 }
 
 async function generateABTestVariants() {
-  const currentFormat = document.getElementById('canvas-format')?.value || 'vertical';
+  const btn = document.querySelector("button[onclick='generateABTestVariants()']");
+  const originalText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `⚙️ Building A/B Split Test Bundle...`;
+  }
+
   const renderBox = document.getElementById('canvas-render-box');
   if (renderBox) {
     renderBox.innerHTML = `<div style="padding:40px; text-align:center; color:#64748B;"><div style="font-size:36px; margin-bottom:12px;">🧪</div><strong style="font-size:16px; color:#6D28D9;">Generating A/B Split Test Dual Creatives...</strong><p style="font-size:12px;">Building Variant A (Authority Navy) & Variant B (Action Crimson)...</p></div>`;
   }
 
   try {
+    const payload = getActiveCampaignPayload();
     const response = await fetch('/api/download-all-zip', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(collectPayloadFromUI(currentFormat))
+      body: JSON.stringify(payload)
     });
 
     if (response.ok) {
@@ -2007,17 +2014,23 @@ async function generateABTestVariants() {
       a.download = `AB_Test_Split_Campaign_${Date.now()}.zip`;
       document.body.appendChild(a);
       a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 1000);
       
       alert("🧪 A/B Split Test Pair Bundle Generated & Downloaded Successfully!");
-      updateGraphicDisplay();
     } else {
       alert("Failed to generate A/B Split Test bundle.");
-      updateGraphicDisplay();
     }
   } catch (err) {
     console.error("A/B generator error:", err);
+    alert("Error generating A/B bundle: " + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
     updateGraphicDisplay();
   }
 }
@@ -2466,14 +2479,17 @@ async function downloadCampaignZipBundle() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `travelbells_3in1_creatives_bundle.zip`;
+    a.download = `travelbells_3in1_creatives_bundle_${Date.now()}.zip`;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
+    alert("📦 3-in-1 ZIP Bundle Downloaded Successfully!");
   } catch (err) {
     console.error("Zip bundle download error:", err);
-    alert("Downloaded 3-in-1 ZIP bundle!");
+    alert("Could not generate ZIP bundle: " + err.message);
   } finally {
     if (btn) {
       btn.disabled = false;

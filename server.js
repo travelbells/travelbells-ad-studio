@@ -674,54 +674,76 @@ function generateBannerSVG({
     defaultB4 = isFr ? "Accompagnement juridique certifié CRIC jusqu'à l'approbation" : "Complete support from profile assessment to approval";
   }
 
-  const safeTitle = title || "Work Permit Ending? Don't Exit, Upgrade";
-  const safeSubtitle = subtitle || "Your time in Canada doesn't have to stop here, Shift gears with a Study Visa and keep moving forward.";
-  const safeBadge = (badgeText || "STUDY VISA UPGRADE").toUpperCase().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const safeFooter = (footerText || "🇨🇦 Travelbells Immigration Inc. | Licensed RCIC Member\n📞 +1 (647) 890-1476 | 🏢 Ontario, Canada").replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  let rawTitle = title || "Work Permit Ending? Don't Exit, Upgrade";
+  let rawSubtitle = subtitle || "Your time in Canada doesn't have to stop here, Shift gears with a Study Visa and keep moving forward.";
+  let rawBadge = badgeText || "STUDY VISA UPGRADE";
+  let rawB1 = b1 || defaultB1;
+  let rawB2 = b2 || defaultB2;
+  let rawB3 = b3 || defaultB3;
+  let rawB4 = b4 || defaultB4;
 
-  const bullet1 = b1 || defaultB1;
-  const bullet2 = b2 || defaultB2;
-  const bullet3 = b3 || defaultB3;
-  const bullet4 = b4 || defaultB4;
+  if (isFr) {
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawTitle)) rawTitle = translateToFrench(rawTitle);
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawSubtitle)) rawSubtitle = translateToFrench(rawSubtitle);
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawBadge)) rawBadge = translateToFrench(rawBadge);
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB1)) rawB1 = translateToFrench(rawB1);
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB2)) rawB2 = translateToFrench(rawB2);
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB3)) rawB3 = translateToFrench(rawB3);
+    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB4)) rawB4 = translateToFrench(rawB4);
+  }
+
+  const safeTitle = rawTitle;
+  const safeSubtitle = rawSubtitle;
+  const safeBadge = rawBadge.toUpperCase().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const bullet1 = rawB1;
+  const bullet2 = rawB2;
+  const bullet3 = rawB3;
+  const bullet4 = rawB4;
 
   const activeHighlightColor = '#C8102E';
+  const ctaText = isFr ? "👉 RÉSERVEZ VOTRE CONSULTATION STRATÉGIQUE RCIC AUJOURD'HUI" : "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY";
+  const rcicMemberText = isFr ? "🇨🇦 Membre CICC Licencié" : "🇨🇦 Licensed RCIC Member";
+  const locationText = isFr ? "📍 Ontario, Canada • Membre CICC Licencié" : "📍 Ontario, Canada • Licensed RCIC Member";
 
   function generateSvgQrCode(urlStr = 'https://travelbellsimmigration.com/book-appointment', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
     return `
-      <g transform="translate(${x}, ${y})">
-        <!-- Background Container Card -->
-        <rect width="${size}" height="${size + 24}" rx="12" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
-        
-        <!-- Finder Patterns (Top-Left, Top-Right, Bottom-Left) -->
-        <rect x="10" y="10" width="30" height="30" rx="4" fill="${darkColor}"/>
-        <rect x="15" y="15" width="20" height="20" rx="2" fill="${lightColor}"/>
-        <rect x="20" y="20" width="10" height="10" rx="1" fill="${darkColor}"/>
-        
-        <rect x="${size - 40}" y="10" width="30" height="30" rx="4" fill="${darkColor}"/>
-        <rect x="${size - 35}" y="15" width="20" height="20" rx="2" fill="${lightColor}"/>
-        <rect x="${size - 30}" y="20" width="10" height="10" rx="1" fill="${darkColor}"/>
-        
-        <rect x="10" y="${size - 40}" width="30" height="30" rx="4" fill="${darkColor}"/>
-        <rect x="15" y="${size - 35}" width="20" height="20" rx="2" fill="${lightColor}"/>
-        <rect x="20" y="${size - 30}" width="10" height="10" rx="1" fill="${darkColor}"/>
-        
-        <!-- Data Grid -->
-        <rect x="45" y="12" width="10" height="10" fill="${darkColor}"/>
-        <rect x="60" y="12" width="10" height="20" fill="${darkColor}"/>
-        <rect x="45" y="45" width="20" height="10" fill="${darkColor}"/>
-        <rect x="12" y="45" width="10" height="20" fill="${darkColor}"/>
-        <rect x="45" y="60" width="20" height="20" fill="${darkColor}"/>
-        <rect x="${size - 35}" y="45" width="20" height="20" fill="${darkColor}"/>
-        <rect x="${size - 45}" y="70" width="25" height="10" fill="${darkColor}"/>
+      <a href="${urlStr}" target="_blank" rel="noopener noreferrer">
+        <g transform="translate(${x}, ${y})">
+          <!-- Background Container Card -->
+          <rect width="${size}" height="${size + 24}" rx="12" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
+          
+          <!-- Finder Patterns (Top-Left, Top-Right, Bottom-Left) -->
+          <rect x="10" y="10" width="30" height="30" rx="4" fill="${darkColor}"/>
+          <rect x="15" y="15" width="20" height="20" rx="2" fill="${lightColor}"/>
+          <rect x="20" y="20" width="10" height="10" rx="1" fill="${darkColor}"/>
+          
+          <rect x="${size - 40}" y="10" width="30" height="30" rx="4" fill="${darkColor}"/>
+          <rect x="${size - 35}" y="15" width="20" height="20" rx="2" fill="${lightColor}"/>
+          <rect x="${size - 30}" y="20" width="10" height="10" rx="1" fill="${darkColor}"/>
+          
+          <rect x="10" y="${size - 40}" width="30" height="30" rx="4" fill="${darkColor}"/>
+          <rect x="15" y="${size - 35}" width="20" height="20" rx="2" fill="${lightColor}"/>
+          <rect x="20" y="${size - 30}" width="10" height="10" rx="1" fill="${darkColor}"/>
+          
+          <!-- Data Grid -->
+          <rect x="45" y="12" width="10" height="10" fill="${darkColor}"/>
+          <rect x="60" y="12" width="10" height="20" fill="${darkColor}"/>
+          <rect x="45" y="45" width="20" height="10" fill="${darkColor}"/>
+          <rect x="12" y="45" width="10" height="20" fill="${darkColor}"/>
+          <rect x="45" y="60" width="20" height="20" fill="${darkColor}"/>
+          <rect x="${size - 35}" y="45" width="20" height="20" fill="${darkColor}"/>
+          <rect x="${size - 45}" y="70" width="25" height="10" fill="${darkColor}"/>
 
-        <!-- Center Maple Badge -->
-        <circle cx="${size / 2}" cy="${size / 2}" r="11" fill="#C8102E"/>
-        <path d="M ${size / 2} ${size / 2 - 5} L ${size / 2 + 2} ${size / 2 - 2} L ${size / 2 + 5} ${size / 2 - 3} L ${size / 2 + 3} ${size / 2 + 1} L ${size / 2 + 5} ${size / 2 + 4} L ${size / 2 + 1} ${size / 2 + 3} L ${size / 2} ${size / 2 + 6} L ${size / 2 - 1} ${size / 2 + 3} L ${size / 2 - 5} ${size / 2 + 4} L ${size / 2 - 3} ${size / 2 + 1} L ${size / 2 - 5} ${size / 2 - 3} L ${size / 2 - 2} ${size / 2 - 2} Z" fill="#FFFFFF"/>
-        
-        <!-- Bottom Label -->
-        <rect x="0" y="${size}" width="${size}" height="24" rx="0" fill="#C8102E"/>
-        <text x="${size / 2}" y="${size + 16}" font-family="'Montserrat', sans-serif" font-weight="800" font-size="9.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.8">SCAN TO BOOK</text>
-      </g>
+          <!-- Center Maple Badge -->
+          <circle cx="${size / 2}" cy="${size / 2}" r="11" fill="#C8102E"/>
+          <path d="M ${size / 2} ${size / 2 - 5} L ${size / 2 + 2} ${size / 2 - 2} L ${size / 2 + 5} ${size / 2 - 3} L ${size / 2 + 3} ${size / 2 + 1} L ${size / 2 + 5} ${size / 2 + 4} L ${size / 2 + 1} ${size / 2 + 3} L ${size / 2} ${size / 2 + 6} L ${size / 2 - 1} ${size / 2 + 3} L ${size / 2 - 5} ${size / 2 + 4} L ${size / 2 - 3} ${size / 2 + 1} L ${size / 2 - 5} ${size / 2 - 3} L ${size / 2 - 2} ${size / 2 - 2} Z" fill="#FFFFFF"/>
+          
+          <!-- Bottom Label -->
+          <rect x="0" y="${size}" width="${size}" height="24" rx="0" fill="#C8102E"/>
+          <text x="${size / 2}" y="${size + 16}" font-family="'Montserrat', sans-serif" font-weight="800" font-size="9.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.8">SCAN TO BOOK</text>
+        </g>
+      </a>
     `;
   }
 
@@ -735,7 +757,7 @@ function generateBannerSVG({
     `;
   }
 
-  function renderNativeSvgTextLines(textStr, x, y, maxLineChars = 40, lineHeight = 24, fill = '#111827', fontSize = 16, fontWeight = '700', textAnchor = 'start', fontStyle = 'Montserrat') {
+  function renderNativeSvgTextLines(textStr, x, y, maxLineChars = 44, lineHeight = 24, fill = '#111827', fontSize = 16, fontWeight = '700', textAnchor = 'start', fontStyle = 'Montserrat') {
     if (!textStr) return '';
     const clean = textStr
       .replace(/&amp;/g, '&')
@@ -770,7 +792,7 @@ function generateBannerSVG({
       `</text>`;
   }
 
-  function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 34, lineHeight = 38, fontSize = 32, textAnchor = 'start', fontStyle = 'Playfair Display') {
+  function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 40, lineHeight = 38, fontSize = 30, textAnchor = 'start', fontStyle = 'Playfair Display', titleFill = '#002B49') {
     if (!textStr) return '';
     const clean = textStr
       .replace(/&amp;/g, '&')
@@ -778,6 +800,11 @@ function generateBannerSVG({
       .replace(/&gt;/g, '>')
       .replace(/<[^>]*>/g, '')
       .trim();
+
+    // Scale font size down slightly if title is long to fit nicely without layout clipping
+    let adjustedFontSize = fontSize;
+    if (clean.length > 50) adjustedFontSize = Math.round(fontSize * 0.82);
+    else if (clean.length > 38) adjustedFontSize = Math.round(fontSize * 0.90);
 
     const words = clean.split(/\s+/);
     const lines = [];
@@ -794,20 +821,13 @@ function generateBannerSVG({
     }
     if (cur.length > 0) lines.push(cur.join(' '));
 
-    return `<text x="${x}" y="${y}" font-family="${fontStyle}, Georgia, serif" font-weight="900" font-size="${fontSize}" text-anchor="${textAnchor}">` +
+    return `<text x="${x}" y="${y}" font-family="${fontStyle}, Georgia, serif" font-weight="900" font-size="${adjustedFontSize}" fill="${titleFill}" text-anchor="${textAnchor}">` +
       lines.map((line, idx) => {
-        const lineWords = line.split(/\s+/);
-        const dyAttr = idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`;
-        
-        const tspans = lineWords.map((w, wIdx) => {
-          const isHighlight = /\b(CANADIAN|STATUS|PERMIT|UPGRADE|SHORT|COURSES|LMIA|EXPRESS|ENTRY|PR|CHEFS|COOKS|REPAIR|TECHNICIAN|B2B|CORPORATE|SANS|EIMT|FMCSP|FRANCOPHONE|PILOT)\b/i.test(w);
-          const fill = isHighlight ? '#C8102E' : '#002B49';
-          const wordEscaped = w.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const prefix = (wIdx === 0 && idx === 0) ? `<tspan x="${x}" ${dyAttr} fill="${fill}">${wordEscaped}` : (wIdx === 0) ? `<tspan x="${x}" ${dyAttr} fill="${fill}">${wordEscaped}` : `<tspan fill="${fill}"> ${wordEscaped}`;
-          return prefix + `</tspan>`;
-        }).join('');
-
-        return tspans;
+        const lineEscaped = line
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
       }).join('') +
       `</text>`;
   }
@@ -847,20 +867,20 @@ function generateBannerSVG({
   </g>
 
   <!-- HEADER WITH LARGE PROMINENT LOGO CARD -->
-  <g transform="translate(40, 40)">
-    <rect width="320" height="96" rx="18" fill="#FFFFFF" filter="url(#shadowStory)" stroke="#E2E8F0" stroke-width="1.5"/>
-    ${logoSrc ? `<image href="${logoSrc}" x="12" y="8" width="296" height="80" preserveAspectRatio="xMidYMid contain" />` : `
-    <text x="160" y="58" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="28" fill="#C8102E" text-anchor="middle">TravelBells</text>
+  <g transform="translate(40, 35)">
+    <rect width="360" height="106" rx="18" fill="#FFFFFF" filter="url(#shadowStory)" stroke="#E2E8F0" stroke-width="1.5"/>
+    ${logoSrc ? `<image href="${logoSrc}" x="12" y="8" width="336" height="90" preserveAspectRatio="xMidYMid contain" />` : `
+    <text x="180" y="64" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="30" fill="#C8102E" text-anchor="middle">TravelBells</text>
     `}
 
-    <g transform="translate(660, 22)">
-      <rect width="340" height="52" rx="26" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadowStory)"/>
-      <text x="170" y="33" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16" fill="#002B49" text-anchor="middle">🇨🇦 Licensed RCIC Member</text>
+    <g transform="translate(640, 26)">
+      <rect width="360" height="54" rx="27" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadowStory)"/>
+      <text x="180" y="34" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
     </g>
   </g>
 
   <!-- PHOTO CARD WITH OVERLAYS -->
-  <g transform="translate(40, 155)" filter="url(#shadowStory)">
+  <g transform="translate(40, 160)" filter="url(#shadowStory)">
     <rect width="1000" height="600" rx="28" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="3"/>
     <image href="${photoSrc}" width="1000" height="600" preserveAspectRatio="xMidYMid slice" clip-path="url(#storyPhotoClip)"/>
     
@@ -875,11 +895,11 @@ function generateBannerSVG({
   <g transform="translate(40, 780)">
     ${showBadge ? `
     <g transform="translate(0, 0)">
-      <rect width="400" height="46" rx="23" fill="${activeHighlightColor}" filter="url(#shadowStory)"/>
-      <text x="200" y="29" font-family="'Montserrat', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
+      <rect width="420" height="46" rx="23" fill="${activeHighlightColor}" filter="url(#shadowStory)"/>
+      <text x="210" y="29" font-family="'Montserrat', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
     </g>` : ''}
 
-    ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 90 : 40, 32, 46, 36, 'start', 'Playfair Display')}
+    ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 90 : 40, 42, 46, 36, 'start', 'Playfair Display', '#002B49')}
     ${renderNativeSvgTextLines(safeSubtitle, 0, showBadge ? 210 : 150, 48, 30, '#002B49', 22, '700', 'start', 'Montserrat')}
 
     <!-- BULLETS CARD - SPACED EVENLY WITHOUT EMPTY SPACE -->
@@ -891,37 +911,39 @@ function generateBannerSVG({
       <g transform="translate(40, 40)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet1, 60, 28, 40, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet1, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 2 -->
       <g transform="translate(40, 170)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet2, 60, 28, 40, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet2, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 3 -->
       <g transform="translate(40, 300)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet3, 60, 28, 40, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet3, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 4 -->
       <g transform="translate(40, 430)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet4, 60, 28, 40, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet4, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
       </g>
     </g>
   </g>
 
   <!-- CTA BANNER BAR -->
-  <g transform="translate(40, 1660)" filter="url(#shadowStory)">
-    <rect width="1000" height="75" rx="18" fill="${activeHighlightColor}"/>
-    <text x="500" y="47" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" letter-spacing="1">👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY</text>
-  </g>
+  <a href="https://travelbellsimmigration.com/book-appointment" target="_blank" rel="noopener noreferrer">
+    <g transform="translate(40, 1660)" filter="url(#shadowStory)">
+      <rect width="1000" height="75" rx="18" fill="${activeHighlightColor}"/>
+      <text x="500" y="47" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="21" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
+    </g>
+  </a>
 
   <!-- FOOTER WITH 4 UNIFORM CRIMSON PILLS -->
   <g transform="translate(0, 1750)">
@@ -938,7 +960,7 @@ function generateBannerSVG({
       <text x="240" y="103" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17.5" fill="#FFFFFF" text-anchor="middle">📞 +1 (647) 890-1476</text>
 
       <rect x="520" y="70" width="480" height="52" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="760" y="103" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16.5" fill="#FFFFFF" text-anchor="middle">📍 Ontario, Canada • Licensed RCIC Member</text>
+      <text x="760" y="103" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
   </g>
 </svg>`;
@@ -970,14 +992,14 @@ function generateBannerSVG({
 
   <!-- HEADER ROW WITH LARGE PROMINENT LOGO CARD -->
   <g transform="translate(24, 12)">
-    <rect width="300" height="86" rx="14" fill="#FFFFFF" filter="url(#shadowLand)" stroke="#E2E8F0" stroke-width="1.5"/>
-    ${logoSrc ? `<image href="${logoSrc}" x="12" y="7" width="276" height="72" preserveAspectRatio="xMidYMid contain" />` : `
-    <text x="150" y="52" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="26" fill="#C8102E" text-anchor="middle">TravelBells</text>
+    <rect width="340" height="86" rx="14" fill="#FFFFFF" filter="url(#shadowLand)" stroke="#E2E8F0" stroke-width="1.5"/>
+    ${logoSrc ? `<image href="${logoSrc}" x="12" y="7" width="316" height="72" preserveAspectRatio="xMidYMid contain" />` : `
+    <text x="170" y="52" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="26" fill="#C8102E" text-anchor="middle">TravelBells</text>
     `}
 
-    <g transform="translate(840, 16)">
-      <rect width="320" height="48" rx="24" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadowLand)"/>
-      <text x="160" y="30" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16" fill="#002B49" text-anchor="middle">🇨🇦 Licensed RCIC Member</text>
+    <g transform="translate(820, 16)">
+      <rect width="340" height="48" rx="24" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadowLand)"/>
+      <text x="170" y="30" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
     </g>
   </g>
 
@@ -997,11 +1019,11 @@ function generateBannerSVG({
   <g transform="translate(405, 108)">
     ${showBadge ? `
     <g transform="translate(0, 0)">
-      <rect width="300" height="34" rx="17" fill="${activeHighlightColor}" filter="url(#shadowLand)"/>
-      <text x="150" y="22" font-family="'Montserrat', sans-serif" font-weight="900" font-size="13.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.2">${safeBadge}</text>
+      <rect width="320" height="34" rx="17" fill="${activeHighlightColor}" filter="url(#shadowLand)"/>
+      <text x="160" y="22" font-family="'Montserrat', sans-serif" font-weight="900" font-size="13.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.2">${safeBadge}</text>
     </g>` : ''}
 
-    ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 74 : 32, 34, 42, 34, 'start', 'Playfair Display')}
+    ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 74 : 32, 46, 42, 32, 'start', 'Playfair Display', '#002B49')}
     ${renderNativeSvgTextLines(safeSubtitle, 0, showBadge ? 158 : 116, 62, 22, '#002B49', 17, '700', 'start', 'Montserrat')}
 
     <!-- BULLETS CARD -->
@@ -1013,64 +1035,66 @@ function generateBannerSVG({
       <g transform="translate(22, 10)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet1, 35, 18, 52, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet1, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 2 -->
       <g transform="translate(22, 58)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet2, 35, 18, 52, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet2, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 3 -->
       <g transform="translate(22, 106)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet3, 35, 18, 52, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet3, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 4 -->
       <g transform="translate(22, 154)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet4, 35, 18, 52, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet4, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
       </g>
     </g>
   </g>
 
   <!-- CTA BANNER BAR -->
-  <g transform="translate(24, 518)" filter="url(#shadowLand)">
-    <rect width="1152" height="48" rx="10" fill="${activeHighlightColor}"/>
-    <text x="576" y="31" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="18.5" fill="#FFFFFF" letter-spacing="1">👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY</text>
-  </g>
+  <a href="https://travelbellsimmigration.com/book-appointment" target="_blank" rel="noopener noreferrer">
+    <g transform="translate(24, 518)" filter="url(#shadowLand)">
+      <rect width="1152" height="48" rx="10" fill="${activeHighlightColor}"/>
+      <text x="576" y="31" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="18.5" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
+    </g>
+  </a>
 
   <!-- FOOTER INFO BAR WITH 4 UNIFORM CRIMSON PILLS -->
   <g transform="translate(0, 574)">
     <rect width="1200" height="56" fill="#002B49"/>
     
     <!-- Pill 1: Website -->
-    <g transform="translate(18, 7)">
+    <g transform="translate(20, 7)">
       <rect width="276" height="42" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="138" y="27" font-family="'Montserrat', sans-serif" font-weight="800" font-size="12.5" fill="#FFFFFF" text-anchor="middle">🌐 www.travelbellsimmigration.com</text>
     </g>
 
     <!-- Pill 2: Email -->
-    <g transform="translate(310, 7)">
+    <g transform="translate(312, 7)">
       <rect width="276" height="42" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="138" y="27" font-family="'Montserrat', sans-serif" font-weight="800" font-size="12.5" fill="#FFFFFF" text-anchor="middle">📧 info@travelbellsimmigration.com</text>
     </g>
 
     <!-- Pill 3: Phone -->
-    <g transform="translate(602, 7)">
+    <g transform="translate(604, 7)">
       <rect width="276" height="42" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="138" y="27" font-family="'Montserrat', sans-serif" font-weight="800" font-size="13" fill="#FFFFFF" text-anchor="middle">📞 +1 (647) 890-1476</text>
     </g>
 
     <!-- Pill 4: Location -->
-    <g transform="translate(894, 7)">
-      <rect width="288" height="42" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="144" y="27" font-family="'Montserrat', sans-serif" font-weight="800" font-size="12" fill="#FFFFFF" text-anchor="middle">📍 Ontario, Canada • Licensed RCIC</text>
+    <g transform="translate(896, 7)">
+      <rect width="284" height="42" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
+      <text x="142" y="27" font-family="'Montserrat', sans-serif" font-weight="800" font-size="11.5" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
   </g>
 </svg>`;
@@ -1101,14 +1125,14 @@ function generateBannerSVG({
 
   <!-- HEADER — LARGE PROMINENT LOGO CARD -->
   <g transform="translate(30, 20)">
-    <rect width="320" height="96" rx="16" fill="#FFFFFF" filter="url(#shadow)" stroke="#E2E8F0" stroke-width="1.5"/>
-    ${logoSrc ? `<image href="${logoSrc}" x="12" y="8" width="296" height="80" preserveAspectRatio="xMidYMid contain" />` : `
-    <text x="160" y="58" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="28" fill="#C8102E" text-anchor="middle">TravelBells</text>
+    <rect width="360" height="106" rx="18" fill="#FFFFFF" filter="url(#shadow)" stroke="#E2E8F0" stroke-width="1.5"/>
+    ${logoSrc ? `<image href="${logoSrc}" x="12" y="8" width="336" height="90" preserveAspectRatio="xMidYMid contain" />` : `
+    <text x="180" y="64" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="30" fill="#C8102E" text-anchor="middle">TravelBells</text>
     `}
 
-    <g transform="translate(680, 20)">
-      <rect width="340" height="52" rx="26" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadow)"/>
-      <text x="170" y="33" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16.5" fill="#002B49" text-anchor="middle">🇨🇦 Licensed RCIC Member</text>
+    <g transform="translate(640, 24)">
+      <rect width="360" height="54" rx="27" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadow)"/>
+      <text x="180" y="34" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
     </g>
   </g>
 
@@ -1127,14 +1151,14 @@ function generateBannerSVG({
   <g transform="translate(480, 135)">
     ${showBadge ? `
     <g transform="translate(0, 0)">
-      <rect width="340" height="38" rx="19" fill="${activeHighlightColor}" filter="url(#shadow)"/>
-      <text x="170" y="24" font-family="'Montserrat', sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
+      <rect width="360" height="38" rx="19" fill="${activeHighlightColor}" filter="url(#shadow)"/>
+      <text x="180" y="24" font-family="'Montserrat', sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
     </g>` : ''}
 
-    ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 80 : 35, 30, 38, 30, 'start', 'Playfair Display')}
+    ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 80 : 35, 40, 38, 28, 'start', 'Playfair Display', '#002B49')}
     ${renderNativeSvgTextLines(safeSubtitle, 0, showBadge ? 180 : 130, 42, 24, '#475569', 17, '700', 'start', 'Montserrat')}
 
-    <!-- BULLETS CARD — BIGGER 19PX FONTS -->
+    <!-- BULLETS CARD — FULL WIDTH 570PX FIT -->
     <g transform="translate(0, ${showBadge ? '235' : '185'})" filter="url(#shadow)">
       <rect width="570" height="410" rx="18" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="1.5"/>
       <rect x="0" y="0" width="8" height="410" fill="${activeHighlightColor}" rx="4"/>
@@ -1143,43 +1167,45 @@ function generateBannerSVG({
       <g transform="translate(25, 20)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet1, 45, 22, 36, 23, '#002B49', 19, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet1, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 2 -->
       <g transform="translate(25, 110)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet2, 45, 22, 36, 23, '#002B49', 19, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet2, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 3 -->
       <g transform="translate(25, 200)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet3, 45, 22, 36, 23, '#002B49', 19, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet3, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
       </g>
 
       <!-- Bullet 4 -->
       <g transform="translate(25, 290)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-        ${renderNativeSvgTextLines(bullet4, 45, 22, 36, 23, '#002B49', 19, '800', 'start', 'Montserrat')}
+        ${renderNativeSvgTextLines(bullet4, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
       </g>
     </g>
   </g>
 
   <!-- CTA BANNER BAR -->
-  <g transform="translate(30, 795)" filter="url(#shadow)">
-    <rect width="1020" height="64" rx="16" fill="${activeHighlightColor}"/>
-    <text x="510" y="41" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">👉 BOOK YOUR OFFICIAL CONSULTATION TODAY</text>
-  </g>
+  <a href="https://travelbellsimmigration.com/book-appointment" target="_blank" rel="noopener noreferrer">
+    <g transform="translate(30, 795)" filter="url(#shadow)">
+      <rect width="1020" height="64" rx="16" fill="${activeHighlightColor}"/>
+      <text x="510" y="41" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
+    </g>
+  </a>
 
   <!-- FOOTER WITH 4 UNIFORM CRIMSON PILLS -->
   <g transform="translate(0, 875)">
     <rect width="1080" height="205" fill="#002B49"/>
     <rect width="1080" height="6" fill="${activeHighlightColor}"/>
-    <g transform="translate(40, 35)">
+    <g transform="translate(40, 30)">
       <rect x="0" y="0" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="240" y="32" font-family="'Montserrat', sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">🌐 www.travelbellsimmigration.com</text>
 
@@ -1190,7 +1216,7 @@ function generateBannerSVG({
       <text x="240" y="102" font-family="'Montserrat', sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">📞 +1 (647) 890-1476</text>
 
       <rect x="520" y="70" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="760" y="102" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16.5" fill="#FFFFFF" text-anchor="middle">📍 Ontario, Canada • Licensed RCIC Member</text>
+      <text x="760" y="102" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16.5" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
   </g>
 </svg>`;
