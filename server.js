@@ -2046,7 +2046,8 @@ async function renderBannerWithPuppeteer(bannerData) {
       display: flex;
       align-items: center;
       justify-content: space-around;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      overflow: hidden;
       gap: 14px;
       border-top: 3px solid #C8102E;
       font-size: ${isLandscape ? '14px' : isStory ? '22px' : '18px'};
@@ -2057,6 +2058,9 @@ async function renderBannerWithPuppeteer(bannerData) {
       align-items: center;
       gap: 6px;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
     .contact-item-highlight {
       font-size: ${isLandscape ? '16px' : isStory ? '26px' : '22px'};
