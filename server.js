@@ -627,6 +627,138 @@ WhatsApp Direct: +1 (647) 890-1476`;
 
 const photoBase64Cache = new Map();
 
+function generateSvgQrCode(urlStr = 'https://travelbellsimmigration.com/book-appointment', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
+  const targetUrl = (urlStr && urlStr.trim()) ? urlStr.trim() : 'https://travelbellsimmigration.com/book-appointment';
+  let pathData = '';
+  
+  try {
+    const QRCode = require('qrcode');
+    const qr = QRCode.create(targetUrl, { errorCorrectionLevel: 'M' });
+    const numCells = qr.modules.size;
+    const cellSize = size / (numCells + 2);
+    
+    for (let r = 0; r < numCells; r++) {
+      for (let c = 0; c < numCells; c++) {
+        if (qr.modules.get(r, c)) {
+          const px = ((c + 1) * cellSize).toFixed(2);
+          const py = ((r + 1) * cellSize).toFixed(2);
+          const cs = cellSize.toFixed(2);
+          pathData += `M${px},${py}h${cs}v${cs}h-${cs}z `;
+        }
+      }
+    }
+  } catch (e) {
+    console.error('QR Code Generation Error:', e);
+  }
+
+  const headerHeight = 22;
+  const cardWidth = size + 16;
+  const cardHeight = size + headerHeight + 16;
+
+  return `
+    <a href="${targetUrl}" target="_blank" rel="noopener noreferrer">
+      <g transform="translate(${x}, ${y})">
+        <!-- Background Outer Card Frame with High-Contrast White Surface & Shadow -->
+        <rect width="${cardWidth}" height="${cardHeight}" rx="14" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
+        
+        <!-- Crimson Top Header Pill Label -->
+        <path d="M 0 14 A 14 14 0 0 1 14 0 L ${cardWidth - 14} 0 A 14 14 0 0 1 ${cardWidth} 14 L ${cardWidth} ${headerHeight} L 0 ${headerHeight} Z" fill="#C8102E"/>
+        <text x="${cardWidth / 2}" y="15" font-family="'Montserrat', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">📱 SCAN TO BOOK</text>
+        
+        <!-- Real ISO 18004 Scannable QR Matrix Vector -->
+        <g transform="translate(8, ${headerHeight + 8})">
+          <rect width="${size}" height="${size}" fill="${lightColor}" rx="4"/>
+          <path d="${pathData}" fill="${darkColor}"/>
+        </g>
+      </g>
+    </a>
+  `;
+}
+
+function renderSocialProofSvg(x = 0, y = 0, scale = 1) {
+  return `
+    <g transform="translate(${x}, ${y}) scale(${scale})">
+      <rect width="330" height="46" rx="23" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.8" filter="url(#shadowStory)"/>
+      <text x="18" y="28" font-size="16">⭐⭐⭐⭐⭐</text>
+      <text x="135" y="29" font-family="'Montserrat', sans-serif" font-weight="800" font-size="14" fill="#002B49">4.9/5 (500+ Clients)</text>
+    </g>
+  `;
+}
+
+function renderNativeSvgTextLines(textStr, x, y, maxLineChars = 44, lineHeight = 24, fill = '#111827', fontSize = 16, fontWeight = '700', textAnchor = 'start', fontStyle = 'Montserrat') {
+  if (!textStr) return '';
+  const clean = textStr
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/<[^>]*>/g, '')
+    .trim();
+
+  const words = clean.split(/\s+/);
+  const lines = [];
+  let cur = [];
+
+  for (const w of words) {
+    const test = [...cur, w].join(' ');
+    if (test.length > maxLineChars && cur.length > 0) {
+      lines.push(cur.join(' '));
+      cur = [w];
+    } else {
+      cur.push(w);
+    }
+  }
+  if (cur.length > 0) lines.push(cur.join(' '));
+
+  return `<text x="${x}" y="${y}" font-family="${fontStyle}, sans-serif" font-weight="${fontWeight}" font-size="${fontSize}" fill="${fill}" text-anchor="${textAnchor}">` +
+    lines.map((line, idx) => {
+      const lineEscaped = line
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
+    }).join('') +
+    `</text>`;
+}
+
+function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 40, lineHeight = 38, fontSize = 30, textAnchor = 'start', fontStyle = 'Playfair Display', titleFill = '#002B49') {
+  if (!textStr) return '';
+  const clean = textStr
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/<[^>]*>/g, '')
+    .trim();
+
+  let adjustedFontSize = fontSize;
+  if (clean.length > 50) adjustedFontSize = Math.round(fontSize * 0.82);
+  else if (clean.length > 38) adjustedFontSize = Math.round(fontSize * 0.90);
+
+  const words = clean.split(/\s+/);
+  const lines = [];
+  let cur = [];
+
+  for (const w of words) {
+    const test = [...cur, w].join(' ');
+    if (test.length > maxLineChars && cur.length > 0) {
+      lines.push(cur.join(' '));
+      cur = [w];
+    } else {
+      cur.push(w);
+    }
+  }
+  if (cur.length > 0) lines.push(cur.join(' '));
+
+  return `<text x="${x}" y="${y}" font-family="${fontStyle}, Georgia, serif" font-weight="900" font-size="${adjustedFontSize}" fill="${titleFill}" text-anchor="${textAnchor}">` +
+    lines.map((line, idx) => {
+      const lineEscaped = line
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
+    }).join('') +
+    `</text>`;
+}
+
 // Master SVG Banner Composer with Exact Instagram Post Replicating Mode + Canva Editing Suite!
 function generateBannerSVG({ 
   title, 
@@ -714,139 +846,6 @@ function generateBannerSVG({
   else if (trustBadge === 'freecheck') rcicMemberText = isFr ? "🎯 Évaluation Gratuite 15-Min" : "🎯 Free 15-Min Assessment";
 
   const locationText = isFr ? "📍 Ontario, Canada • Membre CICC Licencié" : "📍 Ontario, Canada • Licensed RCIC Member";
-
-  function generateSvgQrCode(urlStr = 'https://travelbellsimmigration.com/book-appointment', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
-    const targetUrl = (urlStr && urlStr.trim()) ? urlStr.trim() : 'https://travelbellsimmigration.com/book-appointment';
-    let pathData = '';
-    
-    try {
-      const QRCode = require('qrcode');
-      const qr = QRCode.create(targetUrl, { errorCorrectionLevel: 'M' });
-      const numCells = qr.modules.size;
-      const cellSize = size / (numCells + 2);
-      
-      for (let r = 0; r < numCells; r++) {
-        for (let c = 0; c < numCells; c++) {
-          if (qr.modules.get(r, c)) {
-            const px = ((c + 1) * cellSize).toFixed(2);
-            const py = ((r + 1) * cellSize).toFixed(2);
-            const cs = cellSize.toFixed(2);
-            pathData += `M${px},${py}h${cs}v${cs}h-${cs}z `;
-          }
-        }
-      }
-    } catch (e) {
-      console.error('QR Code Generation Error:', e);
-    }
-
-    const headerHeight = 22;
-    const cardWidth = size + 16;
-    const cardHeight = size + headerHeight + 16;
-
-    return `
-      <a href="${targetUrl}" target="_blank" rel="noopener noreferrer">
-        <g transform="translate(${x}, ${y})">
-          <!-- Background Outer Card Frame with High-Contrast White Surface & Shadow -->
-          <rect width="${cardWidth}" height="${cardHeight}" rx="14" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
-          
-          <!-- Crimson Top Header Pill Label -->
-          <path d="M 0 14 A 14 14 0 0 1 14 0 L ${cardWidth - 14} 0 A 14 14 0 0 1 ${cardWidth} 14 L ${cardWidth} ${headerHeight} L 0 ${headerHeight} Z" fill="#C8102E"/>
-          <text x="${cardWidth / 2}" y="15" font-family="'Montserrat', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">📱 SCAN TO BOOK</text>
-          
-          <!-- Real ISO 18004 Scannable QR Matrix Vector -->
-          <g transform="translate(8, ${headerHeight + 8})">
-            <rect width="${size}" height="${size}" fill="${lightColor}" rx="4"/>
-            <path d="${pathData}" fill="${darkColor}"/>
-          </g>
-        </g>
-      </a>
-    `;
-  }
-
-  function renderSocialProofSvg(x = 0, y = 0, scale = 1) {
-    return `
-      <g transform="translate(${x}, ${y}) scale(${scale})">
-        <rect width="330" height="46" rx="23" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.8" filter="url(#shadowStory)"/>
-        <text x="18" y="28" font-size="16">⭐⭐⭐⭐⭐</text>
-        <text x="135" y="29" font-family="'Montserrat', sans-serif" font-weight="800" font-size="14" fill="#002B49">4.9/5 (500+ Clients)</text>
-      </g>
-    `;
-  }
-
-  function renderNativeSvgTextLines(textStr, x, y, maxLineChars = 44, lineHeight = 24, fill = '#111827', fontSize = 16, fontWeight = '700', textAnchor = 'start', fontStyle = 'Montserrat') {
-    if (!textStr) return '';
-    const clean = textStr
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/<[^>]*>/g, '')
-      .trim();
-
-    const words = clean.split(/\s+/);
-    const lines = [];
-    let cur = [];
-
-    for (const w of words) {
-      const test = [...cur, w].join(' ');
-      if (test.length > maxLineChars && cur.length > 0) {
-        lines.push(cur.join(' '));
-        cur = [w];
-      } else {
-        cur.push(w);
-      }
-    }
-    if (cur.length > 0) lines.push(cur.join(' '));
-
-    return `<text x="${x}" y="${y}" font-family="${fontStyle}, sans-serif" font-weight="${fontWeight}" font-size="${fontSize}" fill="${fill}" text-anchor="${textAnchor}">` +
-      lines.map((line, idx) => {
-        const lineEscaped = line
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
-        return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
-      }).join('') +
-      `</text>`;
-  }
-
-  function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 40, lineHeight = 38, fontSize = 30, textAnchor = 'start', fontStyle = 'Playfair Display', titleFill = '#002B49') {
-    if (!textStr) return '';
-    const clean = textStr
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/<[^>]*>/g, '')
-      .trim();
-
-    // Scale font size down slightly if title is long to fit nicely without layout clipping
-    let adjustedFontSize = fontSize;
-    if (clean.length > 50) adjustedFontSize = Math.round(fontSize * 0.82);
-    else if (clean.length > 38) adjustedFontSize = Math.round(fontSize * 0.90);
-
-    const words = clean.split(/\s+/);
-    const lines = [];
-    let cur = [];
-
-    for (const w of words) {
-      const test = [...cur, w].join(' ');
-      if (test.length > maxLineChars && cur.length > 0) {
-        lines.push(cur.join(' '));
-        cur = [w];
-      } else {
-        cur.push(w);
-      }
-    }
-    if (cur.length > 0) lines.push(cur.join(' '));
-
-    return `<text x="${x}" y="${y}" font-family="${fontStyle}, Georgia, serif" font-weight="900" font-size="${adjustedFontSize}" fill="${titleFill}" text-anchor="${textAnchor}">` +
-      lines.map((line, idx) => {
-        const lineEscaped = line
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
-        return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
-      }).join('') +
-      `</text>`;
-  }
 
   const rawPhotoParam = customPhotoUrl || photoUrl || 'student';
   let photoSrcRaw = DEFAULT_FALLBACK_BASE64;
