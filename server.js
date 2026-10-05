@@ -1903,27 +1903,27 @@ async function renderBannerWithPuppeteer(bannerData) {
     /* 2-Column Main Layout Grid */
     .main-grid-layout {
       display: flex;
-      gap: ${isLandscape ? '18px' : '22px'};
+      gap: ${isLandscape ? '18px' : '20px'};
       align-items: stretch;
       flex: 1;
       margin-bottom: ${isLandscape ? '6px' : '10px'};
       position: relative;
       z-index: 2;
-      ${isStory ? 'flex-direction: column; justify-content: flex-start; align-items: center;' : ''}
+      ${isStory ? 'flex-direction: column; justify-content: flex-start; align-items: center;' : 'flex-direction: row; justify-content: space-between;'}
     }
 
     /* Left Side Human Lifestyle Photo Card */
     .photo-card-wrapper {
       position: relative;
       flex-shrink: 0;
-      width: ${isLandscape ? '380px' : isStory ? '580px' : '430px'};
-      height: ${isLandscape ? '360px' : isStory ? '640px' : '100%'};
-      min-height: ${isLandscape ? '340px' : isStory ? '600px' : '580px'};
+      width: ${isLandscape ? '380px' : isStory ? '1000px' : '430px'};
+      height: ${isLandscape ? '360px' : isStory ? '600px' : '100%'};
+      min-height: ${isLandscape ? '340px' : isStory ? '580px' : '645px'};
       margin: ${isStory ? '0 auto' : '0'};
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 16px 36px rgba(0, 43, 73, 0.18);
-      border: 4px solid #FFFFFF;
+      border: 3px solid #C8102E;
       align-self: stretch;
     }
     .photo-card-img {
@@ -1947,8 +1947,8 @@ async function renderBannerWithPuppeteer(bannerData) {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: ${isLandscape ? '6px' : '12px'};
     }
 
     /* Badge Pill */
@@ -1997,28 +1997,31 @@ async function renderBannerWithPuppeteer(bannerData) {
       line-height: 1.3;
     }
 
-    /* Bullets Card Box - Tight Spacing */
+    /* Bullets Card Box - Glassmorphic High Density */
     .bullets-container {
       background: #FFFFFF;
-      border: 1px solid rgba(0, 43, 73, 0.12);
-      border-left: 6px solid ${t.bulletBorder};
-      border-radius: 14px;
+      border: 2px solid ${t.bulletBorder};
+      border-left: 8px solid ${t.bulletBorder};
+      border-radius: 18px;
       padding: ${bulletPadding};
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-      margin-top: 2px;
+      box-shadow: 0 10px 28px rgba(0, 43, 73, 0.08);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
     }
     .bullet-row {
       display: flex;
       align-items: center;
-      gap: ${isLandscape ? '8px' : '12px'};
+      gap: ${isLandscape ? '10px' : '14px'};
       margin-bottom: ${bulletMargin};
     }
     .bullet-row:last-child { margin-bottom: 0; }
     .bullet-icon {
       width: ${iconSize};
       height: ${iconSize};
-      border-radius: 50%;
-      background: ${t.bulletBorder};
+      border-radius: 8px;
+      background: linear-gradient(135deg, #C8102E 0%, #900C22 100%);
       color: #FFFFFF;
       display: flex;
       align-items: center;
@@ -2026,11 +2029,12 @@ async function renderBannerWithPuppeteer(bannerData) {
       font-size: ${iconFontSize};
       font-weight: 900;
       flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(200, 16, 46, 0.3);
     }
     .bullet-text {
       font-size: ${bulletFontSize};
-      font-weight: 700;
-      color: #0F172A;
+      font-weight: 800;
+      color: #002B49;
       line-height: 1.35;
     }
 
@@ -2118,8 +2122,8 @@ async function renderBannerWithPuppeteer(bannerData) {
       <img src="${t.photoUrl}" alt="Canadian Immigration Applicant" class="photo-card-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80';" />
       <div class="photo-overlay-gradient"></div>
       ${showSocialProof ? `
-      <div style="position:absolute; top:16px; left:16px; background:#FFFFFF; border:2px solid #0284C7; border-radius:30px; padding:6px 14px; font-weight:800; font-size:13px; color:#002B49; box-shadow:0 6px 16px rgba(0,0,0,0.15); display:flex; align-items:center; gap:6px; z-index:4;">
-        <span>⭐⭐⭐⭐⭐</span> <span>4.9/5 (500+ Clients)</span>
+      <div style="position:absolute; top:16px; left:16px; background:#FFFFFF; border:2px solid #C8102E; border-radius:30px; padding:6px 16px; font-weight:800; font-size:13.5px; color:#002B49; box-shadow:0 6px 16px rgba(0,0,0,0.15); display:flex; align-items:center; gap:8px; z-index:4;">
+        <span style="color:#FFB703;">★ ★ ★ ★ ★</span> <span>4.9/5 (500+ Reviews)</span>
       </div>` : ''}
       ${showQrCode ? `
       <div style="position:absolute; bottom:16px; right:16px; z-index:4;">
@@ -2146,10 +2150,10 @@ async function renderBannerWithPuppeteer(bannerData) {
       <!-- Bullet Points -->
       ${showBullets ? `
       <div class="bullets-container">
-        ${bullet1 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet1}</span></div>` : ''}
-        ${bullet2 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet2}</span></div>` : ''}
-        ${bullet3 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet3}</span></div>` : ''}
-        ${bullet4 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet4}</span></div>` : ''}
+        ${bullet1 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet1}</span></div>` : ''}
+        ${bullet2 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet2}</span></div>` : ''}
+        ${bullet3 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet3}</span></div>` : ''}
+        ${bullet4 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet4}</span></div>` : ''}
       </div>` : ''}
     </div>
   </div>
@@ -2191,7 +2195,7 @@ async function renderBannerWithPuppeteer(bannerData) {
     return 'data:image/png;base64,' + Buffer.from(buffer).toString('base64');
   } catch (err) {
     console.error("Puppeteer render error:", err);
-    return null;
+    return generateBannerSVG(bannerData);
   }
 }
 
@@ -2942,7 +2946,7 @@ Travelbells Immigration Inc. | Licensed RCIC CICC Member Firm`;
 const PORT_TO_LISTEN = process.env.PORT || 3007;
 
 if (require.main === module) {
-  server.listen(PORT_TO_LISTEN, () => {
+  server.listen(PORT_TO_LISTEN, '127.0.0.1', () => {
     console.log(`====================================================`);
     console.log(`🚀 Travelbells Ad Studio Server running on port ${PORT_TO_LISTEN}`);
     console.log(`🌐 Local UI Access: http://127.0.0.1:${PORT_TO_LISTEN}`);
