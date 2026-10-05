@@ -1378,8 +1378,8 @@ function generateBannerSVG({
   </g>
 
   <!-- CTA BANNER BAR -->
-  <a href="https://bookings.travelbellsimmigration.com" target="_blank" rel="noopener noreferrer">
-    <g transform="translate(30, 795)" filter="url(#shadow)">
+  <a href="${qrTargetUrl}" target="_blank" rel="noopener noreferrer">
+    <g transform="translate(30, 845)" filter="url(#shadow)">
       <rect width="1020" height="64" rx="16" fill="${activeHighlightColor}"/>
       <text x="510" y="41" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
     </g>
@@ -1387,21 +1387,21 @@ function generateBannerSVG({
 
   <!-- FOOTER WITH 4 UNIFORM CRIMSON PILLS -->
   ${showFooter ? `
-  <g transform="translate(0, 875)">
-    <rect width="1080" height="205" fill="#002B49"/>
+  <g transform="translate(0, 925)">
+    <rect width="1080" height="155" fill="#002B49"/>
     <rect width="1080" height="6" fill="${activeHighlightColor}"/>
-    <g transform="translate(40, 30)">
-      <rect x="0" y="0" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="240" y="32" font-family="'Montserrat', sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">🌐 www.travelbellsimmigration.com</text>
+    <g transform="translate(40, 20)">
+      <rect x="0" y="0" width="480" height="48" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
+      <text x="240" y="30" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#FFFFFF" text-anchor="middle">🌐 www.travelbellsimmigration.com</text>
 
-      <rect x="520" y="0" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="760" y="32" font-family="'Montserrat', sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">📧 info@travelbellsimmigration.com</text>
+      <rect x="520" y="0" width="480" height="48" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
+      <text x="760" y="30" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#FFFFFF" text-anchor="middle">📧 info@travelbellsimmigration.com</text>
 
-      <rect x="0" y="70" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="240" y="102" font-family="'Montserrat', sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">📞 +1 (647) 890-1476</text>
+      <rect x="0" y="60" width="480" height="48" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
+      <text x="240" y="90" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#FFFFFF" text-anchor="middle">📞 +1 (647) 890-1476</text>
 
-      <rect x="520" y="70" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
-      <text x="760" y="102" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16.5" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
+      <rect x="520" y="60" width="480" height="48" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
+      <text x="760" y="90" font-family="'Montserrat', sans-serif" font-weight="800" font-size="15.5" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
   </g>` : ''}
 </svg>`;

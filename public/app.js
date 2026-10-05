@@ -21,8 +21,10 @@ function setVal(id, val) {
 // Interactive Graphic Preview Wrapper with Clickable Hotspot
 function renderInteractiveGraphicHtml(dataUri) {
   const fmt = document.getElementById('canvas-format')?.value || 'vertical';
-  let bottomPos = '20.4%';
-  let heightPos = '6.2%';
+  const targetUrl = document.getElementById('qr-target-url')?.value || 'https://bookings.travelbellsimmigration.com';
+  
+  let bottomPos = '12.8%';
+  let heightPos = '6.0%';
   let leftPos = '2.8%';
   let rightPos = '2.8%';
 
@@ -43,9 +45,10 @@ function renderInteractiveGraphicHtml(dataUri) {
     <img id="main-canvas-img" src="${dataUri}" alt="Generated 300 DPI Creative" style="width: 100%; height: auto; display: block;" onerror="console.warn('Canvas img preview note');" />
     
     <!-- Interactive Glass Shine Hotspot Overlay for the CTA Bar -->
-    <a href="https://bookings.travelbellsimmigration.com" target="_blank" rel="noopener noreferrer" 
+    <a href="${targetUrl}" target="_blank" rel="noopener noreferrer" 
        class="cta-hotspot-link"
-       style="position: absolute; bottom: ${bottomPos}; left: ${leftPos}; right: ${rightPos}; height: ${heightPos}; cursor: pointer; border-radius: 8px; z-index: 10; display: block; text-decoration: none;">
+       title="Click to open ${targetUrl}"
+       style="position: absolute; bottom: ${bottomPos}; left: ${leftPos}; right: ${rightPos}; height: ${heightPos}; cursor: pointer; border-radius: 8px; z-index: 25; display: block; text-decoration: none;">
     </a>
   </div>`;
 }
