@@ -1769,10 +1769,10 @@ async function renderBannerWithPuppeteer(bannerData) {
   const safeTitle = (title || "Work Permit Ending? Don't Exit, Upgrade")
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   
-  // Format key highlight terms with Travelbells Crimson / Navy colors
+  // Format key highlight terms for Cinematic Dark/Glass backdrop
   const formattedTitle = safeTitle
-    .replace(/(WORK PERMIT|PERMIS DE TRAVAIL|STUDY VISA|PERMIS D'ÉTUDES|CANADIAN STATUS EXPIRE|STATUT CANADIEN|WITHOUT AN LMIA|SANS EIMT|EXPRESS ENTRY|RONDES D'INVITATIONS|PR READY|DIPLOMA &amp; MASTER'S|DIPLÔME &amp; MAÎTRISE)/gi, `<span style="color: ${t.primaryColor}; font-weight: 900;">$1</span>`)
-    .replace(/(UPGRADE|ÉVOLUEZ|EXPIRE|QUALIFY|ACCÈS|NO LMIA|SANS EIMT)/gi, `<span style="color: ${t.highlightColor}; font-weight: 900;">$1</span>`);
+    .replace(/(WORK PERMIT|PERMIS DE TRAVAIL|STUDY VISA|PERMIS D'ÉTUDES|CANADIAN STATUS EXPIRE|STATUT CANADIEN|WITHOUT AN LMIA|SANS EIMT|EXPRESS ENTRY|RONDES D'INVITATIONS|PR READY|DIPLOMA &amp; MASTER'S|DIPLÔME &amp; MAÎTRISE)/gi, `<span style="color: #FFFFFF; font-weight: 900;">$1</span>`)
+    .replace(/(UPGRADE|ÉVOLUEZ|EXPIRE|QUALIFY|ACCÈS|NO LMIA|SANS EIMT)/gi, `<span style="color: #FF4D6D; font-weight: 900; text-shadow: 0 0 16px rgba(255, 77, 109, 0.6);">$1</span>`);
 
   const safeSubtitle = (subtitle || "Your time in Canada doesn't have to stop here")
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1784,32 +1784,31 @@ async function renderBannerWithPuppeteer(bannerData) {
   const isLandscape = format === 'landscape';
   const isStory = format === 'story';
 
-  const bodyPadding = isLandscape ? '20px 30px' : isStory ? '45px 35px 35px 35px' : '22px 28px';
-  const logoHeight = isLandscape ? '125px' : isStory ? '200px' : '165px';
-  let badgeFontSize = isLandscape ? '14px' : isStory ? '24px' : '21px';
+  const bodyPadding = isLandscape ? '16px 24px' : isStory ? '36px 30px 24px 30px' : '20px 24px';
+  const logoHeight = isLandscape ? '110px' : isStory ? '180px' : '150px';
+  let badgeFontSize = isLandscape ? '13px' : isStory ? '22px' : '19px';
   if ((safeBadge || '').length > 32) {
-    badgeFontSize = isLandscape ? '12px' : isStory ? '19px' : '17px';
+    badgeFontSize = isLandscape ? '11px' : isStory ? '18px' : '15px';
   } else if ((safeBadge || '').length > 22) {
-    badgeFontSize = isLandscape ? '13px' : isStory ? '21px' : '19px';
+    badgeFontSize = isLandscape ? '12px' : isStory ? '20px' : '17px';
   }
-  const badgePadding = isLandscape ? '8px 22px' : isStory ? '14px 32px' : '10px 26px';
-  let titleFontSize = isLandscape ? '34px' : isStory ? '58px' : '50px';
+  const badgePadding = isLandscape ? '6px 18px' : isStory ? '12px 28px' : '8px 22px';
+  let titleFontSize = isLandscape ? '32px' : isStory ? '54px' : '46px';
   if ((title || '').length > 40) {
-    titleFontSize = isLandscape ? '28px' : isStory ? '48px' : '42px';
+    titleFontSize = isLandscape ? '26px' : isStory ? '44px' : '38px';
   } else if ((title || '').length < 25) {
-    titleFontSize = isLandscape ? '40px' : isStory ? '66px' : '56px';
+    titleFontSize = isLandscape ? '38px' : isStory ? '62px' : '52px';
   }
-  const titleMargin = isLandscape ? '6px' : isStory ? '16px' : '12px';
-  const subtitleFontSize = isLandscape ? '18px' : isStory ? '32px' : '25px';
+  const subtitleFontSize = isLandscape ? '16px' : isStory ? '28px' : '22px';
   
-  const bulletPadding = isLandscape ? '10px 16px' : isStory ? '22px 26px' : '16px 20px';
-  const bulletFontSize = isLandscape ? '17px' : isStory ? '28px' : '24px';
-  const bulletMargin = isLandscape ? '6px' : isStory ? '12px' : '8px';
-  const iconSize = isLandscape ? '26px' : isStory ? '40px' : '36px';
-  const iconFontSize = isLandscape ? '13px' : isStory ? '20px' : '18px';
+  const bulletPadding = isLandscape ? '8px 14px' : isStory ? '18px 22px' : '14px 18px';
+  const bulletFontSize = isLandscape ? '16px' : isStory ? '26px' : '21px';
+  const bulletMargin = isLandscape ? '6px' : isStory ? '12px' : '10px';
+  const iconSize = isLandscape ? '26px' : isStory ? '38px' : '32px';
+  const iconFontSize = isLandscape ? '13px' : isStory ? '20px' : '17px';
   
-  const ctaPadding = isLandscape ? '12px 20px' : isStory ? '22px 30px' : '16px 24px';
-  const ctaFontSize = isLandscape ? '18px' : isStory ? '28px' : '24px';
+  const ctaPadding = isLandscape ? '10px 18px' : isStory ? '20px 28px' : '14px 22px';
+  const ctaFontSize = isLandscape ? '17px' : isStory ? '26px' : '22px';
 
   const html = `<!DOCTYPE html>
 <html>
@@ -1823,7 +1822,7 @@ async function renderBannerWithPuppeteer(bannerData) {
     body {
       width: ${width}px;
       height: ${height}px;
-      background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 60%, #EEF2F6 100%);
+      background: #0F172A;
       font-family: 'Montserrat', sans-serif;
       display: flex;
       flex-direction: column;
@@ -1832,42 +1831,57 @@ async function renderBannerWithPuppeteer(bannerData) {
       position: relative;
       overflow: hidden;
     }
-    
+
+    /* FULL-BLEED PHOTOGRAPHIC CINEMATIC BACKDROP */
+    .fullbleed-photo-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg-photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 30%;
+      filter: brightness(0.55) contrast(1.18) saturate(1.1);
+      transform: scale(1.03);
+    }
+    .bg-photo-dark-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 40%, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.85) 100%),
+                  linear-gradient(180deg, rgba(0, 43, 73, 0.45) 0%, rgba(15, 23, 42, 0.88) 100%);
+    }
+
     /* Top Crimson & Navy Brand Stripe */
     .brand-top-stripe {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 12px;
+      height: 10px;
       background: linear-gradient(90deg, #C8102E 0%, #002B49 50%, #C8102E 100%);
+      z-index: 10;
     }
 
-    /* Outer Canvas Border */
+    /* Outer Canvas Border Frame */
     .canvas-border-frame {
       position: absolute;
       top: 10px;
       left: 10px;
       right: 10px;
       bottom: 10px;
-      border: 1px solid rgba(0, 43, 73, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 18px;
       pointer-events: none;
-      z-index: 2;
-    }
-
-    /* Background Watermark Layer */
-    .watermark-bg-layer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      z-index: 10;
     }
 
     /* Header Bar: Logo + Official RCIC Seal */
@@ -1876,147 +1890,116 @@ async function renderBannerWithPuppeteer(bannerData) {
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      margin-bottom: ${isLandscape ? '6px' : '10px'};
+      margin-bottom: ${isLandscape ? '4px' : '8px'};
       position: relative;
-      z-index: 2;
+      z-index: 5;
+    }
+    .header-logo-box {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 6px 16px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
     }
     .header-logo-img {
       height: ${logoHeight};
-      max-width: 650px;
+      max-width: 500px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
     }
     .rcic-seal-pill {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: #FFFFFF;
+      background: rgba(255, 255, 255, 0.95);
       border: 2px solid #002B49;
       color: #002B49;
       font-weight: 800;
-      font-size: ${isLandscape ? '13px' : isStory ? '18px' : '16px'};
-      padding: ${isLandscape ? '6px 14px' : '9px 20px'};
+      font-size: ${isLandscape ? '13px' : isStory ? '18px' : '15.5px'};
+      padding: ${isLandscape ? '6px 14px' : '8px 18px'};
       border-radius: 30px;
-      box-shadow: 0 4px 12px rgba(0, 43, 73, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
-    /* 2-Column Main Layout Grid */
-    .main-grid-layout {
-      display: flex;
-      gap: ${isLandscape ? '18px' : '20px'};
-      align-items: stretch;
-      flex: 1;
-      margin-bottom: ${isLandscape ? '6px' : '10px'};
+    /* CENTERED FROSTED GLASS HERO CONTENT CONTAINER */
+    .glass-hero-container {
       position: relative;
-      z-index: 2;
-      ${isStory ? 'flex-direction: column; justify-content: flex-start; align-items: center;' : 'flex-direction: row; justify-content: space-between;'}
-    }
-
-    /* Left Side Human Lifestyle Photo Card */
-    .photo-card-wrapper {
-      position: relative;
-      flex-shrink: 0;
-      width: ${isLandscape ? '380px' : isStory ? '1000px' : '430px'};
-      height: ${isLandscape ? '360px' : isStory ? '600px' : '100%'};
-      min-height: ${isLandscape ? '340px' : isStory ? '580px' : '645px'};
-      margin: ${isStory ? '0 auto' : '0'};
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 16px 36px rgba(0, 43, 73, 0.18);
-      border: 3px solid #C8102E;
-      align-self: stretch;
-    }
-    .photo-card-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 15%;
-      display: block;
-    }
-    .photo-overlay-gradient {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 45%;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,43,73,0.85) 100%);
-    }
-
-    /* Right Side Content Block - Compact Stack */
-    .content-side-block {
-      flex: 1;
+      z-index: 5;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      border-radius: 24px;
+      padding: ${isLandscape ? '16px 24px' : isStory ? '36px 36px' : '28px 32px'};
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: ${isLandscape ? '6px' : '12px'};
+      justify-content: space-evenly;
+      flex: 1;
+      margin: ${isLandscape ? '6px 0' : isStory ? '20px 0' : '12px 0'};
     }
 
     /* Badge Pill */
     .badge-wrapper {
       display: flex;
       justify-content: flex-start;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     .badge-pill {
       background: linear-gradient(135deg, #C8102E 0%, #900C22 100%);
       color: #FFFFFF;
       font-weight: 900;
       font-size: ${badgeFontSize};
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       padding: ${badgePadding};
       border-radius: 50px;
       text-transform: uppercase;
-      box-shadow: 0 6px 18px rgba(200, 16, 46, 0.35);
-      border: 2px solid #FFFFFF;
+      box-shadow: 0 6px 20px rgba(200, 16, 46, 0.45);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
       display: inline-block;
       max-width: 98%;
-      word-wrap: break-word;
-      white-space: normal;
       line-height: 1.25;
       text-align: center;
     }
 
-    /* Headline & Subtitle - Minimal Gap */
+    /* Headline & Subtitle */
     .headline-block {
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     .headline-title {
       font-family: 'Playfair Display', Georgia, serif;
       font-weight: 900;
       font-size: ${titleFontSize};
       line-height: 1.15;
-      color: #0F172A;
-      margin-bottom: 4px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
       letter-spacing: -0.5px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     }
     .subtitle-text {
       font-size: ${subtitleFontSize};
-      color: #334155;
+      color: #CBD5E1;
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.35;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
-    /* Bullets Card Box - Glassmorphic High Density */
+    /* Bullets Card Container */
     .bullets-container {
-      background: #FFFFFF;
-      border: 2px solid ${t.bulletBorder};
-      border-left: 8px solid ${t.bulletBorder};
-      border-radius: 18px;
-      padding: ${bulletPadding};
-      box-shadow: 0 10px 28px rgba(0, 43, 73, 0.08);
-      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
+      gap: ${bulletMargin};
+      margin-top: 6px;
     }
     .bullet-row {
       display: flex;
       align-items: center;
       gap: ${isLandscape ? '10px' : '14px'};
-      margin-bottom: ${bulletMargin};
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: ${bulletPadding};
+      backdrop-filter: blur(8px);
     }
-    .bullet-row:last-child { margin-bottom: 0; }
     .bullet-icon {
       width: ${iconSize};
       height: ${iconSize};
@@ -2029,23 +2012,53 @@ async function renderBannerWithPuppeteer(bannerData) {
       font-size: ${iconFontSize};
       font-weight: 900;
       flex-shrink: 0;
-      box-shadow: 0 4px 10px rgba(200, 16, 46, 0.3);
+      box-shadow: 0 4px 12px rgba(200, 16, 46, 0.4);
     }
     .bullet-text {
       font-size: ${bulletFontSize};
-      font-weight: 800;
-      color: #002B49;
+      font-weight: 700;
+      color: #F8FAFC;
       line-height: 1.35;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
-    /* Multi-Pillar Corporate Agency Footer - 2x2 Grid Layout for 100% Full Text Fit */
+    /* Social Proof Card Overlay Inside Glass Container */
+    .social-proof-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #C8102E;
+      border-radius: 30px;
+      padding: ${isLandscape ? '4px 12px' : '8px 18px'};
+      margin-top: 10px;
+      width: fit-content;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .star-gold { color: #FFB703; font-size: ${isLandscape ? '13px' : '16px'}; }
+    .social-proof-text { font-size: ${isLandscape ? '12px' : '14px'}; font-weight: 800; color: #002B49; }
+
+    /* Floating Dynamic QR Code Anchor */
+    .floating-qr-box {
+      position: absolute;
+      bottom: ${isLandscape ? '70px' : isStory ? '210px' : '170px'};
+      right: ${isLandscape ? '30px' : isStory ? '45px' : '36px'};
+      z-index: 8;
+      background: rgba(255, 255, 255, 0.96);
+      border: 2px solid #C8102E;
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Multi-Pillar Corporate Agency Footer - 2x2 Grid Layout */
     .agency-footer-container {
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 4px;
       position: relative;
-      z-index: 2;
+      z-index: 5;
     }
     .cta-primary-bar {
       background: linear-gradient(90deg, #C8102E 0%, #002B49 100%);
@@ -2057,17 +2070,12 @@ async function renderBannerWithPuppeteer(bannerData) {
       font-weight: 900;
       font-size: ${ctaFontSize};
       letter-spacing: 0.5px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      transition: transform 0.2s ease, filter 0.2s ease;
-    }
-    .cta-primary-bar:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
     }
     .contact-info-strip {
       background: #002B49;
@@ -2100,9 +2108,14 @@ async function renderBannerWithPuppeteer(bannerData) {
   </style>
 </head>
 <body>
+  <!-- FULL-BLEED PHOTOGRAPHIC CINEMATIC BACKDROP -->
+  <div class="fullbleed-photo-bg">
+    <img src="${t.photoUrl}" alt="Canadian Immigration Cinematic Backdrop" class="bg-photo-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=1200&auto=format&fit=crop&q=80';" />
+    <div class="bg-photo-dark-overlay"></div>
+  </div>
+
   <div class="brand-top-stripe"></div>
   <div class="canvas-border-frame"></div>
-  ${watermarkHtml}
 
   <!-- Header Row -->
   <div class="header-bar">
@@ -2114,49 +2127,44 @@ async function renderBannerWithPuppeteer(bannerData) {
     </div>
   </div>
 
-  <!-- Main 2-Column Split Grid -->
-  <div class="main-grid-layout">
-    
-    <!-- Left Photo Card Panel -->
-    <div class="photo-card-wrapper">
-      <img src="${t.photoUrl}" alt="Canadian Immigration Applicant" class="photo-card-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80';" />
-      <div class="photo-overlay-gradient"></div>
-      ${showSocialProof ? `
-      <div style="position:absolute; top:16px; left:16px; background:#FFFFFF; border:2px solid #C8102E; border-radius:30px; padding:6px 16px; font-weight:800; font-size:13.5px; color:#002B49; box-shadow:0 6px 16px rgba(0,0,0,0.15); display:flex; align-items:center; gap:8px; z-index:4;">
-        <span style="color:#FFB703;">★ ★ ★ ★ ★</span> <span>4.9/5 (500+ Reviews)</span>
-      </div>` : ''}
-      ${showQrCode ? `
-      <div style="position:absolute; bottom:16px; right:16px; z-index:4;">
-        <svg width="111" height="133" viewBox="0 0 111 133" xmlns="http://www.w3.org/2000/svg">
-          ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://bookings.travelbellsimmigration.com', 0, 0, 95)}
-        </svg>
-      </div>` : ''}
+  <!-- CENTERED FROSTED GLASS HERO CONTENT CONTAINER -->
+  <div class="glass-hero-container">
+    <!-- Topic Badge Pill -->
+    ${showBadge && safeBadge ? `
+    <div class="badge-wrapper">
+      <div class="badge-pill">${safeBadge}</div>
+    </div>` : ''}
+
+    <!-- Main Headline & Subtitle -->
+    <div class="headline-block">
+      <h1 class="headline-title">${formattedTitle}</h1>
+      <p class="subtitle-text">${safeSubtitle}</p>
     </div>
 
-    <!-- Right Text & Bullet Content Panel -->
-    <div class="content-side-block">
-      <!-- Topic Badge Pill -->
-      ${showBadge && safeBadge ? `
-      <div class="badge-wrapper">
-        <div class="badge-pill">${safeBadge}</div>
-      </div>` : ''}
+    <!-- Bullet Points -->
+    ${showBullets ? `
+    <div class="bullets-container">
+      ${bullet1 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet1}</span></div>` : ''}
+      ${bullet2 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet2}</span></div>` : ''}
+      ${bullet3 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet3}</span></div>` : ''}
+      ${bullet4 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet4}</span></div>` : ''}
+    </div>` : ''}
 
-      <!-- Main Headline & Subtitle -->
-      <div class="headline-block">
-        <h1 class="headline-title">${formattedTitle}</h1>
-        <p class="subtitle-text">${safeSubtitle}</p>
-      </div>
-
-      <!-- Bullet Points -->
-      ${showBullets ? `
-      <div class="bullets-container">
-        ${bullet1 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet1}</span></div>` : ''}
-        ${bullet2 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet2}</span></div>` : ''}
-        ${bullet3 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet3}</span></div>` : ''}
-        ${bullet4 ? `<div class="bullet-row"><div class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><span class="bullet-text">${bullet4}</span></div>` : ''}
-      </div>` : ''}
-    </div>
+    <!-- Social Proof Star Rating Card Overlay -->
+    ${showSocialProof ? `
+    <div class="social-proof-banner">
+      <span class="star-gold">★ ★ ★ ★ ★</span>
+      <span class="social-proof-text">4.9/5 (500+ Verified Client Reviews)</span>
+    </div>` : ''}
   </div>
+
+  <!-- Dynamic Floating QR Code Embed -->
+  ${showQrCode ? `
+  <div class="floating-qr-box">
+    <svg width="100" height="120" viewBox="0 0 111 133" xmlns="http://www.w3.org/2000/svg">
+      ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://bookings.travelbellsimmigration.com', 0, 0, 95)}
+    </svg>
+  </div>` : ''}
 
   <!-- Multi-Pillar Corporate Agency Footer -->
   ${showFooter ? `
