@@ -791,9 +791,21 @@ function generateSvgQrCode(urlStr = 'https://bookings.travelbellsimmigration.com
 function renderSocialProofSvg(x = 0, y = 0, scale = 1) {
   return `
     <g transform="translate(${x}, ${y}) scale(${scale})">
-      <rect width="330" height="46" rx="23" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.8" filter="url(#shadowStory)"/>
-      <text x="18" y="28" font-size="16">⭐⭐⭐⭐⭐</text>
-      <text x="135" y="29" font-family="'Montserrat', sans-serif" font-weight="800" font-size="14" fill="#002B49">4.9/5 (500+ Clients)</text>
+      <defs>
+        <linearGradient id="starGradGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FFE169"/>
+          <stop offset="100%" stop-color="#FFB703"/>
+        </linearGradient>
+      </defs>
+      <rect width="336" height="48" rx="24" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.8" filter="url(#shadowStory)"/>
+      <g transform="translate(16, 14)">
+        <path d="M0 8 L3.5 12 L2.5 17 L7 14 L11.5 17 L10.5 12 L14 8 L9 8 L7 3 L5 8 Z" fill="url(#starGradGold)"/>
+        <path d="M16 8 L19.5 12 L18.5 17 L23 14 L27.5 17 L26.5 12 L30 8 L25 8 L23 3 L21 8 Z" fill="url(#starGradGold)"/>
+        <path d="M32 8 L35.5 12 L34.5 17 L39 14 L43.5 17 L42.5 12 L46 8 L41 8 L39 3 L37 8 Z" fill="url(#starGradGold)"/>
+        <path d="M48 8 L51.5 12 L50.5 17 L55 14 L59.5 17 L58.5 12 L62 8 L57 8 L55 3 L53 8 Z" fill="url(#starGradGold)"/>
+        <path d="M64 8 L67.5 12 L66.5 17 L71 14 L75.5 17 L74.5 12 L78 8 L73 8 L71 3 L69 8 Z" fill="url(#starGradGold)"/>
+      </g>
+      <text x="108" y="30" font-family="'Montserrat', sans-serif" font-weight="800" font-size="14" fill="#002B49">4.9/5 (500+ Reviews)</text>
     </g>
   `;
 }
