@@ -65,14 +65,13 @@
           </button>
         </div>
 
-        <!-- Quick Topic Presets -->
-        <div class="hero-presets-row">
-          <span class="preset-label">Quick Topics:</span>
-          <button class="preset-chip" onclick="applyQuickTopic('phonerepair')">📱 Phone Repair Tech</button>
-          <button class="preset-chip" onclick="applyQuickTopic('mobilite')">🇫🇷 Mobilité Francophone (No LMIA)</button>
-          <button class="preset-chip" onclick="applyQuickTopic('express')">🇨🇦 Express Entry Draws</button>
-          <button class="preset-chip" onclick="applyQuickTopic('study')">🎓 Work Permit Ending Upgrade</button>
-          <button class="preset-chip" onclick="applyQuickTopic('lmia')">💼 B2B Corporate LMIA</button>
+        <!-- High-Converting Niche Target Presets Ribbon -->
+        <div class="niche-audience-ribbon" style="margin-top:14px; background: rgba(200, 16, 46, 0.04); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(200, 16, 46, 0.18); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span class="preset-label" style="font-weight:800; color: #C8102E; font-size:12px;">🎯 High-Converting Niche Targets:</span>
+          <button class="preset-chip active-niche" onclick="applyNichePreset('students')" style="background:#C8102E; color:#FFFFFF; border:none; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;">🎓 International Students (PGWP & Study)</button>
+          <button class="preset-chip" onclick="applyNichePreset('workers')" style="background:#FFFFFF; color:#002B49; border:1px solid #CBD5E1; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;">💼 Skilled Workers (Express Entry & PNP)</button>
+          <button class="preset-chip" onclick="applyNichePreset('family')" style="background:#FFFFFF; color:#002B49; border:1px solid #CBD5E1; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;">👨‍👩‍👧 Family Sponsorship (Spouse & Parents)</button>
+          <button class="preset-chip" onclick="applyNichePreset('visitor')" style="background:#FFFFFF; color:#002B49; border:1px solid #CBD5E1; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;">⚡ Visitor to Work Permit & LMIA</button>
         </div>
       </div>
 
@@ -205,6 +204,47 @@
             </div>
           </div>
 
+          <!-- High-Converting Client Acquisition Boosters Panel -->
+          <div class="footer-editor-bar" style="margin-top: 10px; border-color: #10B981; background: #F0FDF4;">
+            <div class="footer-editor-header" onclick="toggleConversionBoostersAccordion()">
+              <span class="badge-editor-label" style="color: #047857;">🚀 ⚡ Conversion Boosters & Trust Overlays:</span>
+              <span class="footer-toggle-icon" id="conversion-toggle-label" style="color: #047857;">✏️ QR Code, Trust Badges & Social Proof</span>
+            </div>
+            <div class="footer-editor-grid" id="conversion-booster-fields">
+              <div class="footer-row-2">
+                <div class="footer-field">
+                  <label class="field-label-sm">📲 Dynamic Booking QR Code Embed:</label>
+                  <select id="toggle-qr-code" class="badge-text-input" onchange="updateFooterFromInput()">
+                    <option value="enabled" selected>✅ Enabled (Show QR Code + "Scan to Book")</option>
+                    <option value="disabled">❌ Disabled</option>
+                  </select>
+                </div>
+                <div class="footer-field">
+                  <label class="field-label-sm">🌐 Booking Target Link:</label>
+                  <input type="text" id="qr-target-url" value="https://travelbellsimmigration.com/book-appointment" class="badge-text-input" oninput="updateFooterFromInput()" />
+                </div>
+              </div>
+              <div class="footer-row-2">
+                <div class="footer-field">
+                  <label class="field-label-sm">⭐ Social Proof Star Rating Card:</label>
+                  <select id="toggle-social-proof" class="badge-text-input" onchange="updateFooterFromInput()">
+                    <option value="enabled" selected>✅ Enabled (4.9/5 Rating - 500+ Clients)</option>
+                    <option value="disabled">❌ Disabled</option>
+                  </select>
+                </div>
+                <div class="footer-field">
+                  <label class="field-label-sm">🇨🇦 Trust & Urgency Badge Overlay:</label>
+                  <select id="select-trust-badge" class="badge-text-input" onchange="updateFooterFromInput()">
+                    <option value="cicc" selected>🇨🇦 Licensed CICC Member</option>
+                    <option value="fasttrack">⚡ Fast-Track Processing 2026</option>
+                    <option value="approval">🔥 High Approval Rate</option>
+                    <option value="freecheck">🎯 Free 15-Min Assessment</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Hidden inputs for JS compatibility -->
           <input type="hidden" id="input-category" value="study_permit" />
           <input type="hidden" id="canvas-format" value="vertical" />
@@ -228,6 +268,9 @@
             </button>
             <button class="btn btn-secondary btn-block" onclick="downloadCampaignZipBundle()">
               📦 Download 3-in-1 ZIP Bundle (1:1 + 9:16 + 16:9)
+            </button>
+            <button class="btn btn-secondary btn-block" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color: #ffffff; border: none; font-weight: 800; margin-top: 6px;" onclick="generateABTestVariants()">
+              🧪 Generate A/B Split Test Pair (Authority vs. Urgency)
             </button>
             <button class="btn btn-success btn-block" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%); margin-top: 8px; font-weight: 800;" onclick="openDirectPublishModal()">
               📲 Direct Publish to Instagram, Facebook & LinkedIn

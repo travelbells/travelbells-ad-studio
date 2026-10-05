@@ -1946,9 +1946,86 @@ async function executeWebhookDispatch() {
 // -----------------------------------------------------------------------------
 // CLEAN LAYOUT CONTROLLERS & BILINGUAL AUTO-GENERATOR HELPERS
 // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// CLEAN LAYOUT CONTROLLERS & BILINGUAL AUTO-GENERATOR HELPERS
+// -----------------------------------------------------------------------------
+function applyNichePreset(presetKey) {
+  const inputEl = document.getElementById('quick-tagline-input');
+  const presets = {
+    students: "Work Permit Ending? Don't Exit Canada, Upgrade to Study Visa with PGWP & Spouse Work Permit pathway",
+    workers: "Skilled Worker Express Entry & Ontario OINP draws for fast-track Canadian Permanent Residency 2026",
+    family: "Spouse & Parents Family Sponsorship with Super Visa and fast approval consultation Ontario",
+    visitor: "Convert Visitor Visa to Open Work Permit without LMIA under new 2026 Canadian IRCC public policy"
+  };
+
+  document.querySelectorAll('.niche-chip').forEach(btn => {
+    btn.style.background = '#FFFFFF';
+    btn.style.color = '#002B49';
+    btn.style.border = '1px solid #CBD5E1';
+  });
+  if (event && event.target) {
+    event.target.style.background = '#C8102E';
+    event.target.style.color = '#FFFFFF';
+    event.target.style.border = 'none';
+  }
+
+  if (inputEl && presets[presetKey]) {
+    inputEl.value = presets[presetKey];
+    generate1ClickBilingualCampaign();
+  }
+}
+
+function toggleConversionBoostersAccordion() {
+  const fields = document.getElementById('conversion-booster-fields');
+  const label = document.getElementById('conversion-toggle-label');
+  if (fields) {
+    const isHidden = fields.style.display === 'none';
+    fields.style.display = isHidden ? 'grid' : 'none';
+    if (label) label.textContent = isHidden ? '🔼 Hide Boosters' : '✏️ QR Code, Trust Badges & Social Proof';
+  }
+}
+
+async function generateABTestVariants() {
+  const currentFormat = document.getElementById('canvas-format')?.value || 'vertical';
+  const renderBox = document.getElementById('canvas-render-box');
+  if (renderBox) {
+    renderBox.innerHTML = `<div style="padding:40px; text-align:center; color:#64748B;"><div style="font-size:36px; margin-bottom:12px;">🧪</div><strong style="font-size:16px; color:#6D28D9;">Generating A/B Split Test Dual Creatives...</strong><p style="font-size:12px;">Building Variant A (Authority Navy) & Variant B (Action Crimson)...</p></div>`;
+  }
+
+  try {
+    const response = await fetch('/api/download-all-zip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collectPayloadFromUI(currentFormat))
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `AB_Test_Split_Campaign_${Date.now()}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      
+      alert("🧪 A/B Split Test Pair Bundle Generated & Downloaded Successfully!");
+      updateGraphicDisplay();
+    } else {
+      alert("Failed to generate A/B Split Test bundle.");
+      updateGraphicDisplay();
+    }
+  } catch (err) {
+    console.error("A/B generator error:", err);
+    updateGraphicDisplay();
+  }
+}
+
 function applyQuickTopic(topicKey) {
   const inputEl = document.getElementById('quick-tagline-input');
   const topics = {
+    phonerepair: "Phone Repair Technician work permit and PR pathway in Ontario Canada",
     mobilite: "Mobilité Francophone work permit without LMIA for French speakers in Ontario NCLC 5+",
     express: "Express Entry category-based draw update for bilingual candidates low CRS cutoff",
     study: "Work Permit Ending? Don't Exit, Upgrade to Study Visa with PGWP pathway in Canada",
