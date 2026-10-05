@@ -807,13 +807,20 @@ function renderNativeSvgTextLines(textStr, x, y, maxLineChars = 44, lineHeight =
     .replace(/<[^>]*>/g, '')
     .trim();
 
+  let adjustedFontSize = fontSize;
+  if (clean.length > 120) adjustedFontSize = Math.round(fontSize * 0.78);
+  else if (clean.length > 70) adjustedFontSize = Math.round(fontSize * 0.88);
+
+  const charFactor = fontSize / adjustedFontSize;
+  const calcMaxLineChars = Math.round(maxLineChars * charFactor);
+
   const words = clean.split(/\s+/);
   const lines = [];
   let cur = [];
 
   for (const w of words) {
     const test = [...cur, w].join(' ');
-    if (test.length > maxLineChars && cur.length > 0) {
+    if (test.length > calcMaxLineChars && cur.length > 0) {
       lines.push(cur.join(' '));
       cur = [w];
     } else {
@@ -822,13 +829,15 @@ function renderNativeSvgTextLines(textStr, x, y, maxLineChars = 44, lineHeight =
   }
   if (cur.length > 0) lines.push(cur.join(' '));
 
-  return `<text x="${x}" y="${y}" font-family="${fontStyle}, sans-serif" font-weight="${fontWeight}" font-size="${fontSize}" fill="${fill}" text-anchor="${textAnchor}">` +
+  const actualLineHeight = Math.round(lineHeight * (adjustedFontSize / fontSize));
+
+  return `<text x="${x}" y="${y}" font-family="${fontStyle}, sans-serif" font-weight="${fontWeight}" font-size="${adjustedFontSize}" fill="${fill}" text-anchor="${textAnchor}">` +
     lines.map((line, idx) => {
       const lineEscaped = line
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
-      return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
+      return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${actualLineHeight}"`}>${lineEscaped}</tspan>`;
     }).join('') +
     `</text>`;
 }
@@ -843,8 +852,12 @@ function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 40, lineHeight = 
     .trim();
 
   let adjustedFontSize = fontSize;
-  if (clean.length > 50) adjustedFontSize = Math.round(fontSize * 0.82);
+  if (clean.length > 100) adjustedFontSize = Math.round(fontSize * 0.65);
+  else if (clean.length > 60) adjustedFontSize = Math.round(fontSize * 0.78);
   else if (clean.length > 38) adjustedFontSize = Math.round(fontSize * 0.90);
+
+  const charFactor = fontSize / adjustedFontSize;
+  const calcMaxLineChars = Math.round(maxLineChars * charFactor);
 
   const words = clean.split(/\s+/);
   const lines = [];
@@ -852,7 +865,7 @@ function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 40, lineHeight = 
 
   for (const w of words) {
     const test = [...cur, w].join(' ');
-    if (test.length > maxLineChars && cur.length > 0) {
+    if (test.length > calcMaxLineChars && cur.length > 0) {
       lines.push(cur.join(' '));
       cur = [w];
     } else {
@@ -861,13 +874,15 @@ function renderNativeSvgHeadline(textStr, x, y, maxLineChars = 40, lineHeight = 
   }
   if (cur.length > 0) lines.push(cur.join(' '));
 
+  const actualLineHeight = Math.round(lineHeight * (adjustedFontSize / fontSize));
+
   return `<text x="${x}" y="${y}" font-family="${fontStyle}, Georgia, serif" font-weight="900" font-size="${adjustedFontSize}" fill="${titleFill}" text-anchor="${textAnchor}">` +
     lines.map((line, idx) => {
       const lineEscaped = line
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
-      return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${lineHeight}"`}>${lineEscaped}</tspan>`;
+      return `<tspan x="${x}" ${idx === 0 ? `y="${y}"` : `dy="${actualLineHeight}"`}>${lineEscaped}</tspan>`;
     }).join('') +
     `</text>`;
 }
@@ -2203,19 +2218,19 @@ function parseUniversalPrompt(rawInput) {
     .trim()
     .toUpperCase();
 
-  if (cleanTitle.length < 5) cleanTitle = note.substring(0, 45).toUpperCase();
-  if (cleanTitle.length > 55) cleanTitle = cleanTitle.substring(0, 52) + "...";
+  if (cleanTitle.length < 5) cleanTitle = note.substring(0, 180).toUpperCase();
+  if (cleanTitle.length > 180) cleanTitle = cleanTitle.substring(0, 177) + "...";
 
-  // Badge construction (short 2-3 words, max 18 chars)
+  // Badge construction (short 2-5 words, max 50 chars)
   const words = cleanTitle.replace(/IN CANADA|CANADIAN|FOR YOUR|FOR/g, '').trim().split(/\s+/);
-  let badgeText = words.slice(0, 3).join(' ');
-  if (badgeText.length > 16) badgeText = words.slice(0, 2).join(' ');
+  let badgeText = words.slice(0, 5).join(' ');
+  if (badgeText.length > 50) badgeText = badgeText.substring(0, 47) + "...";
   if (badgeText.length < 3) badgeText = "IMMIGRATION";
   badgeText = `${badgeText} PR`.toUpperCase();
 
   // Subtitle construction
   let cleanSubtitle = clauses.length > 1 ? clauses.slice(1).join(' • ') : "Regulated RCIC Legal Guidance & Application Support Across Canada";
-  if (cleanSubtitle.length > 95) cleanSubtitle = cleanSubtitle.substring(0, 92) + "...";
+  if (cleanSubtitle.length > 300) cleanSubtitle = cleanSubtitle.substring(0, 297) + "...";
 
   // Bullets construction
   let b1 = customLines[0] || (clauses[0] ? `Targeted legal pathways for ${clauses[0].toLowerCase()}` : "Targeted PR pathways & Work Permit options across Canada");
@@ -2225,7 +2240,7 @@ function parseUniversalPrompt(rawInput) {
 
   const formatBullet = (str) => {
     let s = str.trim();
-    if (s.length > 65) s = s.substring(0, 62) + "...";
+    if (s.length > 200) s = s.substring(0, 197) + "...";
     return s.charAt(0).toUpperCase() + s.slice(1);
   };
 
