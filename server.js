@@ -656,22 +656,23 @@ function generateSvgQrCode(urlStr = 'https://bookings.travelbellsimmigration.com
   const cardHeight = size + headerHeight + 16;
 
   return `
-    <a href="${targetUrl}" target="_blank" rel="noopener noreferrer">
-      <g transform="translate(${x}, ${y})">
-        <!-- Background Outer Card Frame with High-Contrast White Surface & Shadow -->
-        <rect width="${cardWidth}" height="${cardHeight}" rx="14" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
-        
-        <!-- Crimson Top Header Pill Label -->
-        <path d="M 0 14 A 14 14 0 0 1 14 0 L ${cardWidth - 14} 0 A 14 14 0 0 1 ${cardWidth} 14 L ${cardWidth} ${headerHeight} L 0 ${headerHeight} Z" fill="#C8102E"/>
-        <text x="${cardWidth / 2}" y="15" font-family="'Montserrat', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">📱 SCAN TO BOOK</text>
-        
-        <!-- Real ISO 18004 Scannable QR Matrix Vector -->
-        <g transform="translate(8, ${headerHeight + 8})">
-          <rect width="${size}" height="${size}" fill="${lightColor}" rx="4"/>
-          <path d="${pathData}" fill="${darkColor}"/>
-        </g>
+    <g transform="translate(${x}, ${y})">
+      <!-- Background Outer Card Frame with High-Contrast White Surface & Shadow -->
+      <rect width="${cardWidth}" height="${cardHeight}" rx="14" fill="${lightColor}" stroke="${darkColor}" stroke-width="2.5"/>
+      
+      <!-- Crimson Top Header Pill Label -->
+      <path d="M 0 14 A 14 14 0 0 1 14 0 L ${cardWidth - 14} 0 A 14 14 0 0 1 ${cardWidth} 14 L ${cardWidth} ${headerHeight} L 0 ${headerHeight} Z" fill="#C8102E"/>
+      <text x="${cardWidth / 2}" y="15" font-family="'Montserrat', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">📱 SCAN TO BOOK</text>
+      
+      <!-- Real ISO 18004 Scannable QR Matrix Vector -->
+      <g transform="translate(8, ${headerHeight + 8})">
+        <rect width="${size}" height="${size}" fill="${lightColor}" rx="4"/>
+        <path d="${pathData}" fill="${darkColor}"/>
+        <!-- Center High-Contrast Maple Badge -->
+        <circle cx="${size / 2}" cy="${size / 2}" r="12" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+        <path d="M ${size / 2} ${size / 2 - 6} L ${size / 2 + 2} ${size / 2 - 2} L ${size / 2 + 6} ${size / 2 - 3} L ${size / 2 + 3} ${size / 2 + 1} L ${size / 2 + 6} ${size / 2 + 5} L ${size / 2 + 1} ${size / 2 + 3} L ${size / 2} ${size / 2 + 7} L ${size / 2 - 1} ${size / 2 + 3} L ${size / 2 - 6} ${size / 2 + 5} L ${size / 2 - 3} ${size / 2 + 1} L ${size / 2 - 6} ${size / 2 - 3} L ${size / 2 - 2} ${size / 2 - 2} Z" fill="#C8102E"/>
       </g>
-    </a>
+    </g>
   `;
 }
 
@@ -1961,7 +1962,9 @@ async function renderBannerWithPuppeteer(bannerData) {
       </div>` : ''}
       ${showQrCode ? `
       <div style="position:absolute; bottom:16px; right:16px; z-index:4;">
-        ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://bookings.travelbellsimmigration.com', 0, 0, 95)}
+        <svg width="111" height="133" viewBox="0 0 111 133" xmlns="http://www.w3.org/2000/svg">
+          ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://bookings.travelbellsimmigration.com', 0, 0, 95)}
+        </svg>
       </div>` : ''}
     </div>
 
@@ -2769,7 +2772,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { autoGenerateBilingualCampaign, translateToFrench, generateBannerSVG, createZipArchive, server };
+module.exports = { autoGenerateBilingualCampaign, translateToFrench, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, server };
 
 
 
