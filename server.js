@@ -903,6 +903,7 @@ function generateBannerSVG({
     ${renderNativeSvgTextLines(safeSubtitle, 0, showBadge ? 210 : 150, 48, 30, '#002B49', 22, '700', 'start', 'Montserrat')}
 
     <!-- BULLETS CARD - SPACED EVENLY WITHOUT EMPTY SPACE -->
+    ${showBullets ? `
     <g transform="translate(0, ${showBadge ? '320' : '260'})" filter="url(#shadowStory)">
       <rect width="1000" height="540" rx="24" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="2.5"/>
       <rect x="0" y="0" width="12" height="540" fill="${activeHighlightColor}" rx="6"/>
@@ -934,7 +935,7 @@ function generateBannerSVG({
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet4, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
       </g>
-    </g>
+    </g>` : ''}
   </g>
 
   <!-- CTA BANNER BAR -->
@@ -946,6 +947,7 @@ function generateBannerSVG({
   </a>
 
   <!-- FOOTER WITH 4 UNIFORM CRIMSON PILLS -->
+  ${showFooter ? `
   <g transform="translate(0, 1750)">
     <rect width="1080" height="170" fill="#002B49"/>
     <rect width="1080" height="6" fill="${activeHighlightColor}"/>
@@ -962,7 +964,7 @@ function generateBannerSVG({
       <rect x="520" y="70" width="480" height="52" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="760" y="103" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
-  </g>
+  </g>` : ''}
 </svg>`;
     return 'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64');
   }
@@ -1027,6 +1029,7 @@ function generateBannerSVG({
     ${renderNativeSvgTextLines(safeSubtitle, 0, showBadge ? 158 : 116, 62, 22, '#002B49', 17, '700', 'start', 'Montserrat')}
 
     <!-- BULLETS CARD -->
+    ${showBullets ? `
     <g transform="translate(0, ${showBadge ? '198' : '154'})" filter="url(#shadowLand)">
       <rect width="771" height="202" rx="14" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="2"/>
       <rect x="0" y="0" width="8" height="202" fill="${activeHighlightColor}" rx="4"/>
@@ -1058,7 +1061,7 @@ function generateBannerSVG({
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet4, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
       </g>
-    </g>
+    </g>` : ''}
   </g>
 
   <!-- CTA BANNER BAR -->
@@ -1070,6 +1073,7 @@ function generateBannerSVG({
   </a>
 
   <!-- FOOTER INFO BAR WITH 4 UNIFORM CRIMSON PILLS -->
+  ${showFooter ? `
   <g transform="translate(0, 574)">
     <rect width="1200" height="56" fill="#002B49"/>
     
@@ -1096,7 +1100,7 @@ function generateBannerSVG({
       <rect width="284" height="42" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="142" y="27" font-family="'Montserrat', sans-serif" font-weight="800" font-size="11.5" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
-  </g>
+  </g>` : ''}
 </svg>`;
     return 'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64');
   }
@@ -1159,6 +1163,7 @@ function generateBannerSVG({
     ${renderNativeSvgTextLines(safeSubtitle, 0, showBadge ? 180 : 130, 42, 24, '#475569', 17, '700', 'start', 'Montserrat')}
 
     <!-- BULLETS CARD — FULL WIDTH 570PX FIT -->
+    ${showBullets ? `
     <g transform="translate(0, ${showBadge ? '235' : '185'})" filter="url(#shadow)">
       <rect width="570" height="410" rx="18" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="1.5"/>
       <rect x="0" y="0" width="8" height="410" fill="${activeHighlightColor}" rx="4"/>
@@ -1190,7 +1195,7 @@ function generateBannerSVG({
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet4, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
       </g>
-    </g>
+    </g>` : ''}
   </g>
 
   <!-- CTA BANNER BAR -->
@@ -1202,6 +1207,7 @@ function generateBannerSVG({
   </a>
 
   <!-- FOOTER WITH 4 UNIFORM CRIMSON PILLS -->
+  ${showFooter ? `
   <g transform="translate(0, 875)">
     <rect width="1080" height="205" fill="#002B49"/>
     <rect width="1080" height="6" fill="${activeHighlightColor}"/>
@@ -1218,7 +1224,7 @@ function generateBannerSVG({
       <rect x="520" y="70" width="480" height="50" rx="14" fill="#5B1425" stroke="#8B1E38" stroke-width="1.2"/>
       <text x="760" y="102" font-family="'Montserrat', sans-serif" font-weight="800" font-size="16.5" fill="#FFFFFF" text-anchor="middle">${locationText}</text>
     </g>
-  </g>
+  </g>` : ''}
 </svg>`;
   return 'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64');
 }
