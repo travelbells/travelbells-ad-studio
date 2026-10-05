@@ -2022,7 +2022,7 @@ async function renderBannerWithPuppeteer(bannerData) {
       line-height: 1.35;
     }
 
-    /* Multi-Pillar Corporate Agency Footer - Much Bigger Phone & Email */
+    /* Multi-Pillar Corporate Agency Footer - 2x2 Grid Layout for 100% Full Text Fit */
     .agency-footer-container {
       width: 100%;
       display: flex;
@@ -2057,25 +2057,26 @@ async function renderBannerWithPuppeteer(bannerData) {
       background: #002B49;
       color: #FFFFFF;
       border-radius: 4px 4px 12px 12px;
-      padding: ${isLandscape ? '10px 16px' : isStory ? '18px 24px' : '14px 20px'};
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      flex-wrap: nowrap;
-      overflow: hidden;
-      gap: 14px;
+      padding: ${isLandscape ? '8px 14px' : isStory ? '16px 20px' : '10px 14px'};
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: ${isLandscape ? '6px 12px' : isStory ? '12px 18px' : '8px 14px'};
       border-top: 3px solid #C8102E;
-      font-size: ${isLandscape ? '14px' : isStory ? '22px' : '18px'};
+      font-size: ${isLandscape ? '13px' : isStory ? '20px' : '15px'};
       font-weight: 700;
     }
     .contact-item {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      padding: ${isLandscape ? '4px 8px' : isStory ? '8px 14px' : '6px 12px'};
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
     .contact-item-highlight {
       font-size: ${isLandscape ? '16px' : isStory ? '26px' : '22px'};
@@ -2232,10 +2233,26 @@ function parseUniversalPrompt(rawInput) {
   let cleanSubtitle = clauses.length > 1 ? clauses.slice(1).join(' • ') : "Regulated RCIC Legal Guidance & Application Support Across Canada";
   if (cleanSubtitle.length > 300) cleanSubtitle = cleanSubtitle.substring(0, 297) + "...";
 
-  // Bullets construction
-  let b1 = customLines[0] || (clauses[0] ? `Targeted legal pathways for ${clauses[0].toLowerCase()}` : "Targeted PR pathways & Work Permit options across Canada");
-  let b2 = customLines[1] || (clauses[1] ? clauses[1] : "Employer job offer & Provincial Nomination (PNP) assessment");
-  let b3 = customLines[2] || (clauses[2] ? clauses[2] : "Spouse Open Work Permit (SOWP) eligibility for accompanying family");
+  // Bullets construction — Ensure Bullet 1 never duplicates the Headline wording
+  let defaultB1 = "Targeted PR pathways & Work Permit options across Canada";
+  if (customLines[0]) {
+    defaultB1 = customLines[0];
+  } else if (clauses.length > 1 && clauses[1] && clauses[1].length > 4) {
+    defaultB1 = clauses[1];
+  } else if (clauses.length > 2 && clauses[2] && clauses[2].length > 4) {
+    defaultB1 = clauses[2];
+  }
+
+  // Prevent any word duplication with cleanTitle
+  const titleLower = cleanTitle.toLowerCase();
+  const b1Lower = defaultB1.toLowerCase();
+  if (b1Lower.includes(titleLower) || (titleLower.length > 10 && b1Lower.includes(titleLower.substring(0, 10)))) {
+    defaultB1 = "Targeted PR pathways & Work Permit options across Canada";
+  }
+
+  let b1 = defaultB1;
+  let b2 = customLines[1] || (clauses[2] ? clauses[2] : "Employer job offer & Provincial Nomination (PNP) assessment");
+  let b3 = customLines[2] || (clauses[3] ? clauses[3] : "Spouse Open Work Permit (SOWP) eligibility for accompanying family");
   let b4 = customLines[3] || "Complete legal representation by licensed RCIC consultants";
 
   const formatBullet = (str) => {

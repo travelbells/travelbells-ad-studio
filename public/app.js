@@ -21,21 +21,21 @@ function setVal(id, val) {
 // Interactive Graphic Preview Wrapper with Clickable Hotspot
 function renderInteractiveGraphicHtml(dataUri) {
   const fmt = document.getElementById('canvas-format')?.value || 'vertical';
-  let bottomPos = '11.8%';
-  let heightPos = '4.2%';
-  let leftPos = '3.5%';
-  let rightPos = '3.5%';
+  let bottomPos = '20.4%';
+  let heightPos = '6.2%';
+  let leftPos = '2.8%';
+  let rightPos = '2.8%';
 
   if (fmt === 'story') {
     bottomPos = '9.8%';
-    heightPos = '3.2%';
-    leftPos = '4.5%';
-    rightPos = '4.5%';
+    heightPos = '4.0%';
+    leftPos = '3.7%';
+    rightPos = '3.7%';
   } else if (fmt === 'landscape') {
-    bottomPos = '12.2%';
-    heightPos = '5.4%';
-    leftPos = '3.5%';
-    rightPos = '3.5%';
+    bottomPos = '10.2%';
+    heightPos = '7.6%';
+    leftPos = '2.0%';
+    rightPos = '2.0%';
   }
 
   return `
