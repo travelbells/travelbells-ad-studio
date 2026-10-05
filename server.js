@@ -643,6 +643,9 @@ function generateBannerSVG({
   showSlogan = true,
   showBadge = true,
   showFooter = true,
+  showQrCode = true,
+  showSocialProof = true,
+  trustBadge = 'cicc',
   fontStyle = 'playfair-montserrat',
   textColor = 'crimson-red',
   extraText = '',
@@ -677,19 +680,19 @@ function generateBannerSVG({
   let rawTitle = title || "Work Permit Ending? Don't Exit, Upgrade";
   let rawSubtitle = subtitle || "Your time in Canada doesn't have to stop here, Shift gears with a Study Visa and keep moving forward.";
   let rawBadge = badgeText || "STUDY VISA UPGRADE";
-  let rawB1 = b1 || defaultB1;
-  let rawB2 = b2 || defaultB2;
-  let rawB3 = b3 || defaultB3;
-  let rawB4 = b4 || defaultB4;
+  let rawB1 = b1 !== undefined ? b1 : defaultB1;
+  let rawB2 = b2 !== undefined ? b2 : defaultB2;
+  let rawB3 = b3 !== undefined ? b3 : defaultB3;
+  let rawB4 = b4 !== undefined ? b4 : defaultB4;
 
   if (isFr) {
     if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawTitle)) rawTitle = translateToFrench(rawTitle);
     if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawSubtitle)) rawSubtitle = translateToFrench(rawSubtitle);
     if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawBadge)) rawBadge = translateToFrench(rawBadge);
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB1)) rawB1 = translateToFrench(rawB1);
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB2)) rawB2 = translateToFrench(rawB2);
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB3)) rawB3 = translateToFrench(rawB3);
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB4)) rawB4 = translateToFrench(rawB4);
+    if (rawB1 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB1)) rawB1 = translateToFrench(rawB1);
+    if (rawB2 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB2)) rawB2 = translateToFrench(rawB2);
+    if (rawB3 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB3)) rawB3 = translateToFrench(rawB3);
+    if (rawB4 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB4)) rawB4 = translateToFrench(rawB4);
   }
 
   const safeTitle = rawTitle;
@@ -703,7 +706,12 @@ function generateBannerSVG({
 
   const activeHighlightColor = '#C8102E';
   const ctaText = isFr ? "👉 RÉSERVEZ VOTRE CONSULTATION STRATÉGIQUE RCIC AUJOURD'HUI" : "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY";
-  const rcicMemberText = isFr ? "🇨🇦 Membre CICC Licencié" : "🇨🇦 Licensed RCIC Member";
+  
+  let rcicMemberText = isFr ? "🇨🇦 Membre CICC Licencié" : "🇨🇦 Licensed RCIC Member";
+  if (trustBadge === 'fasttrack') rcicMemberText = isFr ? "⚡ Traitement Accéléré 2026" : "⚡ Fast-Track Processing 2026";
+  else if (trustBadge === 'approval') rcicMemberText = isFr ? "🔥 Taux d'Approbation Élevé" : "🔥 High Approval Rate";
+  else if (trustBadge === 'freecheck') rcicMemberText = isFr ? "🎯 Évaluation Gratuite 15-Min" : "🎯 Free 15-Min Assessment";
+
   const locationText = isFr ? "📍 Ontario, Canada • Membre CICC Licencié" : "📍 Ontario, Canada • Licensed RCIC Member";
 
   function generateSvgQrCode(urlStr = 'https://travelbellsimmigration.com/book-appointment', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
@@ -885,10 +893,10 @@ function generateBannerSVG({
     <image href="${photoSrc}" width="1000" height="600" preserveAspectRatio="xMidYMid slice" clip-path="url(#storyPhotoClip)"/>
     
     <!-- Social Proof Star Rating Card Overlay (Top-Left of Photo) -->
-    ${renderSocialProofSvg(24, 24, 1.1)}
+    ${showSocialProof ? renderSocialProofSvg(24, 24, 1.1) : ''}
     
     <!-- Dynamic Booking QR Code Embed (Bottom-Right of Photo) -->
-    ${generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 840, 420, 130)}
+    ${showQrCode ? generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 840, 420, 130) : ''}
   </g>
 
   <!-- CONTENT SECTION -->
@@ -908,33 +916,37 @@ function generateBannerSVG({
       <rect width="1000" height="540" rx="24" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="2.5"/>
       <rect x="0" y="0" width="12" height="540" fill="${activeHighlightColor}" rx="6"/>
 
+      ${bullet1 ? `
       <!-- Bullet 1 -->
       <g transform="translate(40, 40)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet1, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet2 ? `
       <!-- Bullet 2 -->
       <g transform="translate(40, 170)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet2, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet3 ? `
       <!-- Bullet 3 -->
       <g transform="translate(40, 300)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet3, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet4 ? `
       <!-- Bullet 4 -->
       <g transform="translate(40, 430)">
         <circle cx="20" cy="20" r="20" fill="${activeHighlightColor}"/>
         <path d="M13 20 L18 25 L27 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet4, 60, 28, 48, 30, '#002B49', 22, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
     </g>` : ''}
   </g>
 
@@ -1011,10 +1023,10 @@ function generateBannerSVG({
     <image href="${photoSrc}" width="360" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#landPhotoClip)"/>
     
     <!-- Social Proof Star Rating Overlay (Top-Left) -->
-    ${renderSocialProofSvg(12, 14, 0.9)}
+    ${showSocialProof ? renderSocialProofSvg(12, 14, 0.9) : ''}
 
     <!-- Dynamic Booking QR Code Embed (Bottom-Right) -->
-    ${generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 230, 250, 110)}
+    ${showQrCode ? generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 230, 250, 110) : ''}
   </g>
 
   <!-- RIGHT COLUMN: BADGE, HEADLINE, SUBTITLE, BULLETS CARD -->
@@ -1034,33 +1046,37 @@ function generateBannerSVG({
       <rect width="771" height="202" rx="14" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="2"/>
       <rect x="0" y="0" width="8" height="202" fill="${activeHighlightColor}" rx="4"/>
 
+      ${bullet1 ? `
       <!-- Bullet 1 -->
       <g transform="translate(22, 10)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet1, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet2 ? `
       <!-- Bullet 2 -->
       <g transform="translate(22, 58)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet2, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet3 ? `
       <!-- Bullet 3 -->
       <g transform="translate(22, 106)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet3, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet4 ? `
       <!-- Bullet 4 -->
       <g transform="translate(22, 154)">
         <circle cx="13" cy="13" r="13" fill="${activeHighlightColor}"/>
         <path d="M8 13 L12 17 L18 10" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet4, 35, 18, 54, 20, '#002B49', 16.5, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
     </g>` : ''}
   </g>
 
@@ -1146,10 +1162,10 @@ function generateBannerSVG({
     <image href="${photoSrc}" width="430" height="645" preserveAspectRatio="xMidYMid slice" clip-path="url(#photoClip)"/>
     
     <!-- Social Proof Star Rating Overlay (Top-Left) -->
-    ${renderSocialProofSvg(16, 16, 0.95)}
+    ${showSocialProof ? renderSocialProofSvg(16, 16, 0.95) : ''}
 
     <!-- Dynamic Booking QR Code Embed (Bottom-Right) -->
-    ${generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 285, 470, 125)}
+    ${showQrCode ? generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 285, 470, 125) : ''}
   </g>
 
   <g transform="translate(480, 135)">
@@ -1168,33 +1184,37 @@ function generateBannerSVG({
       <rect width="570" height="410" rx="18" fill="#FFFFFF" stroke="${activeHighlightColor}" stroke-width="1.5"/>
       <rect x="0" y="0" width="8" height="410" fill="${activeHighlightColor}" rx="4"/>
 
+      ${bullet1 ? `
       <!-- Bullet 1 -->
       <g transform="translate(25, 20)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet1, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet2 ? `
       <!-- Bullet 2 -->
       <g transform="translate(25, 110)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet2, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet3 ? `
       <!-- Bullet 3 -->
       <g transform="translate(25, 200)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet3, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
 
+      ${bullet4 ? `
       <!-- Bullet 4 -->
       <g transform="translate(25, 290)">
         <circle cx="16" cy="16" r="15" fill="${activeHighlightColor}"/>
         <path d="M11 16 L15 20 L22 12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
         ${renderNativeSvgTextLines(bullet4, 45, 22, 46, 23, '#002B49', 18, '800', 'start', 'Montserrat')}
-      </g>
+      </g>` : ''}
     </g>` : ''}
   </g>
 
@@ -1473,11 +1493,19 @@ async function renderBannerWithPuppeteer(bannerData) {
     showBullets = true,
     showBadge = true,
     showFooter = true,
+    showQrCode = true,
+    showSocialProof = true,
+    trustBadge = 'cicc',
     prompt, tagline, customPhotoUrl, photoUrl,
     b1, b2, b3, b4
   } = bannerData;
 
   const isFr = language === 'fr' || language === 'bilingual' || bannerData.lang === 'fr';
+
+  let rcicMemberText = isFr ? "🇨🇦 Membre CICC Licencié" : "🇨🇦 Licensed RCIC Member";
+  if (trustBadge === 'fasttrack') rcicMemberText = isFr ? "⚡ Traitement Accéléré 2026" : "⚡ Fast-Track Processing 2026";
+  else if (trustBadge === 'approval') rcicMemberText = isFr ? "🔥 Taux d'Approbation Élevé" : "🔥 High Approval Rate";
+  else if (trustBadge === 'freecheck') rcicMemberText = isFr ? "🎯 Évaluation Gratuite 15-Min" : "🎯 Free 15-Min Assessment";
 
   let rawTitle = bannerData.title || bannerData.headline || bannerData.tagline || "Work Permit Ending? Don't Exit, Upgrade";
   let rawSubtitle = bannerData.subtitle || "Your time in Canada doesn't have to stop here";
@@ -1555,10 +1583,10 @@ async function renderBannerWithPuppeteer(bannerData) {
   let defaultB3 = isFr ? "Éligibilité au permis de travail ouvert pour conjoint (PTO)" : "Spouse Open Work Permit (SOWP) eligibility included";
   let defaultB4 = isFr ? "Maintien du statut légal et accès à la Résidence Permanente (RP)" : "Maintain legal status & transition to Permanent Residency (PR)";
 
-  let bullet1 = b1 || defaultB1;
-  let bullet2 = b2 || defaultB2;
-  let bullet3 = b3 || defaultB3;
-  let bullet4 = b4 || defaultB4;
+  let bullet1 = b1 !== undefined ? b1 : defaultB1;
+  let bullet2 = b2 !== undefined ? b2 : defaultB2;
+  let bullet3 = b3 !== undefined ? b3 : defaultB3;
+  let bullet4 = b4 !== undefined ? b4 : defaultB4;
 
   if (isFr) {
     if (b1 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(b1)) bullet1 = translateToFrench(b1);
@@ -1909,7 +1937,7 @@ async function renderBannerWithPuppeteer(bannerData) {
       ${logoBase64 ? `<img src="${logoBase64}" alt="TravelBells Logo" class="header-logo-img" />` : `<h2 style="font-family:'Playfair Display', serif; font-size:38px; color:#C8102E;">TravelBells <span style="font-size:24px; color:#002B49;">Immigration</span></h2>`}
     </div>
     <div class="rcic-seal-pill">
-      <span>🇨🇦 Licensed RCIC Member</span>
+      <span>${rcicMemberText}</span>
     </div>
   </div>
 
@@ -1920,6 +1948,15 @@ async function renderBannerWithPuppeteer(bannerData) {
     <div class="photo-card-wrapper">
       <img src="${t.photoUrl}" alt="Canadian Immigration Applicant" class="photo-card-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80';" />
       <div class="photo-overlay-gradient"></div>
+      ${showSocialProof ? `
+      <div style="position:absolute; top:16px; left:16px; background:#FFFFFF; border:2px solid #0284C7; border-radius:30px; padding:6px 14px; font-weight:800; font-size:13px; color:#002B49; box-shadow:0 6px 16px rgba(0,0,0,0.15); display:flex; align-items:center; gap:6px; z-index:4;">
+        <span>⭐⭐⭐⭐⭐</span> <span>4.9/5 (500+ Clients)</span>
+      </div>` : ''}
+      ${showQrCode ? `
+      <div style="position:absolute; bottom:16px; right:16px; background:#FFFFFF; border:2px solid #002B49; border-radius:12px; padding:8px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.2); z-index:4;">
+        <div style="font-weight:800; font-size:10px; color:#C8102E; margin-bottom:4px;">SCAN TO BOOK</div>
+        <div style="width:85px; height:85px; background:#002B49; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:24px; font-weight:900;">QR</div>
+      </div>` : ''}
     </div>
 
     <!-- Right Text & Bullet Content Panel -->
@@ -1939,10 +1976,10 @@ async function renderBannerWithPuppeteer(bannerData) {
       <!-- Bullet Points -->
       ${showBullets ? `
       <div class="bullets-container">
-        <div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet1}</span></div>
-        <div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet2}</span></div>
-        <div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet3}</span></div>
-        <div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet4}</span></div>
+        ${bullet1 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet1}</span></div>` : ''}
+        ${bullet2 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet2}</span></div>` : ''}
+        ${bullet3 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet3}</span></div>` : ''}
+        ${bullet4 ? `<div class="bullet-row"><div class="bullet-icon">✓</div><span class="bullet-text">${bullet4}</span></div>` : ''}
       </div>` : ''}
     </div>
   </div>

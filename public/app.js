@@ -34,50 +34,46 @@ function renderInteractiveGraphicHtml(dataUri) {
 
 // Global Graphic Renderer
 function updateGraphicDisplay() {
-  const renderBox = document.getElementById('canvas-render-box');
-  const studioBox = document.getElementById('studio-banner-svg');
-
   const lang = activeGraphicLang || (document.getElementById('input-language')?.value === 'fr' ? 'fr' : 'en');
   const format = document.getElementById('canvas-format')?.value || 'vertical';
 
-  let uri = null;
-  if (activeBilingualData && activeBilingualData.graphics && activeBilingualData.graphics[lang]) {
-    uri = activeBilingualData.graphics[lang][format];
+  // Clear cached graphics to guarantee fresh live render with modified DOM inputs
+  if (activeBilingualData) {
+    activeBilingualData.graphics = { en: {}, fr: {} };
   }
 
-  if (uri) {
-    if (renderBox) {
-      renderBox.innerHTML = renderInteractiveGraphicHtml(uri);
-    }
-    if (studioBox) {
-      studioBox.innerHTML = `<img src="${uri}" alt="Studio Banner Graphic" style="width: 100%; height: auto; border-radius: 12px; display: block;" />`;
-    }
-  } else {
-    reRenderSingleGraphic(format, lang);
-  }
+  reRenderSingleGraphic(format, lang);
 }
 
-// Single Format Live Re-renderer via Puppeteer
+// Single Format Live Re-renderer via Puppeteer & SVG Engine
 async function reRenderSingleGraphic(fmt, lang) {
   fmt = fmt || document.getElementById('canvas-format')?.value || 'vertical';
   lang = lang || activeGraphicLang || 'en';
 
   const renderBox = document.getElementById('canvas-render-box');
-  const langObj = activeBilingualData?.campaign ? (lang === 'fr' ? activeBilingualData.campaign.fr : activeBilingualData.campaign.en) : null;
 
-  const headline = langObj?.title || document.getElementById('canvas-headline')?.value || document.getElementById('quick-tagline-input')?.value || 'Travelbells Immigration';
-  const subtitle = langObj?.subtitle || document.getElementById('canvas-subtitle')?.value || '';
-  const badgeText = document.getElementById('canvas-badge-input')?.value || langObj?.badgeText || 'STUDY VISA UPGRADE';
-  const b1 = langObj?.bullets?.[0] || document.getElementById('canvas-b1')?.value || '';
-  const b2 = langObj?.bullets?.[1] || document.getElementById('canvas-b2')?.value || '';
-  const b3 = langObj?.bullets?.[2] || document.getElementById('canvas-b3')?.value || '';
-  const b4 = langObj?.bullets?.[3] || document.getElementById('canvas-b4')?.value || '';
+  // ALWAYS prioritize direct user inputs from the UI inputs over cached campaign objects!
+  const headline = document.getElementById('canvas-headline')?.value || document.getElementById('quick-tagline-input')?.value || 'Travelbells Immigration';
+  const subtitle = document.getElementById('canvas-subtitle')?.value || '';
+  const badgeText = document.getElementById('canvas-badge-input')?.value || 'STUDY VISA UPGRADE';
+  
+  const b1 = document.getElementById('canvas-b1')?.value !== undefined ? document.getElementById('canvas-b1').value : '';
+  const b2 = document.getElementById('canvas-b2')?.value !== undefined ? document.getElementById('canvas-b2').value : '';
+  const b3 = document.getElementById('canvas-b3')?.value !== undefined ? document.getElementById('canvas-b3').value : '';
+  const b4 = document.getElementById('canvas-b4')?.value !== undefined ? document.getElementById('canvas-b4').value : '';
 
   const footerCta = document.getElementById('footer-cta-input')?.value;
   const footerPhone = document.getElementById('footer-phone-input')?.value;
   const footerWebsite = document.getElementById('footer-website-input')?.value;
   const footerEmail = document.getElementById('footer-email-input')?.value;
   const footerLocation = document.getElementById('footer-location-input')?.value;
+
+  const showBadge = document.getElementById('toggle-badge')?.value !== 'disabled';
+  const showBullets = document.getElementById('toggle-bullets')?.value !== 'disabled';
+  const showFooter = document.getElementById('toggle-footer')?.value !== 'disabled';
+  const showQrCode = document.getElementById('toggle-qr-code')?.value !== 'disabled';
+  const showSocialProof = document.getElementById('toggle-social-proof')?.value !== 'disabled';
+  const trustBadge = document.getElementById('select-trust-badge')?.value || 'cicc';
 
   if (renderBox && (!renderBox.querySelector('img') || renderBox.innerHTML.includes('⚙️'))) {
     renderBox.innerHTML = `<div style="padding:40px; text-align:center; color:#64748B;"><div style="font-size:32px; margin-bottom:8px;">⚙️</div><strong>Re-rendering 300 DPI Creative...</strong></div>`;
@@ -94,6 +90,12 @@ async function reRenderSingleGraphic(fmt, lang) {
         subtitle,
         badgeText,
         b1, b2, b3, b4,
+        showBadge,
+        showBullets,
+        showFooter,
+        showQrCode,
+        showSocialProof,
+        trustBadge,
         footerCta,
         footerPhone,
         footerWebsite,
