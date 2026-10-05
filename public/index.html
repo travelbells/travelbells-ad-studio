@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travelbells Social Media Ad Studio & Webhook Dispatcher</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+</head>
+<body class="white-red-theme">
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-container">
+        <img src="logo.jpg" alt="TravelBells Immigration Logo" class="header-logo-img" />
+      </div>
+      <span class="rcic-badge">CRIC / RCIC Verified Firm</span>
+    </div>
+    <div class="header-right">
+      <div class="header-metric" style="background: rgba(16, 185, 129, 0.08); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3);">
+        <span class="metric-label" style="color: #10B981; font-weight: 700;">💾 Design State</span>
+        <span class="metric-val" id="draft-saved-status" style="font-size: 12px; color: #047857;">🟢 Ready</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="openCampaignVaultModal()" title="Saved Campaign Vault Database">
+        <span class="btn-icon">📚</span> Campaign Vault
+      </button>
+      <button class="btn btn-success" onclick="openDispatchWebhookModal()" style="background:#10B981; color:#ffffff; font-weight:800; border:none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);" title="Dispatch live campaign ad & banner to Meta / Make.com">
+        <span class="btn-icon">⚡</span> Webhook Dispatch to Make.com
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="saveDraftStateToLocalStorage(true)" title="Save Current State">
+        <span class="btn-icon">💾</span> Save Draft
+      </button>
+    </div>
+  </header>
+
+  <!-- Clean 1-Page Layout -->
+  <div class="app-layout-clean">
+    <main class="app-content-clean">
+      
+      <!-- HERO CARD: 1-Click Text-to-Creative Engine -->
+      <div class="hero-prompt-card">
+        <div class="hero-prompt-header">
+          <div class="hero-prompt-title-box">
+            <span class="hero-sparkle-icon">⚡</span>
+            <div>
+              <h2 class="hero-prompt-title">AI Ad Campaign & Creative Generator</h2>
+              <p class="hero-prompt-sub">Type your ad topic or instruction note below. AI auto-generates 300 DPI graphics & copy in <strong>English & Native IRCC French</strong>!</p>
+            </div>
+          </div>
+          <div class="hero-badges">
+            <span class="hero-pill-tag purple">Puppeteer 300 DPI</span>
+            <span class="hero-pill-tag green">IRCC Native FR</span>
+            <span class="hero-pill-tag red">Multi-Format (1:1 / 9:16 / 16:9)</span>
+          </div>
+        </div>
+
+        <!-- Input & Auto-Generate Action Bar -->
+        <div class="hero-input-row">
+          <input type="text" id="quick-tagline-input" class="hero-input-field" placeholder="e.g. Mobilité Francophone work permit without LMIA for French speakers in Ontario..." />
+          <button class="btn btn-primary hero-submit-btn" onclick="generate1ClickBilingualCampaign()">
+            🚀 Auto-Generate Creative (EN + FR)
+          </button>
+        </div>
+
+        <!-- Quick Topic Presets -->
+        <div class="hero-presets-row">
+          <span class="preset-label">Quick Topics:</span>
+          <button class="preset-chip" onclick="applyQuickTopic('phonerepair')">📱 Phone Repair Tech</button>
+          <button class="preset-chip" onclick="applyQuickTopic('mobilite')">🇫🇷 Mobilité Francophone (No LMIA)</button>
+          <button class="preset-chip" onclick="applyQuickTopic('express')">🇨🇦 Express Entry Draws</button>
+          <button class="preset-chip" onclick="applyQuickTopic('study')">🎓 Work Permit Ending Upgrade</button>
+          <button class="preset-chip" onclick="applyQuickTopic('lmia')">💼 B2B Corporate LMIA</button>
+        </div>
+      </div>
+
+      <!-- MAIN DUAL WORKSPACE: Graphics (Left) + Multi-Platform Copy (Right) -->
+      <div class="studio-workspace-grid">
+        
+        <!-- LEFT COLUMN: Agency 300 DPI Visual Graphic Preview -->
+        <div class="card glass-card graphic-workspace-card">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-section-title">🖼️ 300 DPI Agency Graphic Preview</h3>
+              <p class="card-section-sub">Rendered crisp HTML5 graphics for feed, stories & banners</p>
+            </div>
+            
+            <!-- Language Selector Tabs -->
+            <div class="lang-switch-tabs">
+              <button class="lang-tab active" id="tab-lang-en" onclick="switchGraphicLanguage('en')">🇨🇦 English</button>
+              <button class="lang-tab" id="tab-lang-fr" onclick="switchGraphicLanguage('fr')">🇫🇷 Native French</button>
+            </div>
+          </div>
+
+          <!-- Format Selector Pills -->
+          <div class="format-pill-row">
+            <button class="fmt-pill active" onclick="switchAspectFormat('vertical', this)">📷 1:1 Feed Post (1080×1080)</button>
+            <button class="fmt-pill" onclick="switchAspectFormat('story', this)">📱 9:16 Story / TikTok (1080×1920)</button>
+            <button class="fmt-pill" onclick="switchAspectFormat('landscape', this)">💼 16:9 Banner (1200×630)</button>
+          </div>
+
+          <!-- Human Photo Preset & Image Importer Selector Bar -->
+          <div class="photo-selector-bar">
+            <span class="photo-selector-label">📸 Human Photo:</span>
+            <button class="photo-chip" onclick="switchCreativePhoto('phone_repair', this)">📱 Phone Repair</button>
+            <button class="photo-chip active" onclick="switchCreativePhoto('student', this)">🎓 Student</button>
+            <button class="photo-chip" onclick="switchCreativePhoto('graduate', this)">🎓 Graduate</button>
+            <button class="photo-chip" onclick="switchCreativePhoto('francophone', this)">🇫🇷 Francophone</button>
+            <button class="photo-chip" onclick="switchCreativePhoto('professional', this)">💼 Professional</button>
+            <button class="photo-chip" onclick="switchCreativePhoto('skyline', this)">🇨🇦 Skyline</button>
+            <button class="photo-chip" onclick="switchCreativePhoto('family', this)">👨‍👩‍👧 Family</button>
+            <button class="photo-chip" onclick="promptCustomPhotoUrl()">🔗 Paste URL</button>
+          </div>
+
+          <!-- Dynamic Live Stock Photo Search Box -->
+          <div class="photo-search-bar" style="margin-bottom:12px; display:flex; gap:8px; align-items:center;">
+            <input type="text" id="photo-search-input" class="badge-text-input" placeholder="Search custom photo (e.g. bakery chef, pilot, carpenter, dentist, truck driver)..." style="flex:1; padding:8px 12px; font-size:12px;" onkeydown="if(event.key==='Enter') searchCustomPhotosUI()" />
+            <button class="btn btn-secondary btn-sm" onclick="searchCustomPhotosUI()" style="white-space:nowrap; font-weight:700; padding:8px 14px; font-size:12px;">🔍 Search Photo</button>
+          </div>
+          <div id="photo-search-results-container" style="margin-bottom:12px; display:none; flex-wrap:wrap; gap:8px; background:#F8FAFC; padding:10px; border-radius:8px; border:1px solid #E2E8F0;">
+          </div>
+
+          <!-- Background Watermark & Texture Selector Bar -->
+          <div class="watermark-selector-bar">
+            <span class="photo-selector-label">🎨 Background Watermark:</span>
+            <button class="photo-chip watermark-chip active" onclick="switchWatermarkStyle('maple', this)">🇨🇦 Maple Leaf</button>
+            <button class="photo-chip watermark-chip" onclick="switchWatermarkStyle('cicc', this)">📜 CICC Seal</button>
+            <button class="photo-chip watermark-chip" onclick="switchWatermarkStyle('logo', this)">🏢 Travelbells Logo</button>
+            <button class="photo-chip watermark-chip" onclick="switchWatermarkStyle('waves', this)">🌊 Waves</button>
+            <button class="photo-chip watermark-chip" onclick="switchWatermarkStyle('none', this)">⚪ Plain White</button>
+          </div>
+
+          <!-- Category Badge Pill Editor & Quick Selector Bar -->
+          <div class="badge-editor-bar">
+            <span class="badge-editor-label">🏷️ Category Pill Badge:</span>
+            <input type="text" id="canvas-badge-input" value="CUSTOM IMMIGRATION ADVISORY" placeholder="Type custom badge text..." oninput="updateBadgeTextFromInput(this.value)" class="badge-text-input" />
+            <div class="badge-chips-group">
+              <button class="photo-chip" onclick="setPresetBadge('ONTARIO OINP WORKER')">🇨🇦 Ontario OINP</button>
+              <button class="photo-chip" onclick="setPresetBadge('SANS EIMT / NO LMIA')">⚡ No LMIA</button>
+              <button class="photo-chip" onclick="setPresetBadge('FMCSP FRANCOPHONE PILOT')">🇫🇷 FMCSP Pilot</button>
+              <button class="photo-chip" onclick="setPresetBadge('STUDY VISA UPGRADE')">🎓 Study Upgrade</button>
+              <button class="photo-chip" onclick="setPresetBadge('EXPRESS ENTRY PR')">🏆 Express Entry</button>
+            </div>
+          </div>
+
+          <!-- Footer & Contact Details Editor Bar -->
+          <div class="footer-editor-bar">
+            <div class="footer-editor-header" onclick="toggleFooterEditorAccordion()">
+              <span class="badge-editor-label">🔻 📜 Footer & Contact Details Editor:</span>
+              <span class="footer-toggle-icon" id="footer-toggle-label">✏️ Edit Phone, Web & CTA</span>
+            </div>
+            <div class="footer-editor-grid" id="footer-editor-fields">
+              <div class="footer-field">
+                <label class="field-label-sm">📢 Footer CTA Button Text:</label>
+                <input type="text" id="footer-cta-input" value="BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY" class="badge-text-input" oninput="updateFooterFromInput()" placeholder="Type custom CTA button text..." />
+              </div>
+              <div class="footer-row-2">
+                <div class="footer-field">
+                  <label class="field-label-sm">📞 Phone Number:</label>
+                  <input type="text" id="footer-phone-input" value="+1 (647) 890-1476" class="badge-text-input" oninput="updateFooterFromInput()" />
+                </div>
+                <div class="footer-field">
+                  <label class="field-label-sm">🌐 Website URL:</label>
+                  <input type="text" id="footer-website-input" value="www.travelbellsimmigration.com" class="badge-text-input" oninput="updateFooterFromInput()" />
+                </div>
+              </div>
+              <div class="footer-row-2">
+                <div class="footer-field">
+                  <label class="field-label-sm">📧 Email Address:</label>
+                  <input type="text" id="footer-email-input" value="info@travelbellsimmigration.com" class="badge-text-input" oninput="updateFooterFromInput()" />
+                </div>
+                <div class="footer-field">
+                  <label class="field-label-sm">📍 Address & CICC Status:</label>
+                  <input type="text" id="footer-location-input" value="Ontario, Canada • Licensed CICC Member" class="badge-text-input" oninput="updateFooterFromInput()" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Bullet Points Live Editor Bar -->
+          <div class="footer-editor-bar" style="margin-top: 10px; border-color: #3B82F6;">
+            <div class="footer-editor-header" onclick="toggleBulletsEditorAccordion()">
+              <span class="badge-editor-label">📌 📝 4 Bullet Points Live Editor:</span>
+              <span class="footer-toggle-icon" id="bullets-toggle-label">✏️ Edit 4 Bullets Live</span>
+            </div>
+            <div class="footer-editor-grid" id="bullets-editor-fields">
+              <div class="footer-field">
+                <label class="field-label-sm">Bullet 1:</label>
+                <input type="text" id="canvas-b1" value="Accredited Diploma & Master's Degree options across Canada" class="badge-text-input" oninput="updateFooterFromInput()" placeholder="Type Bullet 1..." />
+              </div>
+              <div class="footer-field">
+                <label class="field-label-sm">Bullet 2:</label>
+                <input type="text" id="canvas-b2" value="Flexible admission options for low IELTS / CELPIP scores" class="badge-text-input" oninput="updateFooterFromInput()" placeholder="Type Bullet 2..." />
+              </div>
+              <div class="footer-field">
+                <label class="field-label-sm">Bullet 3:</label>
+                <input type="text" id="canvas-b3" value="Spouse Open Work Permit (SOWP) eligibility included" class="badge-text-input" oninput="updateFooterFromInput()" placeholder="Type Bullet 3..." />
+              </div>
+              <div class="footer-field">
+                <label class="field-label-sm">Bullet 4:</label>
+                <input type="text" id="canvas-b4" value="Maintain legal status & transition to Permanent Residency (PR)" class="badge-text-input" oninput="updateFooterFromInput()" placeholder="Type Bullet 4..." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden inputs for JS compatibility -->
+          <input type="hidden" id="input-category" value="study_permit" />
+          <input type="hidden" id="canvas-format" value="vertical" />
+          <input type="hidden" id="canvas-theme" value="travelbells-signature-light" />
+          <input type="hidden" id="canvas-headline" value="Work Permit Ending? Don't Exit, Upgrade" />
+          <input type="hidden" id="canvas-subtitle" value="Your time in Canada doesn't have to stop here" />
+
+          <!-- Live Canvas / Graphic Render Box -->
+          <div class="canvas-render-container" id="canvas-render-box">
+            <div class="canvas-placeholder-msg">
+              <div style="font-size: 48px; margin-bottom: 12px;">🎨</div>
+              <h4>Your High-Resolution Graphic Will Render Here</h4>
+              <p>Type a topic above and click <strong>Auto-Generate Creative</strong></p>
+            </div>
+          </div>
+
+          <!-- Download & Quick Export Bar -->
+          <div class="graphic-export-actions">
+            <button class="btn btn-primary btn-block" onclick="downloadHighResPng()">
+              📥 Download 300 DPI PNG
+            </button>
+            <button class="btn btn-secondary btn-block" onclick="downloadCampaignZipBundle()">
+              📦 Download 3-in-1 ZIP Bundle (1:1 + 9:16 + 16:9)
+            </button>
+            <button class="btn btn-success btn-block" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%); margin-top: 8px; font-weight: 800;" onclick="openDirectPublishModal()">
+              📲 Direct Publish to Instagram, Facebook & LinkedIn
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Multi-Platform Ad Copy & Video Script Workspace -->
+        <div class="card glass-card copy-workspace-card">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-section-title">📱 Multi-Channel Copy & Video Scripts</h3>
+              <p class="card-section-sub">Tailored text variations for social publishing</p>
+            </div>
+          </div>
+
+          <!-- Competitor Insights & Creative Strategy Benchmark Box -->
+          <div class="competitor-insights-card">
+            <div class="competitor-header">
+              <span class="competitor-icon">💡</span>
+              <div>
+                <h4 class="competitor-title">RCIC Competitor Insights & AI Strategy Ideas</h4>
+                <p class="competitor-sub">Analyzed benchmark suggestions to optimize your creative & conversion</p>
+              </div>
+            </div>
+            <div class="insights-container" id="competitor-insights-container">
+              <div class="insight-pill-item">
+                <span class="insight-badge red">🔥 Top RCIC Angle</span>
+                <span><strong>Deadline Hook:</strong> Mentioning 90-day status countdowns boosts CTR by +42%.</span>
+              </div>
+              <div class="insight-pill-item">
+                <span class="insight-badge blue">🖼️ Photo Benchmark</span>
+                <span><strong>Human Photo Card:</strong> 2-column lifestyle split builds 2.4x higher trust than text-only ads.</span>
+              </div>
+              <div class="insight-pill-item">
+                <span class="insight-badge green">🎯 High-Converting CTA</span>
+                <span><strong>Strategy Call:</strong> "Schedule Strategy Session" drives +35% more bookings.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Platform Selector Tabs -->
+          <div class="platform-tabs-row">
+            <button class="preview-tab active" data-platform="facebook">📘 Facebook</button>
+            <button class="preview-tab" data-platform="instagram">📸 Instagram</button>
+            <button class="preview-tab" data-platform="tiktok">🎵 TikTok Script</button>
+            <button class="preview-tab" data-platform="linkedin">💼 LinkedIn B2B</button>
+            <button class="preview-tab" data-platform="whatsapp">💬 WhatsApp</button>
+          </div>
+
+          <div class="copy-display-box">
+            <div class="copy-box-header">
+              <span id="current-platform-label" class="platform-active-name">📘 Facebook Feed Format</span>
+              <button class="btn btn-sm btn-outline" onclick="copyActiveText()">📋 Copy Text</button>
+            </div>
+            <textarea id="output-copy-area" class="copy-textarea" rows="16" placeholder="Generated ad copy text will appear here..."></textarea>
+          </div>
+
+          <!-- Action Buttons Bar -->
+          <div class="copy-actions-row">
+            <button class="btn btn-success btn-lg btn-block" onclick="openDispatchWebhookModal()" style="background:#10B981; color:#ffffff; font-weight:800; border:none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);">
+              ⚡ Dispatch This Campaign to Make.com Webhook
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DEDICATED SECTION: AI Custom Image Generator Studio -->
+      <div class="card glass-card ai-image-studio-card" style="margin-top: 24px; border: 1.5px solid #3B82F6; background: linear-gradient(180deg, #FFFFFF 0%, #EFF6FF 100%);">
+        <div class="card-header-flex">
+          <div>
+            <h3 class="card-section-title" style="color: #1E40AF;">🎨 AI Custom Image Studio (Text-to-Human-Photo Engine)</h3>
+            <p class="card-section-sub">Type any prompt or topic to generate custom AI photos for your Canadian immigration ads</p>
+          </div>
+          <span class="hero-pill-tag blue" style="background: #DBEAFE; color: #1E40AF; font-weight:800;">Free Unlimited AI Generation</span>
+        </div>
+
+        <div class="ai-studio-grid" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; align-items: start;">
+          <div class="ai-studio-inputs">
+            <div class="form-group">
+              <label style="font-weight:700; font-size:12px; color:#1E3A8A; margin-bottom:6px; display:block;">Describe Your Desired Photo / Message:</label>
+              <input type="text" id="ai-image-prompt-input" class="form-control" value="Young international student graduating in Canada wearing professional attire" placeholder="e.g. Young Indian student smiling at Canadian university holding diploma..." style="padding:12px; border-radius:8px; border:1px solid #93C5FD;" />
+            </div>
+
+            <div class="ai-preset-chips-row" style="margin-bottom:14px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span style="font-size:11px; font-weight:700; color:#3B82F6; align-self:center;">Topic Presets:</span>
+              <button class="preset-chip" onclick="applyAiImagePreset('student')">🎓 Graduate Student</button>
+              <button class="preset-chip" onclick="applyAiImagePreset('professional')">💼 Skilled Professional</button>
+              <button class="preset-chip" onclick="applyAiImagePreset('healthcare')">🩺 Healthcare Nurse</button>
+              <button class="preset-chip" onclick="applyAiImagePreset('trades')">🏗️ Skilled Trades</button>
+              <button class="preset-chip" onclick="applyAiImagePreset('francophone')">🇫🇷 Francophone Worker</button>
+              <button class="preset-chip" onclick="applyAiImagePreset('family')">👨‍👩‍👧 PR Family</button>
+              <button class="preset-chip" onclick="applyAiImagePreset('skyline')">🇨🇦 Toronto Skyline</button>
+            </div>
+
+            <button class="btn btn-primary btn-block btn-lg" onclick="generateAiCustomPhoto()" id="btn-generate-ai-photo" style="background: #2563EB; border: none; font-weight: 800; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);">
+              ✨ Generate AI Photo
+            </button>
+          </div>
+
+          <div class="ai-studio-preview-box" style="background:#FFFFFF; border:1.5px dashed #93C5FD; border-radius:12px; padding:16px; text-align:center; min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div id="ai-photo-result-container">
+              <div style="font-size:42px; margin-bottom:8px;">🖼️</div>
+              <p style="font-size:12px; color:#64748B; font-weight:600;">Generated AI photo preview will appear here</p>
+            </div>
+            <div id="ai-photo-actions" style="display:none; margin-top:12px; width:100%;">
+              <button class="btn btn-success btn-block" onclick="applyGeneratedAiPhotoToCreative()" style="background:#10B981; border:none; font-weight:800; width:100%; margin-bottom:8px; box-shadow:0 4px 12px rgba(16,185,129,0.3);">
+                🚀 Apply as Active Creative Photo
+              </button>
+              <a id="download-ai-photo-link" href="#" target="_blank" class="btn btn-secondary btn-sm" style="display:block; text-align:center; text-decoration:none;">
+                🔗 Open High-Res Image Link
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Webhook Dispatch Modal -->
+  <div id="webhook-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚡ Dispatch Live Campaign to Make.com Webhook</h3>
+        <button class="modal-close" onclick="closeDispatchWebhookModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Send complete campaign copy, high-res graphic URLs, and video scripts directly to Make.com / Meta API.</p>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label style="font-weight:700; font-size:12px; margin-bottom:6px; display:block;">Make.com Webhook URL Endpoint</label>
+          <input type="text" id="dispatch-custom-url" class="form-control" value="https://hook.us2.make.com/pa5tbxkdqpesgve7se63k5nrqehcagc2" style="width:100%; padding:10px; border-radius:8px; border:1px solid #CBD5E1;" />
+        </div>
+        <div id="webhook-dispatch-status-box" style="display:none; margin-bottom:14px; padding:10px; border-radius:8px; font-size:12px; font-weight:700;"></div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-secondary" onclick="testMakeComWebhookConnection()" style="flex:1;">🟢 Test Make.com Link</button>
+          <button class="btn btn-success btn-lg" onclick="triggerLiveWebhookDispatch()" style="flex:2; background:#10B981; border:none; font-weight:800;">🚀 Dispatch Payload</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaign Vault & Database History Modal -->
+  <div id="vault-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card" style="max-width: 900px; width: 90%;">
+      <div class="modal-header">
+        <div>
+          <h3>📚 Campaign Vault & Saved Library</h3>
+          <p style="font-size:12px; color:#64748B; margin-top:2px;">Stored past campaigns, multi-format graphics, and bilingual ad copy</p>
+        </div>
+        <button class="modal-close" onclick="closeCampaignVaultModal()">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+        <div class="vault-search-row" style="margin-bottom: 16px; display: flex; gap: 10px;">
+          <input type="text" id="vault-search-input" class="form-control" placeholder="Search saved campaigns by keyword or topic..." oninput="filterVaultCampaigns()" style="flex:1; padding: 10px; border-radius: 8px; border: 1px solid #CBD5E1;" />
+          <button class="btn btn-secondary" onclick="loadVaultCampaignsFromDb()">🔄 Refresh Vault</button>
+        </div>
+        <div id="vault-list-container" class="vault-list-grid">
+          <div style="text-align: center; padding: 30px; color: #64748B;">Loading saved campaigns database...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=1010"></script>
+</body>
+</html>
+
