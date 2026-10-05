@@ -113,7 +113,7 @@ for (const fmt of formats) {
   assert(svgXml.includes('Guidance &amp;') || svgXml.includes('Guidance &'), `Format '${fmt}' subheadline wraps Guidance & cleanly`);
 
   // Check 4: Clickable CTA Link
-  assert(svgXml.includes('href="https://travelbellsimmigration.com/book-appointment"'), `Format '${fmt}' contains active CTA link to booking site`);
+  assert(svgXml.includes('href="https://bookings.travelbellsimmigration.com"'), `Format '${fmt}' contains active CTA link to booking site`);
 
   // Check 5: QR Code Embed
   assert(svgXml.includes('SCAN TO BOOK'), `Format '${fmt}' contains SCAN TO BOOK QR Code badge`);

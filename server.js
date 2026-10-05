@@ -627,8 +627,8 @@ WhatsApp Direct: +1 (647) 890-1476`;
 
 const photoBase64Cache = new Map();
 
-function generateSvgQrCode(urlStr = 'https://travelbellsimmigration.com/book-appointment', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
-  const targetUrl = (urlStr && urlStr.trim()) ? urlStr.trim() : 'https://travelbellsimmigration.com/book-appointment';
+function generateSvgQrCode(urlStr = 'https://bookings.travelbellsimmigration.com', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
+  const targetUrl = (urlStr && urlStr.trim()) ? urlStr.trim() : 'https://bookings.travelbellsimmigration.com';
   let pathData = '';
   
   try {
@@ -778,7 +778,7 @@ function generateBannerSVG({
   showQrCode = true,
   showSocialProof = true,
   trustBadge = 'cicc',
-  qrTargetUrl = 'https://travelbellsimmigration.com/book-appointment',
+  qrTargetUrl = 'https://bookings.travelbellsimmigration.com',
   fontStyle = 'playfair-montserrat',
   textColor = 'crimson-red',
   extraText = '',
@@ -958,7 +958,7 @@ function generateBannerSVG({
   </g>
 
   <!-- CTA BANNER BAR -->
-  <a href="https://travelbellsimmigration.com/book-appointment" target="_blank" rel="noopener noreferrer">
+  <a href="https://bookings.travelbellsimmigration.com" target="_blank" rel="noopener noreferrer">
     <g transform="translate(40, 1660)" filter="url(#shadowStory)">
       <rect width="1000" height="75" rx="18" fill="${activeHighlightColor}"/>
       <text x="500" y="47" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="21" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
@@ -1088,7 +1088,7 @@ function generateBannerSVG({
   </g>
 
   <!-- CTA BANNER BAR -->
-  <a href="https://travelbellsimmigration.com/book-appointment" target="_blank" rel="noopener noreferrer">
+  <a href="https://bookings.travelbellsimmigration.com" target="_blank" rel="noopener noreferrer">
     <g transform="translate(24, 518)" filter="url(#shadowLand)">
       <rect width="1152" height="48" rx="10" fill="${activeHighlightColor}"/>
       <text x="576" y="31" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="18.5" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
@@ -1226,7 +1226,7 @@ function generateBannerSVG({
   </g>
 
   <!-- CTA BANNER BAR -->
-  <a href="https://travelbellsimmigration.com/book-appointment" target="_blank" rel="noopener noreferrer">
+  <a href="https://bookings.travelbellsimmigration.com" target="_blank" rel="noopener noreferrer">
     <g transform="translate(30, 795)" filter="url(#shadow)">
       <rect width="1020" height="64" rx="16" fill="${activeHighlightColor}"/>
       <text x="510" y="41" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">${ctaText}</text>
@@ -1961,7 +1961,7 @@ async function renderBannerWithPuppeteer(bannerData) {
       </div>` : ''}
       ${showQrCode ? `
       <div style="position:absolute; bottom:16px; right:16px; z-index:4;">
-        ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://travelbellsimmigration.com/book-appointment', 0, 0, 95)}
+        ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://bookings.travelbellsimmigration.com', 0, 0, 95)}
       </div>` : ''}
     </div>
 

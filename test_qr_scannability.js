@@ -19,7 +19,7 @@ function assert(cond, title, details = '') {
 }
 
 // 1. Verify default booking URL generates scannable QR matrix
-const defaultUrl = 'https://travelbellsimmigration.com/book-appointment';
+const defaultUrl = 'https://bookings.travelbellsimmigration.com';
 const defaultSvg = server.generateBannerSVG({ showQrCode: true, qrTargetUrl: defaultUrl, format: 'vertical' });
 const defaultXml = Buffer.from(defaultSvg.replace(/^data:image\/svg\+xml;base64,/, ''), 'base64').toString('utf8');
 
