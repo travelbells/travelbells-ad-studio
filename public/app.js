@@ -1845,34 +1845,25 @@ async function downloadCampaignZipBundle() {
     const footerEmail = document.getElementById('footer-email-input')?.value;
     const footerLocation = document.getElementById('footer-location-input')?.value;
 
-    const fetchFormatPng = async (fmt, width, height) => {
-      try {
-        const res = await fetch('/api/generate-puppeteer-banner', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: headline, headline, tagline: headline, subtitle, badgeText, b1, b2, b3, b4,
-            footerCta, footerPhone, footerWebsite, footerEmail, footerLocation,
-            watermark: activeWatermarkStyle, format: fmt, lang: activeGraphicLang,
-            customPhotoUrl: activePhotoPreset
-          })
-        });
-        const json = await res.json();
-        let uri = json.dataUri;
-        if (uri && uri.startsWith('data:image/svg+xml')) {
-          uri = await convertSvgToPng(uri, width, height);
-        }
-        return uri;
-      } catch (err) {
-        console.warn(`PNG export note for ${fmt}:`, err);
-        return null;
-      }
+    const fetchFormat = async (fmt) => {
+      const res = await fetch('/api/generate-puppeteer-banner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: headline, headline, tagline: headline, subtitle, badgeText, b1, b2, b3, b4,
+          footerCta, footerPhone, footerWebsite, footerEmail, footerLocation,
+          watermark: activeWatermarkStyle, format: fmt, lang: activeGraphicLang,
+          customPhotoUrl: activePhotoPreset
+        })
+      });
+      const json = await res.json();
+      return json.dataUri;
     };
 
     const [pngV, pngS, pngL] = await Promise.all([
-      fetchFormatPng('vertical', 1080, 1080),
-      fetchFormatPng('story', 1080, 1920),
-      fetchFormatPng('landscape', 1200, 630)
+      fetchFormat('vertical'),
+      fetchFormat('story'),
+      fetchFormat('landscape')
     ]);
 
     const captionsText = `TRAVELBELLS IMMIGRATION MULTI-PLATFORM AD ASSET BUNDLE
@@ -1990,7 +1981,7 @@ async function executeWebhookDispatch() {
     statusBox.style.display = 'block';
     statusBox.style.background = '#FEF3C7';
     statusBox.style.color = '#B45309';
-    statusBox.innerText = `⏳ Publishing Campaign to Social Media (${postMode})...`;
+    statusBox.innerText = `⏳ Executing Outbound Webhook (${postMode}) to ${webhookUrl || channel}...`;
   }
 
   try {
@@ -2011,15 +2002,15 @@ async function executeWebhookDispatch() {
     const data = await res.json();
     if (data.success) {
       if (statusBox) {
-        statusBox.style.background = '#D1FAE5';
-        statusBox.style.color = '#047857';
-        statusBox.innerText = `🎉 Campaign Successfully Published to Social Media!`;
+        statusBox.style.background = data.isLive ? '#D1FAE5' : '#E0F2FE';
+        statusBox.style.color = data.isLive ? '#047857' : '#0369A1';
+        statusBox.innerText = `✅ ${data.status}\nChannel: ${data.channel}\n${data.targetUrl ? `Target URL: ${data.targetUrl}\nResponse: ${data.responseBody}` : 'Mode: Local Payload Validation'}`;
       }
     } else {
       if (statusBox) {
         statusBox.style.background = '#FEE2E2';
         statusBox.style.color = '#B91C1C';
-        statusBox.innerText = `❌ Publishing Failed: ${data.status || data.error}`;
+        statusBox.innerText = `❌ Dispatch Failed: ${data.status || data.error}`;
       }
     }
   } catch (err) {

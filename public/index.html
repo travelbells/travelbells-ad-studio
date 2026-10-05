@@ -27,8 +27,8 @@
       <button class="btn btn-secondary btn-sm" onclick="openCampaignVaultModal()" title="Saved Campaign Vault Database">
         <span class="btn-icon">📚</span> Campaign Vault
       </button>
-      <button class="btn btn-success" onclick="openDispatchWebhookModal()" style="background:#10B981; color:#ffffff; font-weight:800; border:none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);" title="Publish campaign ad & banner to Instagram, Facebook & LinkedIn">
-        <span class="btn-icon">⚡</span> Publish Campaign to Social Media
+      <button class="btn btn-success" onclick="openDispatchWebhookModal()" style="background:#10B981; color:#ffffff; font-weight:800; border:none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);" title="Dispatch live campaign ad & banner to Meta / Make.com">
+        <span class="btn-icon">⚡</span> Webhook Dispatch to Make.com
       </button>
       <button class="btn btn-secondary btn-sm" onclick="saveDraftStateToLocalStorage(true)" title="Save Current State">
         <span class="btn-icon">💾</span> Save Draft
@@ -412,29 +412,23 @@
     </main>
   </div>
 
-  <!-- Social Media Publishing Modal (White-Label Stealth Dispatch) -->
+  <!-- Webhook Dispatch Modal -->
   <div id="webhook-modal" class="modal-overlay" style="display:none;">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>⚡ Publish Campaign to Social Media</h3>
+        <h3>⚡ Dispatch Live Campaign to Make.com Webhook</h3>
         <button class="modal-close" onclick="closeDispatchWebhookModal()">✕</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:13px; color:#475569; margin-bottom:14px;">Publish high-res ad graphics & bilingually tailored copy directly to Instagram, Facebook & LinkedIn feeds.</p>
-        
-        <details style="margin-bottom: 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 12px;">
-          <summary style="font-size:12px; font-weight:700; color:#64748B; cursor:pointer;">⚙️ Advanced Publishing Endpoint Settings</summary>
-          <div style="margin-top: 8px;">
-            <label style="font-weight:700; font-size:11px; color:#475569; margin-bottom:4px; display:block;">API / Dispatch Endpoint URL:</label>
-            <input type="text" id="dispatch-custom-url" class="form-control" value="https://hook.us2.make.com/pa5tbxkdqpesgve7se63k5nrqehcagc2" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CBD5E1; font-size:11px;" />
-          </div>
-        </details>
-
+        <p>Send complete campaign copy, high-res graphic URLs, and video scripts directly to Make.com / Meta API.</p>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label style="font-weight:700; font-size:12px; margin-bottom:6px; display:block;">Make.com Webhook URL Endpoint</label>
+          <input type="text" id="dispatch-custom-url" class="form-control" value="https://hook.us2.make.com/pa5tbxkdqpesgve7se63k5nrqehcagc2" style="width:100%; padding:10px; border-radius:8px; border:1px solid #CBD5E1;" />
+        </div>
         <div id="webhook-dispatch-status-box" style="display:none; margin-bottom:14px; padding:10px; border-radius:8px; font-size:12px; font-weight:700;"></div>
-        
         <div style="display:flex; gap:10px;">
-          <button class="btn btn-secondary" onclick="closeDispatchWebhookModal()" style="flex:1;">Cancel</button>
-          <button class="btn btn-success btn-lg" onclick="triggerLiveWebhookDispatch()" style="flex:2; background: linear-gradient(135deg, #059669 0%, #10B981 100%); border:none; font-weight:800; box-shadow:0 4px 15px rgba(16,185,129,0.35);">🚀 Publish Campaign Now</button>
+          <button class="btn btn-secondary" onclick="testMakeComWebhookConnection()" style="flex:1;">🟢 Test Make.com Link</button>
+          <button class="btn btn-success btn-lg" onclick="triggerLiveWebhookDispatch()" style="flex:2; background:#10B981; border:none; font-weight:800;">🚀 Dispatch Payload</button>
         </div>
       </div>
     </div>
