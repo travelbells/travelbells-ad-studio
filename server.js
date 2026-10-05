@@ -249,6 +249,69 @@ function translateToFrench(text) {
   let result = text.trim();
 
   const phrases = [
+    { en: /regulated rcic legal guidance & application support across canada/gi, fr: "Orientation juridique CRIC agréée et soutien aux demandes partout au Canada" },
+    { en: /regulated rcic legal guidance & application support/gi, fr: "Orientation juridique CRIC agréée et soutien aux demandes" },
+    { en: /regulated rcic legal guidance/gi, fr: "Orientation juridique CRIC agréée" },
+    { en: /legal guidance & application support across canada/gi, fr: "Orientation juridique et soutien aux demandes partout au Canada" },
+    { en: /legal guidance & application support/gi, fr: "Orientation juridique et soutien aux demandes" },
+    { en: /application support across canada/gi, fr: "Soutien aux demandes d'immigration partout au Canada" },
+    { en: /application support/gi, fr: "Soutien aux demandes" },
+    { en: /across canada/gi, fr: "partout au Canada" },
+
+    { en: /mobilité francophone work permit without lmia for french speakers/gi, fr: "Permis de travail Mobilité Francophone sans EIMT pour francophones" },
+    { en: /mobilité francophone work permit without lmia french speakers/gi, fr: "Permis de travail Mobilité Francophone sans EIMT pour francophones" },
+    { en: /mobilité francophone work permit without lmia/gi, fr: "Permis de travail Mobilité Francophone sans EIMT" },
+    { en: /mobilite francophone work permit without lmia/gi, fr: "Permis de travail Mobilité Francophone sans EIMT" },
+    { en: /mobilité francophone work permit/gi, fr: "Permis de travail Mobilité Francophone" },
+    { en: /mobilite francophone work permit/gi, fr: "Permis de travail Mobilité Francophone" },
+    { en: /french speakers/gi, fr: "personnes francophones" },
+    { en: /french speaking/gi, fr: "francophones" },
+
+    { en: /employer job offer & provincial nomination \(pnp\) assessment/gi, fr: "Évaluation de l'offre d'emploi employeur et nomination provinciale (PCP)" },
+    { en: /employer job offer & provincial nomination assessment/gi, fr: "Évaluation de l'offre d'emploi employeur et nomination provinciale" },
+    { en: /employer job offer/gi, fr: "Offre d'emploi de l'employeur" },
+    { en: /provincial nomination \(pnp\) assessment/gi, fr: "Évaluation de la nomination provinciale (PCP)" },
+    { en: /provincial nomination assessment/gi, fr: "Évaluation de la nomination provinciale" },
+    { en: /provincial nomination \(pnp\)/gi, fr: "Nomination provinciale (PCP)" },
+    { en: /provincial nomination/gi, fr: "Nomination provinciale (PCP)" },
+
+    { en: /spouse open work permit \(sowp\) eligibility for accompanying family/gi, fr: "Éligibilité au permis de travail ouvert du conjoint (PTO) pour la famille" },
+    { en: /spouse open work permit eligibility for accompanying family/gi, fr: "Éligibilité au permis de travail ouvert du conjoint (PTO) pour la famille" },
+    { en: /spouse open work permit \(sowp\) eligibility included/gi, fr: "Éligibilité au permis de travail ouvert du conjoint (PTO) incluse" },
+    { en: /spouse open work permit \(sowp\) eligibility/gi, fr: "Éligibilité au permis de travail ouvert du conjoint (PTO)" },
+    { en: /spouse open work permit/gi, fr: "Permis de travail ouvert du conjoint (PTO)" },
+    { en: /eligibility for accompanying family/gi, fr: "Éligibilité pour la famille accompagnante" },
+    { en: /accompanying family/gi, fr: "famille accompagnante" },
+
+    { en: /complete legal representation by licensed rcic consultants/gi, fr: "Représentation juridique complète par des consultants CRIC agréés" },
+    { en: /complete legal representation/gi, fr: "Représentation juridique complète" },
+    { en: /by licensed rcic consultants/gi, fr: "par des consultants CRIC agréés" },
+    { en: /licensed rcic consultants/gi, fr: "Consultants CRIC agréés" },
+    { en: /licensed rcic member/gi, fr: "Membre CRIC agréé" },
+    { en: /licensed cicc member/gi, fr: "Membre CICC agréé" },
+
+    { en: /express entry & provincial nomination \(oinp\) skilled worker/gi, fr: "Entrée Express et Nomination Provinciale (OINP) Travailleur Qualifié" },
+    { en: /express entry & provincial nomination/gi, fr: "Entrée Express et Nomination Provinciale" },
+    { en: /skilled worker express entry/gi, fr: "Travailleur Qualifié Entrée Express" },
+    { en: /skilled worker/gi, fr: "Travailleur Qualifié" },
+    { en: /pr ready candidates with ontario experience/gi, fr: "Candidats prêts pour la RP avec expérience en Ontario" },
+    { en: /pr ready candidates/gi, fr: "Candidats prêts pour la RP" },
+    { en: /with ontario experience/gi, fr: "avec expérience en Ontario" },
+    { en: /targeted pr draws for healthcare, tech & trades/gi, fr: "Tirages RP ciblés pour la santé, les technologies et les métiers" },
+    { en: /targeted pr draws/gi, fr: "Tirages RP ciblés" },
+    { en: /for healthcare, tech & trades/gi, fr: "pour la santé, les technologies et les métiers" },
+    { en: /boost your crs score with provincial nomination \(\+600 pts\)/gi, fr: "Augmentez votre score CRS avec une nomination provinciale (+600 pts)" },
+    { en: /boost your crs score/gi, fr: "Augmentez votre score CRS" },
+    { en: /with provincial nomination/gi, fr: "avec une nomination provinciale" },
+    
+    { en: /accredited diploma & master's degree options across canada/gi, fr: "Programmes de diplôme et maîtrise agréés partout au Canada" },
+    { en: /accredited diploma & master's degree options/gi, fr: "Programmes de diplôme et maîtrise agréés" },
+    { en: /flexible admission options for low ielts \/ celpip scores/gi, fr: "Conditions d'admission flexibles pour faibles scores IELTS / CELPIP" },
+    { en: /flexible admission options/gi, fr: "Conditions d'admission flexibles" },
+    { en: /for low ielts \/ celpip scores/gi, fr: "pour faibles scores IELTS / CELPIP" },
+    { en: /maintain legal status & transition to permanent residency \(pr\)/gi, fr: "Maintenez votre statut légal et accédez à la Résidence Permanente (RP)" },
+    { en: /maintain legal status & transition to permanent residency/gi, fr: "Maintenez votre statut légal et accédez à la Résidence Permanente" },
+
     { en: /work in ontario/gi, fr: "Travailler en Ontario" },
     { en: /work in canada/gi, fr: "Travailler au Canada" },
     { en: /you may have a chance to get pr/gi, fr: "Vous pouvez obtenir la Résidence Permanente" },
@@ -292,10 +355,6 @@ function translateToFrench(text) {
     { en: /transition to permanent residency/gi, fr: "accès à la Résidence Permanente" },
     { en: /full rcic representation/gi, fr: "représentation officielle par un consultant CRIC" },
     { en: /from profile evaluation to approval/gi, fr: "de l'évaluation du profil jusqu'à l'approbation" },
-    { en: /complete legal representation by licensed rcic consultants/gi, fr: "accompagnement juridique complet par des consultants CRIC agréés" },
-    { en: /complete legal representation/gi, fr: "accompagnement juridique complet" },
-    { en: /licensed rcic consultants/gi, fr: "consultants réglementés CRIC agréés" },
-    { en: /licensed rcic/gi, fr: "consultant agréé CRIC" },
     { en: /low english requirements/gi, fr: "exigences d'anglais adaptées" },
     { en: /low english/gi, fr: "niveau d'anglais flexible" },
     { en: /no job offer required/gi, fr: "aucune offre d'emploi requise" },
@@ -332,7 +391,8 @@ function translateToFrench(text) {
     { en: /pnp stream matched/gi, fr: "éligible PCP provincial" },
     { en: /permanent residency/gi, fr: "Résidence Permanente" },
     { en: /express entry/gi, fr: "Entrée Express" },
-    { en: /custom immigration advisory/gi, fr: "conseil juridique personnalisé" }
+    { en: /custom immigration advisory/gi, fr: "conseil juridique personnalisé" },
+    { en: /book your official rcic strategy consultation today/gi, fr: "Réservez votre consultation stratégique CRIC aujourd'hui" }
   ];
 
   for (const p of phrases) {
@@ -340,6 +400,63 @@ function translateToFrench(text) {
   }
 
   const wordsMap = [
+    { en: /\bregulated\b/gi, fr: "réglementé" },
+    { en: /\bguidance\b/gi, fr: "orientation" },
+    { en: /\bapplication\b/gi, fr: "demande" },
+    { en: /\bsupport\b/gi, fr: "soutien" },
+    { en: /\bacross\b/gi, fr: "partout au" },
+    { en: /\bspeaker\b/gi, fr: "locuteur" },
+    { en: /\bspeakers\b/gi, fr: "locuteurs" },
+    { en: /\bspeaking\b/gi, fr: "francophone" },
+    { en: /\bemployer\b/gi, fr: "employeur" },
+    { en: /\boffer\b/gi, fr: "offre" },
+    { en: /\bassessment\b/gi, fr: "évaluation" },
+    { en: /\beligibility\b/gi, fr: "éligibilité" },
+    { en: /\baccompanying\b/gi, fr: "accompagnante" },
+    { en: /\brepresentation\b/gi, fr: "représentation" },
+    { en: /\bconsultants\b/gi, fr: "consultants" },
+    { en: /\bconsultant\b/gi, fr: "consultant" },
+    { en: /\blicensed\b/gi, fr: "agréé" },
+    { en: /\bcandidates\b/gi, fr: "candidats" },
+    { en: /\bcandidate\b/gi, fr: "candidat" },
+    { en: /\bexperience\b/gi, fr: "expérience" },
+    { en: /\btargeted\b/gi, fr: "ciblés" },
+    { en: /\btrades\b/gi, fr: "métiers" },
+    { en: /\btech\b/gi, fr: "technologies" },
+    { en: /\bhealthcare\b/gi, fr: "santé" },
+    { en: /\bscore\b/gi, fr: "score" },
+    { en: /\bboost\b/gi, fr: "augmenter" },
+    { en: /\bdraws\b/gi, fr: "tirages" },
+    { en: /\bdraw\b/gi, fr: "tirage" },
+    { en: /\bpoints\b/gi, fr: "points" },
+    { en: /\boptions\b/gi, fr: "options" },
+    { en: /\boption\b/gi, fr: "option" },
+    { en: /\bdiploma\b/gi, fr: "diplôme" },
+    { en: /\bdegree\b/gi, fr: "diplôme" },
+    { en: /\bmaster's\b/gi, fr: "maîtrise" },
+    { en: /\blow\b/gi, fr: "faible" },
+    { en: /\bscores\b/gi, fr: "scores" },
+    { en: /\bspouse\b/gi, fr: "conjoint" },
+    { en: /\bopen\b/gi, fr: "ouvert" },
+    { en: /\bincluded\b/gi, fr: "inclus" },
+    { en: /\bmaintain\b/gi, fr: "maintenir" },
+    { en: /\bstatus\b/gi, fr: "statut" },
+    { en: /\btransition\b/gi, fr: "transition" },
+    { en: /\bresidency\b/gi, fr: "résidence" },
+    { en: /\bpermanent\b/gi, fr: "permanente" },
+    { en: /\bofficial\b/gi, fr: "officiel" },
+    { en: /\bstrategy\b/gi, fr: "stratégique" },
+    { en: /\bconsultation\b/gi, fr: "consultation" },
+    { en: /\btoday\b/gi, fr: "aujourd'hui" },
+    { en: /\bupgrade\b/gi, fr: "évoluer" },
+    { en: /\bpathway\b/gi, fr: "voie" },
+    { en: /\bpathways\b/gi, fr: "voies" },
+    { en: /\bfirm\b/gi, fr: "cabinet" },
+    { en: /\bverified\b/gi, fr: "vérifié" },
+    { en: /\bskilled\b/gi, fr: "qualifié" },
+    { en: /\bworker\b/gi, fr: "travailleur" },
+    { en: /\bworkers\b/gi, fr: "travailleurs" },
+    { en: /\bready\b/gi, fr: "prêt" },
     { en: /\bwork\b/gi, fr: "travail" },
     { en: /\bworking\b/gi, fr: "travailler" },
     { en: /\bpermit\b/gi, fr: "permis" },
@@ -380,7 +497,6 @@ function translateToFrench(text) {
     { en: /\brequired\b/gi, fr: "requis" },
     { en: /\brequirement\b/gi, fr: "exigence" },
     { en: /\brequirements\b/gi, fr: "exigences" },
-    { en: /\blow\b/gi, fr: "réduit" },
     { en: /\bfees\b/gi, fr: "frais" },
     { en: /\bfee\b/gi, fr: "frais" },
     { en: /\btuition\b/gi, fr: "scolarité" },
@@ -397,11 +513,7 @@ function translateToFrench(text) {
     { en: /\bcustomized\b/gi, fr: "sur mesure" },
     { en: /\bapproved\b/gi, fr: "agréé" },
     { en: /\bsolutions\b/gi, fr: "solutions" },
-    { en: /\bupdate\b/gi, fr: "mise à jour" },
-    { en: /\bdraws?\b/gi, fr: "tirages" },
-    { en: /\bemployers?\b/gi, fr: "employeurs" },
-    { en: /\bjob\b/gi, fr: "emploi" },
-    { en: /\boffer\b/gi, fr: "offre" }
+    { en: /\bupdate\b/gi, fr: "mise à jour" }
   ];
 
   for (const w of wordsMap) {
@@ -820,13 +932,13 @@ function generateBannerSVG({
   let rawB4 = b4 !== undefined ? b4 : defaultB4;
 
   if (isFr) {
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawTitle)) rawTitle = translateToFrench(rawTitle);
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawSubtitle)) rawSubtitle = translateToFrench(rawSubtitle);
-    if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawBadge)) rawBadge = translateToFrench(rawBadge);
-    if (rawB1 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB1)) rawB1 = translateToFrench(rawB1);
-    if (rawB2 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB2)) rawB2 = translateToFrench(rawB2);
-    if (rawB3 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB3)) rawB3 = translateToFrench(rawB3);
-    if (rawB4 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawB4)) rawB4 = translateToFrench(rawB4);
+    rawTitle = translateToFrench(rawTitle);
+    rawSubtitle = translateToFrench(rawSubtitle);
+    rawBadge = translateToFrench(rawBadge);
+    if (rawB1) rawB1 = translateToFrench(rawB1);
+    if (rawB2) rawB2 = translateToFrench(rawB2);
+    if (rawB3) rawB3 = translateToFrench(rawB3);
+    if (rawB4) rawB4 = translateToFrench(rawB4);
   }
 
   const safeTitle = rawTitle;
@@ -858,6 +970,30 @@ function generateBannerSVG({
   }
   const photoSrc = photoSrcRaw.replace(/&/g, '&amp;');
   const logoSrc = getLogoBase64().replace(/&/g, '&amp;');
+
+  const storyBadgeCharCount = (safeBadge || '').length;
+  let storyBadgePillWidth = Math.min(1000, Math.max(420, storyBadgeCharCount * 13.5 + 50));
+  let storyBadgeFontSize = 16;
+  if (storyBadgePillWidth >= 950) {
+    storyBadgeFontSize = 14;
+    storyBadgePillWidth = Math.min(1000, Math.max(420, storyBadgeCharCount * 11 + 45));
+  }
+
+  const landBadgeCharCount = (safeBadge || '').length;
+  let landBadgePillWidth = Math.min(770, Math.max(320, landBadgeCharCount * 10.5 + 36));
+  let landBadgeFontSize = 13.5;
+  if (landBadgePillWidth >= 740) {
+    landBadgeFontSize = 11.5;
+    landBadgePillWidth = Math.min(770, Math.max(320, landBadgeCharCount * 9 + 32));
+  }
+
+  const vertBadgeCharCount = (safeBadge || '').length;
+  let vertBadgePillWidth = Math.min(570, Math.max(340, vertBadgeCharCount * 11 + 40));
+  let vertBadgeFontSize = 14;
+  if (vertBadgePillWidth >= 540) {
+    vertBadgeFontSize = 12;
+    vertBadgePillWidth = Math.min(570, Math.max(340, vertBadgeCharCount * 9.5 + 36));
+  }
 
   // FORMAT 1: STORY (9:16 Aspect Ratio - 1080x1920)
   if (format === 'story') {
@@ -891,7 +1027,7 @@ function generateBannerSVG({
 
     <g transform="translate(640, 26)">
       <rect width="360" height="54" rx="27" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadowStory)"/>
-      <text x="180" y="34" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
+      <text x="180" y="34" font-family="'Montserrat', sans-serif" font-weight="800" font-size="15.5" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
     </g>
   </g>
 
@@ -911,8 +1047,8 @@ function generateBannerSVG({
   <g transform="translate(40, 780)">
     ${showBadge ? `
     <g transform="translate(0, 0)">
-      <rect width="420" height="46" rx="23" fill="${activeHighlightColor}" filter="url(#shadowStory)"/>
-      <text x="210" y="29" font-family="'Montserrat', sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
+      <rect width="${storyBadgePillWidth}" height="46" rx="23" fill="${activeHighlightColor}" filter="url(#shadowStory)"/>
+      <text x="${storyBadgePillWidth / 2}" y="29" font-family="'Montserrat', sans-serif" font-weight="900" font-size="${storyBadgeFontSize}" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
     </g>` : ''}
 
     ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 90 : 40, 42, 46, 36, 'start', 'Playfair Display', '#002B49')}
@@ -1041,8 +1177,8 @@ function generateBannerSVG({
   <g transform="translate(405, 108)">
     ${showBadge ? `
     <g transform="translate(0, 0)">
-      <rect width="320" height="34" rx="17" fill="${activeHighlightColor}" filter="url(#shadowLand)"/>
-      <text x="160" y="22" font-family="'Montserrat', sans-serif" font-weight="900" font-size="13.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.2">${safeBadge}</text>
+      <rect width="${landBadgePillWidth}" height="34" rx="17" fill="${activeHighlightColor}" filter="url(#shadowLand)"/>
+      <text x="${landBadgePillWidth / 2}" y="22" font-family="'Montserrat', sans-serif" font-weight="900" font-size="${landBadgeFontSize}" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.2">${safeBadge}</text>
     </g>` : ''}
 
     ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 74 : 32, 46, 42, 32, 'start', 'Playfair Display', '#002B49')}
@@ -1160,7 +1296,7 @@ function generateBannerSVG({
 
     <g transform="translate(640, 24)">
       <rect width="360" height="54" rx="27" fill="#FFFFFF" stroke="#002B49" stroke-width="2" filter="url(#shadow)"/>
-      <text x="180" y="34" font-family="'Montserrat', sans-serif" font-weight="800" font-size="17" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
+      <text x="180" y="34" font-family="'Montserrat', sans-serif" font-weight="800" font-size="15.5" fill="#002B49" text-anchor="middle">${rcicMemberText}</text>
     </g>
   </g>
 
@@ -1179,8 +1315,8 @@ function generateBannerSVG({
   <g transform="translate(480, 135)">
     ${showBadge ? `
     <g transform="translate(0, 0)">
-      <rect width="360" height="38" rx="19" fill="${activeHighlightColor}" filter="url(#shadow)"/>
-      <text x="180" y="24" font-family="'Montserrat', sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
+      <rect width="${vertBadgePillWidth}" height="38" rx="19" fill="${activeHighlightColor}" filter="url(#shadow)"/>
+      <text x="${vertBadgePillWidth / 2}" y="24" font-family="'Montserrat', sans-serif" font-weight="900" font-size="${vertBadgeFontSize}" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">${safeBadge}</text>
     </g>` : ''}
 
     ${renderNativeSvgHeadline(safeTitle, 0, showBadge ? 80 : 35, 40, 38, 28, 'start', 'Playfair Display', '#002B49')}
@@ -1521,13 +1657,13 @@ async function renderBannerWithPuppeteer(bannerData) {
 
   if (isFr) {
     if (bannerData.title_fr) rawTitle = bannerData.title_fr;
-    else if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawTitle)) rawTitle = translateToFrench(rawTitle);
+    else rawTitle = translateToFrench(rawTitle);
 
     if (bannerData.subtitle_fr) rawSubtitle = bannerData.subtitle_fr;
-    else if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawSubtitle)) rawSubtitle = translateToFrench(rawSubtitle);
+    else rawSubtitle = translateToFrench(rawSubtitle);
 
     if (bannerData.badge_fr) rawBadge = bannerData.badge_fr;
-    else if (!/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(rawBadge)) rawBadge = translateToFrench(rawBadge);
+    else rawBadge = translateToFrench(rawBadge);
   }
 
   const title = rawTitle;
@@ -1535,7 +1671,7 @@ async function renderBannerWithPuppeteer(bannerData) {
   const badgeText = rawBadge;
 
   let rawCta = bannerData.footerCta || bannerData.ctaText || (isFr ? 'RÉSERVEZ VOTRE CONSULTATION STRATÉGIQUE RCIC AUJOURD\'HUI' : 'BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY');
-  if (isFr && !/[éèêàâùçôîïë]|réservez|consultation/i.test(rawCta)) {
+  if (isFr) {
     rawCta = translateToFrench(rawCta);
   }
   const ctaText = rawCta;
@@ -1597,10 +1733,10 @@ async function renderBannerWithPuppeteer(bannerData) {
   let bullet4 = b4 !== undefined ? b4 : defaultB4;
 
   if (isFr) {
-    if (b1 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(b1)) bullet1 = translateToFrench(b1);
-    if (b2 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(b2)) bullet2 = translateToFrench(b2);
-    if (b3 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(b3)) bullet3 = translateToFrench(b3);
-    if (b4 && !/[éèêàâùçôîïë]|programme|permis|résidence|canada|service/i.test(b4)) bullet4 = translateToFrench(b4);
+    if (bullet1) bullet1 = translateToFrench(bullet1);
+    if (bullet2) bullet2 = translateToFrench(bullet2);
+    if (bullet3) bullet3 = translateToFrench(bullet3);
+    if (bullet4) bullet4 = translateToFrench(bullet4);
   }
 
   const safeTitle = (title || "Work Permit Ending? Don't Exit, Upgrade")
