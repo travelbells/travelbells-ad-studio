@@ -74,6 +74,7 @@ async function reRenderSingleGraphic(fmt, lang) {
   const showQrCode = document.getElementById('toggle-qr-code')?.value !== 'disabled';
   const showSocialProof = document.getElementById('toggle-social-proof')?.value !== 'disabled';
   const trustBadge = document.getElementById('select-trust-badge')?.value || 'cicc';
+  const qrTargetUrl = document.getElementById('qr-target-url')?.value || 'https://travelbellsimmigration.com/book-appointment';
 
   if (renderBox && (!renderBox.querySelector('img') || renderBox.innerHTML.includes('⚙️'))) {
     renderBox.innerHTML = `<div style="padding:40px; text-align:center; color:#64748B;"><div style="font-size:32px; margin-bottom:8px;">⚙️</div><strong>Re-rendering 300 DPI Creative...</strong></div>`;
@@ -96,6 +97,7 @@ async function reRenderSingleGraphic(fmt, lang) {
         showQrCode,
         showSocialProof,
         trustBadge,
+        qrTargetUrl,
         footerCta,
         footerPhone,
         footerWebsite,

@@ -646,6 +646,7 @@ function generateBannerSVG({
   showQrCode = true,
   showSocialProof = true,
   trustBadge = 'cicc',
+  qrTargetUrl = 'https://travelbellsimmigration.com/book-appointment',
   fontStyle = 'playfair-montserrat',
   textColor = 'crimson-red',
   extraText = '',
@@ -715,41 +716,48 @@ function generateBannerSVG({
   const locationText = isFr ? "📍 Ontario, Canada • Membre CICC Licencié" : "📍 Ontario, Canada • Licensed RCIC Member";
 
   function generateSvgQrCode(urlStr = 'https://travelbellsimmigration.com/book-appointment', x = 0, y = 0, size = 110, darkColor = '#002B49', lightColor = '#FFFFFF') {
-    return `
-      <a href="${urlStr}" target="_blank" rel="noopener noreferrer">
-        <g transform="translate(${x}, ${y})">
-          <!-- Background Container Card -->
-          <rect width="${size}" height="${size + 24}" rx="12" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
-          
-          <!-- Finder Patterns (Top-Left, Top-Right, Bottom-Left) -->
-          <rect x="10" y="10" width="30" height="30" rx="4" fill="${darkColor}"/>
-          <rect x="15" y="15" width="20" height="20" rx="2" fill="${lightColor}"/>
-          <rect x="20" y="20" width="10" height="10" rx="1" fill="${darkColor}"/>
-          
-          <rect x="${size - 40}" y="10" width="30" height="30" rx="4" fill="${darkColor}"/>
-          <rect x="${size - 35}" y="15" width="20" height="20" rx="2" fill="${lightColor}"/>
-          <rect x="${size - 30}" y="20" width="10" height="10" rx="1" fill="${darkColor}"/>
-          
-          <rect x="10" y="${size - 40}" width="30" height="30" rx="4" fill="${darkColor}"/>
-          <rect x="15" y="${size - 35}" width="20" height="20" rx="2" fill="${lightColor}"/>
-          <rect x="20" y="${size - 30}" width="10" height="10" rx="1" fill="${darkColor}"/>
-          
-          <!-- Data Grid -->
-          <rect x="45" y="12" width="10" height="10" fill="${darkColor}"/>
-          <rect x="60" y="12" width="10" height="20" fill="${darkColor}"/>
-          <rect x="45" y="45" width="20" height="10" fill="${darkColor}"/>
-          <rect x="12" y="45" width="10" height="20" fill="${darkColor}"/>
-          <rect x="45" y="60" width="20" height="20" fill="${darkColor}"/>
-          <rect x="${size - 35}" y="45" width="20" height="20" fill="${darkColor}"/>
-          <rect x="${size - 45}" y="70" width="25" height="10" fill="${darkColor}"/>
+    const targetUrl = (urlStr && urlStr.trim()) ? urlStr.trim() : 'https://travelbellsimmigration.com/book-appointment';
+    let pathData = '';
+    
+    try {
+      const QRCode = require('qrcode');
+      const qr = QRCode.create(targetUrl, { errorCorrectionLevel: 'M' });
+      const numCells = qr.modules.size;
+      const cellSize = size / (numCells + 2);
+      
+      for (let r = 0; r < numCells; r++) {
+        for (let c = 0; c < numCells; c++) {
+          if (qr.modules.get(r, c)) {
+            const px = ((c + 1) * cellSize).toFixed(2);
+            const py = ((r + 1) * cellSize).toFixed(2);
+            const cs = cellSize.toFixed(2);
+            pathData += `M${px},${py}h${cs}v${cs}h-${cs}z `;
+          }
+        }
+      }
+    } catch (e) {
+      console.error('QR Code Generation Error:', e);
+    }
 
-          <!-- Center Maple Badge -->
-          <circle cx="${size / 2}" cy="${size / 2}" r="11" fill="#C8102E"/>
-          <path d="M ${size / 2} ${size / 2 - 5} L ${size / 2 + 2} ${size / 2 - 2} L ${size / 2 + 5} ${size / 2 - 3} L ${size / 2 + 3} ${size / 2 + 1} L ${size / 2 + 5} ${size / 2 + 4} L ${size / 2 + 1} ${size / 2 + 3} L ${size / 2} ${size / 2 + 6} L ${size / 2 - 1} ${size / 2 + 3} L ${size / 2 - 5} ${size / 2 + 4} L ${size / 2 - 3} ${size / 2 + 1} L ${size / 2 - 5} ${size / 2 - 3} L ${size / 2 - 2} ${size / 2 - 2} Z" fill="#FFFFFF"/>
+    const headerHeight = 22;
+    const cardWidth = size + 16;
+    const cardHeight = size + headerHeight + 16;
+
+    return `
+      <a href="${targetUrl}" target="_blank" rel="noopener noreferrer">
+        <g transform="translate(${x}, ${y})">
+          <!-- Background Outer Card Frame with High-Contrast White Surface & Shadow -->
+          <rect width="${cardWidth}" height="${cardHeight}" rx="14" fill="${lightColor}" filter="url(#shadowStory)" stroke="${darkColor}" stroke-width="2"/>
           
-          <!-- Bottom Label -->
-          <rect x="0" y="${size}" width="${size}" height="24" rx="0" fill="#C8102E"/>
-          <text x="${size / 2}" y="${size + 16}" font-family="'Montserrat', sans-serif" font-weight="800" font-size="9.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.8">SCAN TO BOOK</text>
+          <!-- Crimson Top Header Pill Label -->
+          <path d="M 0 14 A 14 14 0 0 1 14 0 L ${cardWidth - 14} 0 A 14 14 0 0 1 ${cardWidth} 14 L ${cardWidth} ${headerHeight} L 0 ${headerHeight} Z" fill="#C8102E"/>
+          <text x="${cardWidth / 2}" y="15" font-family="'Montserrat', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">📱 SCAN TO BOOK</text>
+          
+          <!-- Real ISO 18004 Scannable QR Matrix Vector -->
+          <g transform="translate(8, ${headerHeight + 8})">
+            <rect width="${size}" height="${size}" fill="${lightColor}" rx="4"/>
+            <path d="${pathData}" fill="${darkColor}"/>
+          </g>
         </g>
       </a>
     `;
@@ -896,7 +904,7 @@ function generateBannerSVG({
     ${showSocialProof ? renderSocialProofSvg(24, 24, 1.1) : ''}
     
     <!-- Dynamic Booking QR Code Embed (Bottom-Right of Photo) -->
-    ${showQrCode ? generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 840, 420, 130) : ''}
+    ${showQrCode ? generateSvgQrCode(qrTargetUrl, 840, 420, 130) : ''}
   </g>
 
   <!-- CONTENT SECTION -->
@@ -1026,7 +1034,7 @@ function generateBannerSVG({
     ${showSocialProof ? renderSocialProofSvg(12, 14, 0.9) : ''}
 
     <!-- Dynamic Booking QR Code Embed (Bottom-Right) -->
-    ${showQrCode ? generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 230, 250, 110) : ''}
+    ${showQrCode ? generateSvgQrCode(qrTargetUrl, 230, 250, 110) : ''}
   </g>
 
   <!-- RIGHT COLUMN: BADGE, HEADLINE, SUBTITLE, BULLETS CARD -->
@@ -1165,7 +1173,7 @@ function generateBannerSVG({
     ${showSocialProof ? renderSocialProofSvg(16, 16, 0.95) : ''}
 
     <!-- Dynamic Booking QR Code Embed (Bottom-Right) -->
-    ${showQrCode ? generateSvgQrCode('https://travelbellsimmigration.com/book-appointment', 285, 470, 125) : ''}
+    ${showQrCode ? generateSvgQrCode(qrTargetUrl, 285, 470, 125) : ''}
   </g>
 
   <g transform="translate(480, 135)">
@@ -1953,9 +1961,8 @@ async function renderBannerWithPuppeteer(bannerData) {
         <span>⭐⭐⭐⭐⭐</span> <span>4.9/5 (500+ Clients)</span>
       </div>` : ''}
       ${showQrCode ? `
-      <div style="position:absolute; bottom:16px; right:16px; background:#FFFFFF; border:2px solid #002B49; border-radius:12px; padding:8px; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.2); z-index:4;">
-        <div style="font-weight:800; font-size:10px; color:#C8102E; margin-bottom:4px;">SCAN TO BOOK</div>
-        <div style="width:85px; height:85px; background:#002B49; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:24px; font-weight:900;">QR</div>
+      <div style="position:absolute; bottom:16px; right:16px; z-index:4;">
+        ${generateSvgQrCode(bannerData.qrTargetUrl || 'https://travelbellsimmigration.com/book-appointment', 0, 0, 95)}
       </div>` : ''}
     </div>
 
@@ -2756,7 +2763,7 @@ Travelbells Immigration Inc. | Licensed RCIC CICC Member Firm`;
 const PORT_TO_LISTEN = process.env.PORT || 3007;
 
 if (require.main === module) {
-  server.listen(PORT_TO_LISTEN, '127.0.0.1', () => {
+  server.listen(PORT_TO_LISTEN, () => {
     console.log(`====================================================`);
     console.log(`🚀 Travelbells Ad Studio Server running on port ${PORT_TO_LISTEN}`);
     console.log(`🌐 Local UI Access: http://127.0.0.1:${PORT_TO_LISTEN}`);
