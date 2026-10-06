@@ -2164,57 +2164,70 @@ async function switchGraphicLanguage(lang) {
   const langSelect = document.getElementById('input-language');
   if (langSelect) langSelect.value = lang;
 
-  let langObj = (activeBilingualData && activeBilingualData.campaign) ? activeBilingualData.campaign[lang] : null;
+  // Master English baseline text from activeBilingualData
+  const masterEn = activeBilingualData?.campaign?.en;
 
-  const curHeadline = document.getElementById('canvas-headline')?.value || '';
-  const curSubtitle = document.getElementById('canvas-subtitle')?.value || '';
-  const curBadge = document.getElementById('canvas-badge-input')?.value || '';
-  const curB1 = document.getElementById('canvas-b1')?.value || '';
-  const curB2 = document.getElementById('canvas-b2')?.value || '';
-  const curB3 = document.getElementById('canvas-b3')?.value || '';
-  const curB4 = document.getElementById('canvas-b4')?.value || '';
+  const titleSource = masterEn?.title || document.getElementById('canvas-headline')?.value || 'Travelbells Immigration';
+  const subtitleSource = masterEn?.subtitle || document.getElementById('canvas-subtitle')?.value || '';
+  const badgeSource = masterEn?.badgeText || document.getElementById('canvas-badge-input')?.value || 'STUDY VISA UPGRADE';
+  const b1Source = masterEn?.bullets?.[0] || document.getElementById('canvas-b1')?.value || '';
+  const b2Source = masterEn?.bullets?.[1] || document.getElementById('canvas-b2')?.value || '';
+  const b3Source = masterEn?.bullets?.[2] || document.getElementById('canvas-b3')?.value || '';
+  const b4Source = masterEn?.bullets?.[3] || document.getElementById('canvas-b4')?.value || '';
 
-  try {
-    const res = await fetch('/api/translate-text', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: langObj?.title || curHeadline,
-        subtitle: langObj?.subtitle || curSubtitle,
-        badgeText: langObj?.badgeText || curBadge,
-        b1: (langObj?.bullets ? langObj.bullets[0] : null) || curB1,
-        b2: (langObj?.bullets ? langObj.bullets[1] : null) || curB2,
-        b3: (langObj?.bullets ? langObj.bullets[2] : null) || curB3,
-        b4: (langObj?.bullets ? langObj.bullets[3] : null) || curB4,
-        targetLang: lang
-      })
-    });
-    const trData = await res.json();
-    if (trData.success) {
-      setVal('canvas-headline', trData.title);
-      setVal('canvas-subtitle', trData.subtitle);
-      setVal('canvas-badge-input', trData.badgeText);
-      setVal('canvas-b1', trData.b1);
-      setVal('canvas-b2', trData.b2);
-      setVal('canvas-b3', trData.b3);
-      setVal('canvas-b4', trData.b4);
-
-      if (!activeBilingualData) activeBilingualData = { campaign: {} };
-      if (!activeBilingualData.campaign) activeBilingualData.campaign = {};
-      
-      activeBilingualData.campaign[lang] = {
-        title: trData.title,
-        subtitle: trData.subtitle,
-        badgeText: trData.badgeText,
-        bullets: [trData.b1, trData.b2, trData.b3, trData.b4],
-        fullCopy: `🇨🇦 ${trData.title}\n\n${trData.subtitle}\n\n✨ Key Highlights:\n🔴 ${trData.b1}\n🔴 ${trData.b2}\n🔴 ${trData.b3}\n🔴 ${trData.b4}\n\n📩 BOOK YOUR CONSULTATION TODAY:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Licensed RCIC Firm\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp: +1 (647) 890-1476`,
-        tiktokScript: `🎬 [TIKTOK HOOK - ${lang.toUpperCase()}]\nHeadline: ${trData.title}\nSubtitle: ${trData.subtitle}\nCall-To-Action: Link in Bio!`,
-        whatsapp: `🇨🇦 *Travelbells Immigration Update (${lang.toUpperCase()})*\n\n*${trData.title}*\n${trData.subtitle}\n\n👉 Book: https://wa.me/16478901476`,
-        linkedin: `💼 CANADIAN IMMIGRATION ADVISORY | ${trData.title}\n\n${trData.subtitle}\n\n• ${trData.b1}\n• ${trData.b2}\n• ${trData.b3}\n\n🌐 https://www.travelbellsimmigration.com`
-      };
+  if (lang === 'en' && masterEn) {
+    setVal('canvas-headline', masterEn.title);
+    setVal('canvas-subtitle', masterEn.subtitle);
+    setVal('canvas-badge-input', masterEn.badgeText);
+    if (masterEn.bullets) {
+      setVal('canvas-b1', masterEn.bullets[0] || '');
+      setVal('canvas-b2', masterEn.bullets[1] || '');
+      setVal('canvas-b3', masterEn.bullets[2] || '');
+      setVal('canvas-b4', masterEn.bullets[3] || '');
     }
-  } catch (err) {
-    console.warn("Translation sync note:", err);
+  } else {
+    try {
+      const res = await fetch('/api/translate-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: titleSource,
+          subtitle: subtitleSource,
+          badgeText: badgeSource,
+          b1: b1Source,
+          b2: b2Source,
+          b3: b3Source,
+          b4: b4Source,
+          targetLang: lang
+        })
+      });
+      const trData = await res.json();
+      if (trData.success) {
+        setVal('canvas-headline', trData.title);
+        setVal('canvas-subtitle', trData.subtitle);
+        setVal('canvas-badge-input', trData.badgeText);
+        setVal('canvas-b1', trData.b1);
+        setVal('canvas-b2', trData.b2);
+        setVal('canvas-b3', trData.b3);
+        setVal('canvas-b4', trData.b4);
+
+        if (!activeBilingualData) activeBilingualData = { campaign: {} };
+        if (!activeBilingualData.campaign) activeBilingualData.campaign = {};
+        
+        activeBilingualData.campaign[lang] = {
+          title: trData.title,
+          subtitle: trData.subtitle,
+          badgeText: trData.badgeText,
+          bullets: [trData.b1, trData.b2, trData.b3, trData.b4],
+          fullCopy: `🇨🇦 ${trData.title}\n\n${trData.subtitle}\n\n✨ Key Highlights:\n🔴 ${trData.b1}\n🔴 ${trData.b2}\n🔴 ${trData.b3}\n🔴 ${trData.b4}\n\n📩 BOOK YOUR CONSULTATION TODAY:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Licensed RCIC Firm\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp: +1 (647) 890-1476`,
+          tiktokScript: `🎬 [TIKTOK HOOK - ${lang.toUpperCase()}]\nHeadline: ${trData.title}\nSubtitle: ${trData.subtitle}\nCall-To-Action: Link in Bio!`,
+          whatsapp: `🇨🇦 *Travelbells Immigration Update (${lang.toUpperCase()})*\n\n*${trData.title}*\n${trData.subtitle}\n\n👉 Book: https://wa.me/16478901476`,
+          linkedin: `💼 CANADIAN IMMIGRATION ADVISORY | ${trData.title}\n\n${trData.subtitle}\n\n• ${trData.b1}\n• ${trData.b2}\n• ${trData.b3}\n\n🌐 https://www.travelbellsimmigration.com`
+        };
+      }
+    } catch (err) {
+      console.warn("Translation sync note:", err);
+    }
   }
 
   updateGraphicDisplay();

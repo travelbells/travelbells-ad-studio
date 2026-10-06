@@ -1857,7 +1857,7 @@ async function renderBannerWithPuppeteer(bannerData) {
   const websiteText = bannerData.footerWebsite || bannerData.websiteText || 'www.travelbellsimmigration.com';
   const emailText = bannerData.footerEmail || bannerData.emailText || 'info@travelbellsimmigration.com';
   const phoneText = bannerData.footerPhone || bannerData.phoneText || '+1 (647) 890-1476';
-  const locationText = bannerData.footerLocation || bannerData.locationText || (isFr ? 'Ontario, Canada • Membre CICC Agréé • register.college-ic.ca' : 'Ontario, Canada • Licensed CICC Member • register.college-ic.ca');
+  let locationText = bannerData.footerLocation || bannerData.locationText || (isFr ? 'Ontario, Canada • Membre CICC Agréé • register.college-ic.ca' : 'Ontario, Canada • Licensed CICC Member • register.college-ic.ca');
   const watermarkStyle = bannerData.watermark || bannerData.backgroundWatermark || 'maple';
   const width = format === 'story' ? 1080 : format === 'landscape' ? 1200 : 1080;
   const height = format === 'story' ? 1920 : format === 'landscape' ? 630 : 1080;
