@@ -2299,7 +2299,7 @@ async function renderBannerWithPuppeteer(bannerData) {
 
   try {
     const browser = await getPuppeteerBrowser();
-    if (!browser) return null;
+    if (!browser) return generateBannerSVG(bannerData);
     const page = await browser.newPage();
     await page.setViewport({ width, height, deviceScaleFactor: 2 });
     await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 5000 });
@@ -2318,7 +2318,7 @@ async function renderBannerWithPuppeteer(bannerData) {
     return 'data:image/png;base64,' + Buffer.from(buffer).toString('base64');
   } catch (err) {
     console.error("Puppeteer render error:", err);
-    return null;
+    return generateBannerSVG(bannerData);
   }
 }
 
@@ -2430,39 +2430,43 @@ function autoGenerateBilingualCampaign(body = {}) {
   let b4_FR = translateToFrench(b4_EN);
 
   // Explicit property overrides from request body if passed directly
-  if (title) { title_EN = title; title_FR = translateToFrench(title); }
-  if (subtitle) { subtitle_EN = subtitle; subtitle_FR = translateToFrench(subtitle); }
-  if (badgeText) { badge_EN = badgeText; badge_FR = translateToFrench(badgeText); }
-  if (b1) { b1_EN = b1; b1_FR = translateToFrench(b1); }
-  if (b2) { b2_EN = b2; b2_FR = translateToFrench(b2); }
-  if (b3) { b3_EN = b3; b3_FR = translateToFrench(b3); }
-  if (b4) { b4_EN = b4; b4_FR = translateToFrench(b4); }
+  if (title) title_EN = title;
+  if (subtitle) subtitle_EN = subtitle;
+  if (badgeText) badge_EN = badgeText;
+  if (b1) b1_EN = b1;
+  if (b2) b2_EN = b2;
+  if (b3) b3_EN = b3;
+  if (b4) b4_EN = b4;
 
-  return {
+  const result = {
     tagline: rawNote,
     category,
-    language,
-    en: {
-      title: title_EN,
-      subtitle: subtitle_EN,
-      badgeText: badge_EN,
-      bullets: [b1_EN, b2_EN, b3_EN, b4_EN],
-      fullCopy: `🇨🇦 ${title_EN}\n\n${subtitle_EN}\n\n✨ Key Highlights:\n🔴 ${b1_EN}\n🔴 ${b2_EN}\n🔴 ${b3_EN}\n🔴 ${b4_EN}\n\n📩 BOOK YOUR CONSULTATION TODAY:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Licensed RCIC Firm\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp: +1 (647) 890-1476`,
-      tiktokScript: `🎬 [TIKTOK HOOK - ENGLISH]\nHeadline: ${title_EN}\nSubtitle: ${subtitle_EN}\nCall-To-Action: Link in Bio!`,
-      whatsapp: `🇨🇦 *Travelbells Immigration Update*\n\n*${title_EN}*\n${subtitle_EN}\n\n👉 Book: https://wa.me/16478901476`,
-      linkedin: `💼 CANADIAN IMMIGRATION ADVISORY | ${title_EN}\n\n${subtitle_EN}\n\n• ${b1_EN}\n• ${b2_EN}\n• ${b3_EN}\n\n🌐 https://www.travelbellsimmigration.com`
-    },
-    fr: {
-      title: title_FR,
-      subtitle: subtitle_FR,
-      badgeText: badge_FR,
-      bullets: [b1_FR, b2_FR, b3_FR, b4_FR],
-      fullCopy: `🇨🇦 ${title_FR}\n\n${subtitle_FR}\n\n✨ Avantages Principaux:\n🔹 ${b1_FR}\n🔹 ${b2_FR}\n🔹 ${b3_FR}\n🔹 ${b4_FR}\n\n📩 ÉVALUATION DE VOTRE DOSSIER:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Cabinet agréé CRIC\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp Direct: +1 (647) 890-1476`,
-      tiktokScript: `🎬 [TIKTOK HOOK - FRANÇAIS]\nTitre: ${title_FR}\nSous-titre: ${subtitle_FR}\nAppel à l'action: Lien en Bio!`,
-      whatsapp: `🇨🇦 *Mise à jour Travelbells Immigration*\n\n*${title_FR}*\n${subtitle_FR}\n\n👉 Contact WhatsApp: https://wa.me/16478901476`,
-      linkedin: `💼 IMMIGRATION CANADA | ${title_FR}\n\n${subtitle_FR}\n\n• ${b1_FR}\n• ${b2_FR}\n• ${b3_FR}\n\n🌐 https://www.travelbellsimmigration.com`
-    }
+    language
   };
+
+  const langKeys = ['en', 'fr', 'pa', 'hi', 'tl', 'es', 'ar'];
+  for (const l of langKeys) {
+    const tTitle = translateToLanguage(title_EN, l);
+    const tSub = translateToLanguage(subtitle_EN, l);
+    const tBadge = translateToLanguage(badge_EN, l);
+    const tB1 = translateToLanguage(b1_EN, l);
+    const tB2 = translateToLanguage(b2_EN, l);
+    const tB3 = translateToLanguage(b3_EN, l);
+    const tB4 = translateToLanguage(b4_EN, l);
+
+    result[l] = {
+      title: tTitle,
+      subtitle: tSub,
+      badgeText: tBadge,
+      bullets: [tB1, tB2, tB3, tB4],
+      fullCopy: `🇨🇦 ${tTitle}\n\n${tSub}\n\n✨ Key Highlights:\n🔴 ${tB1}\n🔴 ${tB2}\n🔴 ${tB3}\n🔴 ${tB4}\n\n📩 BOOK YOUR CONSULTATION TODAY:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Licensed RCIC Firm\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp: +1 (647) 890-1476`,
+      tiktokScript: `🎬 [TIKTOK HOOK - ${l.toUpperCase()}]\nHeadline: ${tTitle}\nSubtitle: ${tSub}\nCall-To-Action: Link in Bio!`,
+      whatsapp: `🇨🇦 *Travelbells Immigration Update (${l.toUpperCase()})*\n\n*${tTitle}*\n${tSub}\n\n👉 Book: https://wa.me/16478901476`,
+      linkedin: `💼 CANADIAN IMMIGRATION ADVISORY | ${tTitle}\n\n${tSub}\n\n• ${tB1}\n• ${tB2}\n• ${tB3}\n\n🌐 https://www.travelbellsimmigration.com`
+    };
+  }
+
+  return result;
 }
 
 // Router Request Handler

@@ -773,8 +773,8 @@ async function generate1ClickBilingualCampaign() {
     if (data.success && (data.campaign || data.graphics)) {
       activeBilingualData = data;
       const camp = data.campaign;
-      const selectedLang = document.getElementById('input-language')?.value || 'en';
-      const langObj = (selectedLang === 'fr' && camp?.fr) ? camp.fr : camp?.en;
+      const selectedLang = activeGraphicLang || document.getElementById('input-language')?.value || 'en';
+      const langObj = (camp && camp[selectedLang]) ? camp[selectedLang] : camp?.en;
 
       if (langObj) {
         setVal('canvas-headline', langObj.title);
@@ -2053,6 +2053,12 @@ function applyNichePreset(presetKey) {
 
   if (inputEl && presets[presetKey]) {
     inputEl.value = presets[presetKey];
+    setVal('canvas-headline', '');
+    setVal('canvas-subtitle', '');
+    setVal('canvas-b1', '');
+    setVal('canvas-b2', '');
+    setVal('canvas-b3', '');
+    setVal('canvas-b4', '');
     generate1ClickBilingualCampaign();
   }
 }
@@ -2149,11 +2155,14 @@ function updateCopyFromBilingualData() {
 
 function switchGraphicLanguage(lang) {
   activeGraphicLang = lang;
-  document.getElementById('tab-lang-en')?.classList.toggle('active', lang === 'en');
-  document.getElementById('tab-lang-fr')?.classList.toggle('active', lang === 'fr');
+  
+  const allLangs = ['en', 'fr', 'pa', 'hi', 'tl', 'es', 'ar'];
+  allLangs.forEach(l => {
+    document.getElementById(`tab-lang-${l}`)?.classList.toggle('active', l === lang);
+  });
 
   if (activeBilingualData && activeBilingualData.campaign) {
-    const langObj = lang === 'fr' ? activeBilingualData.campaign.fr : activeBilingualData.campaign.en;
+    const langObj = activeBilingualData.campaign[lang] || activeBilingualData.campaign.en;
     if (langObj) {
       setVal('canvas-headline', langObj.title);
       setVal('canvas-subtitle', langObj.subtitle);
@@ -2610,6 +2619,13 @@ function applyGeoPreset(city) {
     const input = document.getElementById('quick-tagline-input');
     if (input) input.value = cfg.tagline;
     setPresetBadge(cfg.badge);
+    setVal('canvas-headline', '');
+    setVal('canvas-subtitle', '');
+    setVal('canvas-b1', '');
+    setVal('canvas-b2', '');
+    setVal('canvas-b3', '');
+    setVal('canvas-b4', '');
+    if (cfg.photo) switchCreativePhoto(cfg.photo);
     generate1ClickBilingualCampaign();
   }
 }
