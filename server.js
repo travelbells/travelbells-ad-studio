@@ -2661,6 +2661,63 @@ function autoGenerateBilingualCampaign(body = {}) {
   return result;
 }
 
+function parseAiCommand(commandText) {
+  if (!commandText || typeof commandText !== 'string') {
+    return { success: false, error: 'Empty command string' };
+  }
+
+  const text = commandText.toLowerCase();
+
+  // 1. Language Detection
+  let language = 'en';
+  if (text.includes('punjabi') || text.includes('ਪੰਜਾਬੀ') || text.includes(' pa ') || text.includes('in punjabi')) language = 'pa';
+  else if (text.includes('hindi') || text.includes('हिंदी') || text.includes(' hi ') || text.includes('in hindi')) language = 'hi';
+  else if (text.includes('tagalog') || text.includes('filipino') || text.includes('tl') || text.includes('philippines')) language = 'tl';
+  else if (text.includes('spanish') || text.includes('español') || text.includes('es') || text.includes('in spanish')) language = 'es';
+  else if (text.includes('arabic') || text.includes('عربي') || text.includes('ar') || text.includes('in arabic')) language = 'ar';
+  else if (text.includes('french') || text.includes('français') || text.includes('fr') || text.includes('in french')) language = 'fr';
+
+  // 2. Category / Topic Detection
+  let category = 'students';
+  if (text.includes('worker') || text.includes('express entry') || text.includes('oinp') || text.includes('pnp') || text.includes('skilled') || text.includes('pilot') || text.includes('job') || text.includes('career') || text.includes('francophone')) {
+    category = 'workers';
+  } else if (text.includes('student') || text.includes('study') || text.includes('pgwp') || text.includes('college') || text.includes('university')) {
+    category = 'students';
+  } else if (text.includes('family') || text.includes('spouse') || text.includes('parent') || text.includes('sowp') || text.includes('sponsorship')) {
+    category = 'family';
+  } else if (text.includes('visitor') || text.includes('tourist') || text.includes('lmia') || text.includes('work permit')) {
+    category = 'visitor';
+  }
+
+  // 3. Region / Geotag Detection
+  let region = 'brampton';
+  if (text.includes('calgary') || text.includes('alberta') || text.includes('aaip')) region = 'calgary';
+  else if (text.includes('surrey') || text.includes('vancouver') || text.includes('bc')) region = 'surrey';
+  else if (text.includes('montreal') || text.includes('quebec') || text.includes('francophone')) region = 'montreal';
+  else if (text.includes('brampton') || text.includes('peel') || text.includes('ontario') || text.includes('oinp')) region = 'brampton';
+
+  // 4. Theme / Humanized Renderer Selection
+  let themePreset = 'editorial_news'; // Default to 100% humanized editorial news!
+  if (text.includes('dark') || text.includes('glass')) themePreset = 'dark_glass';
+  else if (text.includes('red') || text.includes('vibrant')) themePreset = 'vibrant_red';
+  else if (text.includes('corporate') || text.includes('light')) themePreset = 'light_corporate';
+
+  // 5. Auto Publish Action Detection
+  const autoPublish = text.includes('publish') || text.includes('post') || text.includes('facebook') || text.includes('social media') || text.includes('dispatch') || text.includes('send') || text.includes('upload');
+
+  return {
+    success: true,
+    rawCommand: commandText,
+    parsed: {
+      category,
+      language,
+      region,
+      themePreset,
+      autoPublish
+    }
+  };
+}
+
 // Router Request Handler
 const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
@@ -2687,6 +2744,11 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       let body = {};
       try { if (bodyData) body = JSON.parse(bodyData); } catch (e) {}
+
+      if (pathname === '/api/parse-ai-command' && method === 'POST') {
+        const result = parseAiCommand(body.command || body.prompt || '');
+        return sendJson(result);
+      }
 
       if (pathname === '/api/draft-state' && method === 'GET') {
         const draft = getDraftState();
@@ -3294,7 +3356,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { autoGenerateBilingualCampaign, translateToFrench, translateToLanguage, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, server };
+module.exports = { autoGenerateBilingualCampaign, translateToFrench, translateToLanguage, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, parseAiCommand, server };
 
 
 

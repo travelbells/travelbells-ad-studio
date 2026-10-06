@@ -65,6 +65,27 @@
           </button>
         </div>
 
+        <!-- AI Voice Microphone 🎙️ & Natural Language Command Input Bar -->
+        <div class="ai-voice-command-bar" style="margin-top:14px; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); padding: 14px 18px; border-radius: 16px; border: 1.5px solid #38BDF8; box-shadow: 0 8px 24px rgba(15,23,42,0.25);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:18px;">🎙️</span>
+              <strong style="color:#FFFFFF; font-size:13.5px; letter-spacing:0.5px;">AI VOICE & NATURAL LANGUAGE COMMAND ENGINE</strong>
+              <span id="voice-status-badge" style="background:rgba(56,189,248,0.15); color:#38BDF8; border:1px solid rgba(56,189,248,0.4); font-size:11px; font-weight:700; padding:2px 8px; border-radius:12px;">Oral or Written Command</span>
+            </div>
+            <span style="color:#94A3B8; font-size:11.5px;">Click Mic 🎙️ or Type Instruction below</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button id="mic-toggle-btn" onclick="toggleVoiceRecording()" style="background:#C8102E; color:#FFFFFF; border:none; font-weight:800; font-size:14px; padding:10px 16px; border-radius:12px; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s ease;">
+              <span id="mic-icon">🎙️</span> <span id="mic-btn-label">Speak Command</span>
+            </button>
+            <input type="text" id="ai-command-input" class="hero-input-field" placeholder="e.g. 'Generate a Punjabi ad for Brampton students whose PGWP is expiring and publish to Facebook'..." style="flex:1; background:#020617; border-color:#334155; color:#F8FAFC; font-weight:600;" />
+            <button class="btn btn-primary" onclick="executeAiCommand()" style="background:linear-gradient(135deg, #38BDF8 0%, #0284C7 100%); color:#FFFFFF; border:none; font-weight:800; font-size:13.5px; padding:10px 18px; border-radius:12px; cursor:pointer; white-space:nowrap;">
+              ⚡ Run AI Command
+            </button>
+          </div>
+        </div>
+
         <!-- High-Converting Niche Target Presets Ribbon -->
         <div class="niche-audience-ribbon" style="margin-top:14px; background: rgba(200, 16, 46, 0.04); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(200, 16, 46, 0.18); display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           <span class="preset-label" style="font-weight:800; color: #C8102E; font-size:12px;">🎯 High-Converting Niche Targets:</span>

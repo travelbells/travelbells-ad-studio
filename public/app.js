@@ -2763,5 +2763,146 @@ function toggleCRSCalculatorLeadOverlay() {
   }
 }
 
+// 🎙️ Speech Recognition AI Voice & Command Engine
+let isVoiceRecording = false;
+let speechRecognitionInstance = null;
+
+function toggleVoiceRecording() {
+  const micBtn = document.getElementById('mic-toggle-btn');
+  const micLabel = document.getElementById('mic-btn-label');
+  const statusBadge = document.getElementById('voice-status-badge');
+  const inputEl = document.getElementById('ai-command-input');
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Voice Speech Recognition is not supported in this browser version. You can type your command directly in the input box!");
+    return;
+  }
+
+  if (isVoiceRecording) {
+    if (speechRecognitionInstance) speechRecognitionInstance.stop();
+    isVoiceRecording = false;
+    if (micBtn) micBtn.style.background = '#C8102E';
+    if (micLabel) micLabel.innerText = 'Speak Command';
+    if (statusBadge) {
+      statusBadge.innerText = 'Oral or Written Command';
+      statusBadge.style.color = '#38BDF8';
+    }
+    return;
+  }
+
+  try {
+    speechRecognitionInstance = new SpeechRecognition();
+    speechRecognitionInstance.continuous = false;
+    speechRecognitionInstance.interimResults = true;
+    speechRecognitionInstance.lang = 'en-US';
+
+    speechRecognitionInstance.onstart = () => {
+      isVoiceRecording = true;
+      if (micBtn) micBtn.style.background = '#EF4444';
+      if (micLabel) micLabel.innerText = 'Listening...';
+      if (statusBadge) {
+        statusBadge.innerText = '🔴 Listening... Speak now!';
+        statusBadge.style.color = '#EF4444';
+      }
+    };
+
+    speechRecognitionInstance.onresult = (e) => {
+      let transcript = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        transcript += e.results[i][0].transcript;
+      }
+      if (inputEl) inputEl.value = transcript;
+    };
+
+    speechRecognitionInstance.onerror = (err) => {
+      console.warn("Speech recognition note:", err);
+      isVoiceRecording = false;
+      if (micBtn) micBtn.style.background = '#C8102E';
+      if (micLabel) micLabel.innerText = 'Speak Command';
+      if (statusBadge) {
+        statusBadge.innerText = 'Voice Error. Type instruction below';
+        statusBadge.style.color = '#F59E0B';
+      }
+    };
+
+    speechRecognitionInstance.onend = () => {
+      isVoiceRecording = false;
+      if (micBtn) micBtn.style.background = '#C8102E';
+      if (micLabel) micLabel.innerText = 'Speak Command';
+      if (statusBadge) {
+        statusBadge.innerText = 'Command Captured! Processing...';
+        statusBadge.style.color = '#10B981';
+      }
+      if (inputEl && inputEl.value.trim().length > 3) {
+        executeAiCommand();
+      }
+    };
+
+    speechRecognitionInstance.start();
+  } catch (err) {
+    console.error("Speech init error:", err);
+  }
+}
+
+async function executeAiCommand() {
+  const inputEl = document.getElementById('ai-command-input');
+  const commandText = inputEl ? inputEl.value.trim() : '';
+
+  if (!commandText) {
+    alert("Please type or speak an AI instruction command first (e.g., 'Generate a Punjabi ad for Brampton students and publish to Facebook').");
+    return;
+  }
+
+  const statusBadge = document.getElementById('voice-status-badge');
+  if (statusBadge) {
+    statusBadge.innerText = '⚡ Interpreting Command with AI...';
+    statusBadge.style.color = '#38BDF8';
+  }
+
+  try {
+    const res = await fetch('/api/parse-ai-command', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: commandText })
+    });
+    const data = await res.json();
+
+    if (data.success && data.parsed) {
+      const { category, language, region, themePreset, autoPublish } = data.parsed;
+
+      // Apply Niche Category & Geotag Preset
+      applyNichePreset(category || 'students');
+      applyGeoPreset(region || 'brampton');
+
+      // Set Theme Preset (Defaults to Editorial News for 100% Humanized Look!)
+      const themeSelect = document.getElementById('select-theme-preset');
+      if (themeSelect) themeSelect.value = themePreset || 'editorial_news';
+
+      // Switch Language (EN, FR, PA, HI, TL, ES, AR)
+      await switchGraphicLanguage(language || 'pa');
+
+      if (statusBadge) {
+        statusBadge.innerText = `✅ Creative Generated: ${language.toUpperCase()} | ${region.toUpperCase()} | ${category.toUpperCase()}`;
+        statusBadge.style.color = '#10B981';
+      }
+
+      // Auto Publish to Social Webhook if requested in command
+      if (autoPublish) {
+        setTimeout(() => {
+          triggerLiveWebhookDispatch();
+        }, 1200);
+      }
+    }
+  } catch (err) {
+    console.error("Execute AI Command error:", err);
+    if (statusBadge) {
+      statusBadge.innerText = '⚠️ Execution Note. Generated defaults applied';
+      statusBadge.style.color = '#F59E0B';
+    }
+  }
+}
+
 
 
