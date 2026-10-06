@@ -528,100 +528,154 @@ function translateToLanguage(text, lang = 'en') {
   if (!text) return '';
   if (lang === 'en') return text;
   if (lang === 'fr') return translateToFrench(text);
-  
+
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   const translations = {
     pa: {
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS FAST-TRACK CANADIAN PERMANENT RESIDENCY 2026": "ਸਕਿਲਡ ਵਰਕਰ ਐਕਸਪ੍ਰੈਸ ਐਂਟਰੀ ਅਤੇ ਓਨਟਾਰੀਓ OINP ਡਰਾਅ - ਫਾਸਟ-ਟਰੈਕ ਕੈਨੇਡੀਅਨ ਪੀ.ਆਰ 2026",
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS": "ਸਕਿਲਡ ਵਰਕਰ ਐਕਸਪ੍ਰੈਸ ਐਂਟਰੀ ਅਤੇ ਓਨਟਾਰੀਓ OINP ਡਰਾਅ",
       "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "ਕੈਨੇਡਾ ਵਰਕ ਪਰਮਿਟ ਖਤਮ? ਚਿੰਤਾ ਨਾ ਕਰੋ, ਅੱਗੇ ਵਧੋ",
       "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM - DIRECT PR SKILLED PROFESSIONALS": "ਕੈਲਗਰੀ ਅਤੇ ਅਲਬਰਟਾ ਏਏਆਈਪੀ ਟੈਕ ਸਟ੍ਰੀਮ - ਸਿੱਧੀ ਪੀ.ਆਰ",
       "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM": "ਕੈਲਗਰੀ ਅਤੇ ਅਲਬਰਟਾ ਏਏਆਈਪੀ ਟੈਕ ਸਟ੍ਰੀਮ",
       "BRAMPTON & PEEL PGWP WORK PERMIT EXPIRY": "ਬ੍ਰੈਂਪਟਨ ਪੀਜੀਡਬਲਯੂਪੀ ਵਰਕ ਪਰਮਿਟ ਅੱਪਗ੍ਰੇਡ",
       "SURREY & VANCOUVER SKILLED TRADES": "ਸਰੀ ਅਤੇ ਵੈਨਕੂਵਰ ਸਕਿਲਡ ਟਰੇਡਜ਼",
-      "EXPRESS ENTRY PR": "ਐਕਸਪ੍ਰੈਸ ਐਂਟਰੀ ਪੀ.ਆਰ",
-      "STUDY VISA UPGRADE": "ਸਟੱਡੀ ਵੀਜ਼ਾ ਅੱਪਗ੍ਰੇਡ",
+      "REGULATED RCIC LEGAL GUIDANCE & APPLICATION SUPPORT ACROSS CANADA": "ਕੈਨੇਡਾ ਭਰ ਵਿੱਚ ਰੈਗੂਲੇਟਿਡ RCIC ਕਾਨੂੰਨੀ ਸਲਾਹ ਅਤੇ ਅਰਜ਼ੀ ਸਹਾਇਤਾ",
+      "YOUR TIME IN CANADA DOESN'T HAVE TO STOP HERE": "ਕੈਨੇਡਾ ਵਿੱਚ ਤੁਹਾਡਾ ਸਮਾਂ ਇੱਥੇ ਖਤਮ ਹੋਣ ਦੀ ਲੋੜ ਨਹੀਂ",
+      "TARGETED PR PATHWAYS & WORK PERMIT OPTIONS ACROSS CANADA": "ਕੈਨੇਡਾ ਭਰ ਵਿੱਚ ਟਾਰਗੇਟਿਡ ਪੀ.ਆਰ ਰਸਤੇ ਅਤੇ ਵਰਕ ਪਰਮਿਟ ਵਿਕਲਪ",
+      "EMPLOYER JOB OFFER & PROVINCIAL NOMINATION (PNP) ASSESSMENT": "ਨਿਯੋਜਕ ਨੌਕਰੀ ਦੀ ਪੇਸ਼ਕਸ਼ ਅਤੇ ਸੂਬਾਈ ਨਾਮਜ਼ਦਗੀ (PNP) ਮੁਲਾਂਕਣ",
+      "SPOUSE OPEN WORK PERMIT (SOWP) ELIGIBILITY FOR ACCOMPANYING FAMILY": "ਨਾਲ ਜਾਣ ਵਾਲੇ ਪਰਿਵਾਰ ਲਈ ਸਪਾਊਸ ਓਪਨ ਵਰਕ ਪਰਮਿਟ (SOWP) ਯੋਗਤਾ",
+      "COMPLETE LEGAL REPRESENTATION BY LICENSED RCIC CONSULTANTS": "ਲਾਇਸੰਸਸ਼ੁਦਾ RCIC ਸਲਾਹਕਾਰਾਂ ਦੁਆਰਾ ਪੂਰੀ ਕਾਨੂੰਨੀ ਨੁਮਾਇੰਦਗੀ",
+      "ACCREDITED DIPLOMA & MASTER'S DEGREE OPTIONS ACROSS CANADA": "ਕੈਨੇਡਾ ਭਰ ਵਿੱਚ ਮਾਨਤਾ ਪ੍ਰਾਪਤ ਡਿਪਲੋਮਾ ਅਤੇ ਮਾਸਟਰ ਡਿਗਰੀ ਵਿਕਲਪ",
+      "FLEXIBLE ADMISSION OPTIONS FOR LOW IELTS / CELPIP SCORES": "ਘੱਟ IELTS / CELPIP ਸਕੋਰਾਂ ਲਈ ਲਚਕਦਾਰ ਦਾਖਲਾ ਵਿਕਲਪ",
+      "MAINTAIN LEGAL STATUS & TRANSITION TO PERMANENT RESIDENCY (PR)": "ਕਾਨੂੰਨੀ ਸਥਿਤੀ ਬਣਾਏ ਰੱਖੋ ਅਤੇ ਪੱਕੀ ਰਿਹਾਇਸ਼ (PR) ਪ੍ਰਾਪਤ ਕਰੋ",
+      "COMPREHENSIVE CRS SCORE OPTIMIZATION AND TARGETED DRAW MATCHING": "ਵਿਆਪਕ CRS ਸਕੋਰ ਅਨੁਕੂਲਨ ਅਤੇ ਟਾਰਗੇਟਿਡ ਡਰਾਅ ਮੇਲ",
       "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "ਅੱਜ ਹੀ ਆਪਣੀ ਆਰਸੀਆਈਸੀ ਸਲਾਹ ਬੁੱਕ ਕਰੋ",
+      "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "👉 ਅੱਜ ਹੀ ਆਪਣੀ ਅਧਿਕਾਰਤ RCIC ਰਣਨੀਤੀ ਸਲਾਹ ਬੁੱਕ ਕਰੋ",
+      "🇨🇦 LICENSED RCIC MEMBER": "🇨🇦 ਲਾਇਸੰਸਸ਼ੁਦਾ RCIC ਮੈਂਬਰ",
+      "⚡ FAST-TRACK PROCESSING 2026": "⚡ ਫਾਸਟ-ਟਰੈਕ ਪ੍ਰੋਸੈਸਿੰਗ 2026",
+      "🔥 HIGH APPROVAL RATE": "🔥 ਉੱਚ ਮੰਜ਼ੂਰੀ ਦਰ",
+      "🎯 FREE 15-MIN ASSESSMENT": "🎯 ਮੁਫਤ 15-ਮਿੰਟ ਮੁਲਾਂਕਣ",
+      "ONTARIO, CANADA • LICENSED CICC MEMBER • REGISTER.COLLEGE-IC.CA": "ਓਨਟਾਰੀਓ, ਕੈਨੇਡਾ • ਲਾਇਸੰਸਸ਼ੁਦਾ CICC ਮੈਂਬਰ • register.college-ic.ca",
       "CALGARY AAIP TECH STREAM": "ਕੈਲਗਰੀ AAIP ਟੈਕ ਸਟ੍ਰੀਮ",
       "BRAMPTON PGWP UPGRADE": "ਬ੍ਰੈਂਪਟਨ ਪੀਜੀਡਬਲਯੂਪੀ ਅੱਪਗ੍ਰੇਡ",
       "SURREY BC PNP TRADES": "ਸਰੀ ਬੀਸੀ ਪੀਐਨਪੀ ਟਰੇਡਜ਼",
-      "CANADA": "ਕੈਨੇਡਾ",
+      "EXPRESS ENTRY PR": "ਐਕਸਪ੍ਰੈਸ ਐਂਟਰੀ ਪੀ.ਆਰ",
+      "STUDY VISA UPGRADE": "ਸਟੱਡੀ ਵੀਜ਼ਾ ਅੱਪਗ੍ਰੇਡ",
+      "PERMANENT RESIDENCY": "ਪੱਕੀ ਰਿਹਾਇਸ਼ (PR)",
       "WORK PERMIT": "ਵਰਕ ਪਰਮਿਟ",
-      "NO LMIA": "ਬਿਨਾਂ LMIA"
+      "STUDY VISA": "ਸਟੱਡੀ ਵੀਜ਼ਾ",
+      "NO LMIA": "ਬਿਨਾਂ LMIA",
+      "CANADA": "ਕੈਨੇਡਾ"
     },
     hi: {
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS FAST-TRACK CANADIAN PERMANENT RESIDENCY 2026": "स्किल्ड वर्कर एक्सप्रेस एंट्री एवं ओंटारियो OINP ड्रा - फास्ट-ट्रैक कनाडाई पीआर 2026",
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS": "स्किल्ड वर्कर एक्सप्रेस एंट्री एवं ओंटारियो OINP ड्रा",
       "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "कनाडा वर्क परमिट खत्म? बाहर न जाएं, अपग्रेड करें",
       "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM - DIRECT PR SKILLED PROFESSIONALS": "कैलगरी एवं अल्बर्टा AAIP टेक स्ट्रीम - डायरेक्ट पीआर",
       "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM": "कैलगरी एवं अल्बर्टा AAIP टेक स्ट्रीम",
       "BRAMPTON & PEEL PGWP WORK PERMIT EXPIRY": "ब्रैम्पटन PGWP वर्क परमिट अपग्रेड",
       "SURREY & VANCOUVER SKILLED TRADES": "सरे एवं वैंकूवर स्किल्ड ट्रेड्स",
-      "EXPRESS ENTRY PR": "एक्सप्रेस एंट्री पीआर",
-      "STUDY VISA UPGRADE": "स्टडी वीजा अपग्रेड",
+      "REGULATED RCIC LEGAL GUIDANCE & APPLICATION SUPPORT ACROSS CANADA": "पूरे कनाडा में विनियमित RCIC कानूनी मार्गदर्शन एवं आवेदन सहायता",
+      "YOUR TIME IN CANADA DOESN'T HAVE TO STOP HERE": "कनाडा में आपका समय यहीं समाप्त होने की आवश्यकता नहीं है",
+      "TARGETED PR PATHWAYS & WORK PERMIT OPTIONS ACROSS CANADA": "पूरे कनाडा में लक्षित पीआर मार्ग और वर्क परमिट विकल्प",
+      "EMPLOYER JOB OFFER & PROVINCIAL NOMINATION (PNP) ASSESSMENT": "नियोक्ता नौकरी की पेशकश एवं प्रांतीय नामांकन (PNP) मूल्यांकन",
+      "SPOUSE OPEN WORK PERMIT (SOWP) ELIGIBILITY FOR ACCOMPANYING FAMILY": "साथ आने वाले परिवार के लिए जीवनसाथी ओपन वर्क परमिट (SOWP) पात्रता",
+      "COMPLETE LEGAL REPRESENTATION BY LICENSED RCIC CONSULTANTS": "लाइसेंस प्राप्त RCIC सलाहकारों द्वारा पूर्ण कानूनी प्रतिनिधित्व",
+      "ACCREDITED DIPLOMA & MASTER'S DEGREE OPTIONS ACROSS CANADA": "पूरे कनाडा में मान्यता प्राप्त डिप्लोमा और मास्टर डिग्री विकल्प",
+      "FLEXIBLE ADMISSION OPTIONS FOR LOW IELTS / CELPIP SCORES": "कम IELTS / CELPIP स्कोर के लिए लचीले प्रवेश विकल्प",
+      "MAINTAIN LEGAL STATUS & TRANSITION TO PERMANENT RESIDENCY (PR)": "कानूनी स्थिति बनाए रखें और स्थायी निवास (PR) प्राप्त करें",
+      "COMPREHENSIVE CRS SCORE OPTIMIZATION AND TARGETED DRAW MATCHING": "व्यापक CRS स्कोर अनुकूलन और लक्षित ड्रा मिलान",
       "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "आज ही अपनी RCIC सलाह बुक करें",
+      "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "👉 आज ही अपनी आधिकारिक RCIC रणनीति परामर्श बुक करें",
+      "🇨🇦 LICENSED RCIC MEMBER": "🇨🇦 लाइसेंस प्राप्त RCIC सदस्य",
+      "⚡ FAST-TRACK PROCESSING 2026": "⚡ फास्ट-ट्रैक प्रोसेसिंग 2026",
+      "🔥 HIGH APPROVAL RATE": "🔥 उच्च स्वीकृति दर",
+      "🎯 FREE 15-MIN ASSESSMENT": "🎯 मुफ्त 15-मिनट मूल्यांकन",
+      "ONTARIO, CANADA • LICENSED CICC MEMBER • REGISTER.COLLEGE-IC.CA": "ओंटारियो, कनाडा • लाइसेंस प्राप्त CICC सदस्य • register.college-ic.ca",
       "CALGARY AAIP TECH STREAM": "कैलगरी AAIP टेक स्ट्रीम",
       "BRAMPTON PGWP UPGRADE": "ब्रैम्पटन PGWP अपग्रेड",
       "SURREY BC PNP TRADES": "सरे बीसी पीएनपी ट्रेड्स",
-      "CANADA": "कनाडा",
+      "EXPRESS ENTRY PR": "एक्सप्रेस एंट्री पीआर",
+      "STUDY VISA UPGRADE": "स्टडी वीजा अपग्रेड",
+      "PERMANENT RESIDENCY": "स्थायी निवास (PR)",
       "WORK PERMIT": "वर्क परमिट",
-      "NO LMIA": "बिना LMIA"
+      "STUDY VISA": "स्टडी वीजा",
+      "NO LMIA": "बिना LMIA",
+      "CANADA": "कनाडा"
     },
     tl: {
-      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "Magtatapos na ang Work Permit? Huwag Umalis, Mag-Upgrade",
-      "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM - DIRECT PR SKILLED PROFESSIONALS": "Calgary & Alberta AAIP Tech Stream - Direct PR",
-      "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM": "Calgary & Alberta AAIP Tech Pathways",
-      "BRAMPTON & PEEL PGWP WORK PERMIT EXPIRY": "Brampton PGWP Work Permit Upgrade",
-      "SURREY & VANCOUVER SKILLED TRADES": "Surrey & Vancouver Skilled Trades PNP",
-      "EXPRESS ENTRY PR": "Express Entry PR Pathways",
-      "STUDY VISA UPGRADE": "Study Visa Upgrade",
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS FAST-TRACK CANADIAN PERMANENT RESIDENCY 2026": "Skilled Worker Express Entry & Ontario OINP Draws Fast-Track Canadian PR 2026",
+      "REGULATED RCIC LEGAL GUIDANCE & APPLICATION SUPPORT ACROSS CANADA": "Regulated RCIC Legal Guidance at Application Support sa Buong Canada",
+      "TARGETED PR PATHWAYS & WORK PERMIT OPTIONS ACROSS CANADA": "Mga target na PR pathway at opsiyon sa Work Permit sa buong Canada",
+      "EMPLOYER JOB OFFER & PROVINCIAL NOMINATION (PNP) ASSESSMENT": "Job offer mula sa employer at Provincial Nomination (PNP) assessment",
+      "SPOUSE OPEN WORK PERMIT (SOWP) ELIGIBILITY FOR ACCOMPANYING FAMILY": "Spouse Open Work Permit (SOWP) eligibility para sa kasamang pamilya",
+      "COMPLETE LEGAL REPRESENTATION BY LICENSED RCIC CONSULTANTS": "Kumpletong legal representation mula sa licensed RCIC consultants",
       "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "Mag-book ng Opisyal na RCIC Consultation Ngayon",
-      "CALGARY AAIP TECH STREAM": "CALGARY AAIP TECH STREAM",
-      "BRAMPTON PGWP UPGRADE": "BRAMPTON PGWP UPGRADE",
-      "SURREY BC PNP TRADES": "SURREY BC PNP TRADES",
-      "CANADA": "Canada",
+      "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "👉 MAG-BOOK NG OPISYAL NA RCIC STRATEGY CONSULTATION NGAYON",
+      "🇨🇦 LICENSED RCIC MEMBER": "🇨🇦 Licensed RCIC Member",
       "WORK PERMIT": "Work Permit",
-      "NO LMIA": "Walang LMIA Needed"
+      "PERMANENT RESIDENCY": "Permanent Residency (PR)",
+      "CANADA": "Canada"
     },
     es: {
-      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "¿Permiso de Trabajo por Vencer? No Salga, Actualice",
-      "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM - DIRECT PR SKILLED PROFESSIONALS": "Programa Tecnológico Acelerado Calgary & Alberta AAIP - PR Directo",
-      "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM": "Programa Tecnológico Acelerado Calgary & Alberta AAIP",
-      "BRAMPTON & PEEL PGWP WORK PERMIT EXPIRY": "Actualización de Permiso PGWP Brampton",
-      "SURREY & VANCOUVER SKILLED TRADES": "Programa de Oficios Calificados Surrey & Vancouver",
-      "EXPRESS ENTRY PR": "Residencia Permanente Express Entry",
-      "STUDY VISA UPGRADE": "Actualización a Visa de Estudio",
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS FAST-TRACK CANADIAN PERMANENT RESIDENCY 2026": "Trabajador Calificado Express Entry y Sorteos OINP de Ontario - Residencia Permanente Vía Rápida 2026",
+      "REGULATED RCIC LEGAL GUIDANCE & APPLICATION SUPPORT ACROSS CANADA": "Orientación Legal RCIC Regulada y Apoyo de Solicitud en Todo Canadá",
+      "TARGETED PR PATHWAYS & WORK PERMIT OPTIONS ACROSS CANADA": "Rutas de residencia permanente y opciones de permiso de trabajo en Canadá",
+      "EMPLOYER JOB OFFER & PROVINCIAL NOMINATION (PNP) ASSESSMENT": "Oferta de empleo y evaluación de Nominación Provincial (PNP)",
+      "SPOUSE OPEN WORK PERMIT (SOWP) ELIGIBILITY FOR ACCOMPANYING FAMILY": "Elegibilidad de Permiso de Trabajo Abierto para Cónyuge (SOWP)",
+      "COMPLETE LEGAL REPRESENTATION BY LICENSED RCIC CONSULTANTS": "Representación legal completa por consultores licenciados RCIC",
       "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "Reserve su Consulta Oficial RCIC Hoy Mismo",
-      "CALGARY AAIP TECH STREAM": "VÍA TECNOLÓGICA CALGARY AAIP",
-      "BRAMPTON PGWP UPGRADE": "ACTUALIZACIÓN PGWP BRAMPTON",
-      "SURREY BC PNP TRADES": "OFICIOS BC PNP SURREY",
-      "CANADA": "Canadá",
+      "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "👉 RESERVE SU CONSULTA DE ESTRATEGIA RCIC OFICIAL HOY",
+      "🇨🇦 LICENSED RCIC MEMBER": "🇨🇦 Miembro Licenciado RCIC",
+      "⚡ FAST-TRACK PROCESSING 2026": "⚡ Procesamiento Acelerado 2026",
+      "🔥 HIGH APPROVAL RATE": "🔥 Alta Tasa de Aprobación",
+      "🎯 FREE 15-MIN ASSESSMENT": "🎯 Evaluación Gratuita 15-Min",
+      "ONTARIO, CANADA • LICENSED CICC MEMBER • REGISTER.COLLEGE-IC.CA": "Ontario, Canadá • Miembro Licenciado CICC • register.college-ic.ca",
+      "PERMANENT RESIDENCY": "Residencia Permanente (PR)",
       "WORK PERMIT": "Permiso de Trabajo",
-      "NO LMIA": "Sin LMIA"
+      "STUDY VISA": "Visa de Estudio",
+      "NO LMIA": "Sin LMIA",
+      "CANADA": "Canadá"
     },
     ar: {
-      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "هل ينتهي تصريح عملك؟ لا تغادر، قم بالتحديث الآن",
-      "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM - DIRECT PR SKILLED PROFESSIONALS": "مسار كالغاري وألبرتا التكنولوجي السريع - إقامة دائمة مباشرة",
-      "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM": "مسار كالغاري وألبرتا التكنولوجي السريع",
-      "BRAMPTON & PEEL PGWP WORK PERMIT EXPIRY": "تحديث تصريح العمل PGWP في برامبتون",
-      "SURREY & VANCOUVER SKILLED TRADES": "برنامج المهن الماهرة في سوري وفانكوفر",
-      "EXPRESS ENTRY PR": "الإقامة الدائمة عبر الإكسبريس إنتري",
-      "STUDY VISA UPGRADE": "تحديث تأشيرة الدراسة",
+      "SKILLED WORKER EXPRESS ENTRY & ONTARIO OINP DRAWS FAST-TRACK CANADIAN PERMANENT RESIDENCY 2026": "سحوبات العمال الماهرين عبر الإكسبريس إنتري وأونتاريو OINP - الإقامة الدائمة الكندية السريعة 2026",
+      "REGULATED RCIC LEGAL GUIDANCE & APPLICATION SUPPORT ACROSS CANADA": "توجيه قانوني معتمد من RCIC ودعم طلبات الهجرة في جميع أنحاء كندا",
+      "TARGETED PR PATHWAYS & WORK PERMIT OPTIONS ACROSS CANADA": "مسارات إقامة دائمة مستهدفة وخيارات تصاريح عمل في كندا",
+      "EMPLOYER JOB OFFER & PROVINCIAL NOMINATION (PNP) ASSESSMENT": "عرض عمل من صاحب العمل وتقييم الترشيح الإقليمي (PNP)",
+      "SPOUSE OPEN WORK PERMIT (SOWP) ELIGIBILITY FOR ACCOMPANYING FAMILY": "أهلية تصريح العمل المفتوح للزوج/الزوجة (SOWP) للعائلة المرافقة",
+      "COMPLETE LEGAL REPRESENTATION BY LICENSED RCIC CONSULTANTS": "تمثيل قانوني كامل بواسطة مستشاري RCIC المرخصين",
       "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "احجز استشارتك القانونية المعتمدة اليوم",
-      "CALGARY AAIP TECH STREAM": "مسار كالغاري التكنولوجي",
-      "BRAMPTON PGWP UPGRADE": "تحديث برامبتون PGWP",
-      "SURREY BC PNP TRADES": "مهن سوري بي سي",
-      "CANADA": "كندا",
+      "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "👉 احجز استشارتك القانونية المعتمدة اليوم",
+      "🇨🇦 LICENSED RCIC MEMBER": "🇨🇦 عضو RCIC مرخص",
+      "⚡ FAST-TRACK PROCESSING 2026": "⚡ معالجة سريعة 2026",
+      "🔥 HIGH APPROVAL RATE": "🔥 نسبة موافقة عالية",
+      "🎯 FREE 15-MIN ASSESSMENT": "🎯 تقييم مجاني لمدة 15 دقيقة",
+      "ONTARIO, CANADA • LICENSED CICC MEMBER • REGISTER.COLLEGE-IC.CA": "أونتاريو، كندا • عضو CICC مرخص • register.college-ic.ca",
+      "PERMANENT RESIDENCY": "الإقامة الدائمة (PR)",
       "WORK PERMIT": "تصريح عمل",
-      "NO LMIA": "بدون LMIA"
+      "STUDY VISA": "تأشيرة دراسة",
+      "NO LMIA": "بدون LMIA",
+      "CANADA": "كندا"
     }
   };
 
   const dict = translations[lang];
   if (!dict) return text;
 
-  let upper = text.toUpperCase();
-  for (const [enKey, trVal] of Object.entries(dict)) {
-    if (upper.includes(enKey)) {
-      return upper.replace(enKey, trVal);
+  // Sort keys by descending length so full sentence matches evaluate before sub-phrases
+  const keys = Object.keys(dict).sort((a, b) => b.length - a.length);
+  let result = text;
+  for (const enKey of keys) {
+    const trVal = dict[enKey];
+    const regex = new RegExp(escapeRegExp(enKey), 'gi');
+    if (regex.test(result)) {
+      result = result.replace(regex, trVal);
     }
   }
-  return text;
+  return result;
 }
 
 // CICC Section 44 Compliance Shield Engine: Automatically sanitizes prohibited guarantee claims
@@ -1856,11 +1910,13 @@ async function renderBannerWithPuppeteer(bannerData) {
   let bullet3 = b3 !== undefined ? b3 : defaultB3;
   let bullet4 = b4 !== undefined ? b4 : defaultB4;
 
-  if (isFr) {
-    if (bullet1) bullet1 = translateToFrench(bullet1);
-    if (bullet2) bullet2 = translateToFrench(bullet2);
-    if (bullet3) bullet3 = translateToFrench(bullet3);
-    if (bullet4) bullet4 = translateToFrench(bullet4);
+  if (targetLang !== 'en') {
+    if (bullet1) bullet1 = translateToLanguage(bullet1, targetLang);
+    if (bullet2) bullet2 = translateToLanguage(bullet2, targetLang);
+    if (bullet3) bullet3 = translateToLanguage(bullet3, targetLang);
+    if (bullet4) bullet4 = translateToLanguage(bullet4, targetLang);
+    rcicMemberText = translateToLanguage(rcicMemberText, targetLang);
+    locationText = translateToLanguage(locationText, targetLang);
   }
 
   const safeTitle = (title || "Work Permit Ending? Don't Exit, Upgrade")
@@ -2597,8 +2653,30 @@ const server = http.createServer(async (req, res) => {
         return sendJson({ success: true, copy, recommendedPeakTimes: REGION_PEAK_TIMES[body.targetRegion] || REGION_PEAK_TIMES.west_africa });
       }
 
-      if (pathname === '/api/translate' && method === 'POST') {
-        const translatedText = translateToFrench(body.text || '');
+      if ((pathname === '/api/translate' || pathname === '/api/translate-text') && method === 'POST') {
+        const lang = body.targetLang || body.lang || body.language || 'en';
+        if (body.title !== undefined || body.headline !== undefined || body.bullets !== undefined) {
+          const tTitle = translateToLanguage(body.title || body.headline || '', lang);
+          const tSub = translateToLanguage(body.subtitle || '', lang);
+          const tBadge = translateToLanguage(body.badgeText || body.badge || '', lang);
+          const tB1 = translateToLanguage(body.b1 || (body.bullets ? body.bullets[0] : ''), lang);
+          const tB2 = translateToLanguage(body.b2 || (body.bullets ? body.bullets[1] : ''), lang);
+          const tB3 = translateToLanguage(body.b3 || (body.bullets ? body.bullets[2] : ''), lang);
+          const tB4 = translateToLanguage(body.b4 || (body.bullets ? body.bullets[3] : ''), lang);
+          return sendJson({
+            success: true,
+            title: tTitle,
+            subtitle: tSub,
+            badgeText: tBadge,
+            b1: tB1,
+            b2: tB2,
+            b3: tB3,
+            b4: tB4,
+            bullets: [tB1, tB2, tB3, tB4],
+            translatedText: tTitle
+          });
+        }
+        const translatedText = translateToLanguage(body.text || '', lang);
         return sendJson({ success: true, translatedText });
       }
 
