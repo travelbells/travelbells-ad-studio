@@ -55,12 +55,12 @@ function renderInteractiveGraphicHtml(dataUri) {
 
 // Global Graphic Renderer
 function updateGraphicDisplay() {
-  const lang = activeGraphicLang || (document.getElementById('input-language')?.value === 'fr' ? 'fr' : 'en');
+  const lang = activeGraphicLang || 'en';
   const format = document.getElementById('canvas-format')?.value || 'vertical';
 
   // Clear cached graphics to guarantee fresh live render with modified DOM inputs
   if (activeBilingualData) {
-    activeBilingualData.graphics = { en: {}, fr: {} };
+    activeBilingualData.graphics = {};
   }
 
   reRenderSingleGraphic(format, lang);
@@ -1090,11 +1090,12 @@ function updateBadgeTextFromInput(badgeText) {
   
   if (activeBilingualData) {
     if (activeBilingualData.campaign) {
-      if (activeBilingualData.campaign.en) activeBilingualData.campaign.en.badgeText = badgeText;
-      if (activeBilingualData.campaign.fr) activeBilingualData.campaign.fr.badgeText = badgeText;
+      for (const k of Object.keys(activeBilingualData.campaign)) {
+        if (activeBilingualData.campaign[k]) activeBilingualData.campaign[k].badgeText = badgeText;
+      }
     }
     if (activeBilingualData.graphics) {
-      activeBilingualData.graphics = { en: {}, fr: {} };
+      activeBilingualData.graphics = {};
     }
   }
 
@@ -1114,7 +1115,7 @@ function switchWatermarkStyle(styleKey, btnEl) {
   if (btnEl) btnEl.classList.add('active');
   activeWatermarkStyle = styleKey;
   if (activeBilingualData && activeBilingualData.graphics) {
-    activeBilingualData.graphics = { en: {}, fr: {} };
+    activeBilingualData.graphics = {};
   }
   reRenderSingleGraphic();
 }
@@ -1124,13 +1125,13 @@ let footerDebounceTimer = null;
 
 function updateFooterFromInput() {
   if (activeBilingualData && activeBilingualData.graphics) {
-    activeBilingualData.graphics = { en: {}, fr: {} };
+    activeBilingualData.graphics = {};
   }
 
   // Persist updated input values to activeBilingualData
   if (activeBilingualData && activeBilingualData.campaign) {
     const lang = activeGraphicLang || 'en';
-    const langObj = lang === 'fr' ? activeBilingualData.campaign.fr : activeBilingualData.campaign.en;
+    const langObj = activeBilingualData.campaign[lang] || activeBilingualData.campaign.en;
     if (langObj) {
       langObj.title = document.getElementById('canvas-headline')?.value || langObj.title;
       langObj.subtitle = document.getElementById('canvas-subtitle')?.value || langObj.subtitle;
@@ -1833,7 +1834,7 @@ async function downloadCampaignZipBundle() {
   if (statusEl) statusEl.innerHTML = `⏳ Generating all 3 High-Res PNG Formats (Feed 1:1, Story 9:16, Banner 16:9)...`;
 
   try {
-    const langObj = activeBilingualData?.campaign ? (activeGraphicLang === 'fr' ? activeBilingualData.campaign.fr : activeBilingualData.campaign.en) : null;
+    const langObj = activeBilingualData?.campaign ? (activeBilingualData.campaign[activeGraphicLang] || activeBilingualData.campaign.en) : null;
     const headline = langObj?.title || document.getElementById('quick-tagline-input')?.value || document.getElementById('canvas-headline')?.value || 'Travelbells Immigration';
     const subtitle = langObj?.subtitle || document.getElementById('canvas-subtitle')?.value || '';
     const badgeText = document.getElementById('canvas-badge-input')?.value || langObj?.badgeText || 'STUDY VISA UPGRADE';
@@ -2555,7 +2556,7 @@ async function testMakeComWebhookConnection() {
 
 // Active Campaign Payload Extractor
 function getActiveCampaignPayload() {
-  const lang = activeGraphicLang || (document.getElementById('input-language')?.value === 'fr' ? 'fr' : 'en');
+  const lang = activeGraphicLang || 'en';
   const fmt = document.getElementById('canvas-format')?.value || 'vertical';
   
   return {
