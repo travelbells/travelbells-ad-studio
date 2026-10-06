@@ -260,27 +260,18 @@
                   </select>
                 </div>
               </div>
-              <div class="footer-row-2" style="margin-top: 10px;">
-                <div class="footer-field" style="width: 100%;">
-                  <label class="field-label-sm">🎨 Visual Aesthetic Theme Selector:</label>
-                  <select id="select-theme-preset" class="badge-text-input" onchange="updateFooterFromInput()">
-                    <option value="light_corporate" selected>⚪ Light Corporate (Clean White — Best for Print / PDF)</option>
-                    <option value="dark_glass">🌌 Dark Cinematic Glass (Full-Bleed Photo — Best for Social Ads)</option>
-                    <option value="vibrant_red">🔴 High-Contrast Red (Urgent Status Advisory Notice)</option>
-                  </select>
-                </div>
-              </div>
+          <!-- Interactive Visual Theme Switcher Bar -->
+          <div class="theme-switcher-banner-bar" style="background: #FFFFFF; border: 2px solid #002B49; border-radius: 14px; padding: 12px 18px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(0,43,73,0.08); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div style="font-weight: 800; font-size: 14px; color: #002B49; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">🎨</span>
+              <span>Visual Theme Aesthetic:</span>
             </div>
+            <select id="select-theme-preset" class="badge-text-input" style="flex: 1; max-width: 480px; font-weight: 800; font-size: 13.5px; border-color: #C8102E; color: #002B49; background: #FFF;" onchange="updateFooterFromInput()">
+              <option value="light_corporate" selected>⚪ Light Corporate (Clean White — Best for Print / PDF)</option>
+              <option value="dark_glass">🌌 Dark Cinematic Glass (Full-Bleed Photo — Best for Social Ads)</option>
+              <option value="vibrant_red">🔴 High-Contrast Red (Urgent Status Advisory Notice)</option>
+            </select>
           </div>
-
-          <!-- Hidden inputs for JS compatibility & E2E suite -->
-          <input type="hidden" id="input-category" value="study_permit" />
-          <input type="hidden" id="input-language" value="en" />
-          <input type="hidden" id="toggle-badge" value="true" />
-          <input type="hidden" id="toggle-bullets" value="true" />
-          <input type="hidden" id="toggle-footer" value="true" />
-          <input type="hidden" id="canvas-format" value="vertical" />
-          <input type="hidden" id="canvas-theme" value="travelbells-signature-light" />
 
           <!-- Live Canvas / Graphic Render Box -->
           <div class="canvas-render-container" id="canvas-render-box">
