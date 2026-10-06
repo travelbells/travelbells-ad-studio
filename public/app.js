@@ -129,6 +129,7 @@ async function reRenderSingleGraphic(fmt, lang) {
         footerLocation,
         watermark: activeWatermarkStyle,
         format: fmt,
+        language: lang,
         lang,
         customPhotoUrl: activePhotoPreset
       })

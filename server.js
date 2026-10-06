@@ -1062,6 +1062,7 @@ function generateBannerSVG({
   format = 'vertical', 
   category, 
   language,
+  lang,
   customPhotoUrl,
   photoUrl,
   showBullets = true,
@@ -1089,7 +1090,8 @@ function generateBannerSVG({
   const width = format === 'story' ? 1080 : format === 'landscape' ? 1200 : 1080;
   const height = format === 'story' ? 1920 : format === 'landscape' ? 630 : 1080;
 
-  const isFr = language === 'fr' || language === 'bilingual';
+  const targetLang = lang || language || 'en';
+  const isFr = targetLang === 'fr' || targetLang === 'bilingual';
 
   let defaultB1 = "Stay in Canada legally while studying";
   let defaultB2 = "Upgrade your skills with in-demand programs";
@@ -1112,7 +1114,6 @@ function generateBannerSVG({
   let rawB3 = b3 !== undefined ? b3 : defaultB3;
   let rawB4 = b4 !== undefined ? b4 : defaultB4;
 
-  const targetLang = language || 'en';
   if (targetLang !== 'en') {
     rawTitle = translateToLanguage(rawTitle, targetLang);
     rawSubtitle = translateToLanguage(rawSubtitle, targetLang);
@@ -1837,7 +1838,7 @@ async function renderBannerWithPuppeteer(bannerData) {
   let rawSubtitle = bannerData.subtitle || "Your time in Canada doesn't have to stop here";
   let rawBadge = bannerData.badgeText || "STUDY VISA UPGRADE";
 
-  const targetLang = language || bannerData.lang || 'en';
+  const targetLang = bannerData.lang || bannerData.language || (language !== 'en' ? language : 'en');
   if (targetLang !== 'en') {
     rawTitle = translateToLanguage(rawTitle, targetLang);
     rawSubtitle = translateToLanguage(rawSubtitle, targetLang);
