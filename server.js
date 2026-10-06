@@ -1023,14 +1023,15 @@ function generateBannerSVG({
   let rawB3 = b3 !== undefined ? b3 : defaultB3;
   let rawB4 = b4 !== undefined ? b4 : defaultB4;
 
-  if (isFr) {
-    rawTitle = translateToFrench(rawTitle);
-    rawSubtitle = translateToFrench(rawSubtitle);
-    rawBadge = translateToFrench(rawBadge);
-    if (rawB1) rawB1 = translateToFrench(rawB1);
-    if (rawB2) rawB2 = translateToFrench(rawB2);
-    if (rawB3) rawB3 = translateToFrench(rawB3);
-    if (rawB4) rawB4 = translateToFrench(rawB4);
+  const targetLang = language || 'en';
+  if (targetLang !== 'en') {
+    rawTitle = translateToLanguage(rawTitle, targetLang);
+    rawSubtitle = translateToLanguage(rawSubtitle, targetLang);
+    rawBadge = translateToLanguage(rawBadge, targetLang);
+    if (rawB1) rawB1 = translateToLanguage(rawB1, targetLang);
+    if (rawB2) rawB2 = translateToLanguage(rawB2, targetLang);
+    if (rawB3) rawB3 = translateToLanguage(rawB3, targetLang);
+    if (rawB4) rawB4 = translateToLanguage(rawB4, targetLang);
   }
 
   const safeTitle = rawTitle;
@@ -1747,24 +1748,20 @@ async function renderBannerWithPuppeteer(bannerData) {
   let rawSubtitle = bannerData.subtitle || "Your time in Canada doesn't have to stop here";
   let rawBadge = bannerData.badgeText || "STUDY VISA UPGRADE";
 
-  if (isFr) {
-    if (bannerData.title_fr) rawTitle = bannerData.title_fr;
-    else rawTitle = translateToFrench(rawTitle);
-
-    if (bannerData.subtitle_fr) rawSubtitle = bannerData.subtitle_fr;
-    else rawSubtitle = translateToFrench(rawSubtitle);
-
-    if (bannerData.badge_fr) rawBadge = bannerData.badge_fr;
-    else rawBadge = translateToFrench(rawBadge);
+  const targetLang = language || bannerData.lang || 'en';
+  if (targetLang !== 'en') {
+    rawTitle = translateToLanguage(rawTitle, targetLang);
+    rawSubtitle = translateToLanguage(rawSubtitle, targetLang);
+    rawBadge = translateToLanguage(rawBadge, targetLang);
   }
 
   const title = rawTitle;
   const subtitle = rawSubtitle;
   const badgeText = rawBadge;
 
-  let rawCta = bannerData.footerCta || bannerData.ctaText || (isFr ? 'RÉSERVEZ VOTRE CONSULTATION STRATÉGIQUE RCIC AUJOURD\'HUI' : 'BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY');
-  if (isFr) {
-    rawCta = translateToFrench(rawCta);
+  let rawCta = bannerData.footerCta || bannerData.ctaText || 'BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY';
+  if (targetLang !== 'en') {
+    rawCta = translateToLanguage(rawCta, targetLang);
   }
   const ctaText = rawCta;
 
