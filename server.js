@@ -589,6 +589,17 @@ function translateToLanguage(text, lang = 'en') {
   return text;
 }
 
+// CICC Section 44 Compliance Shield Engine: Automatically sanitizes prohibited guarantee claims
+function applyCICCComplianceShield(text) {
+  if (!text) return '';
+  return text
+    .replace(/\b100% PR GUARANTEED\b/gi, "OFFICIAL RCIC STRATEGY ASSESSMENT")
+    .replace(/\b100% GUARANTEED\b/gi, "OFFICIAL RCIC VERIFIED ADVISORY")
+    .replace(/\bGUARANTEED APPROVAL\b/gi, "HIGH APPROVAL RATE ADVISORY")
+    .replace(/\bGUARANTEED PR\b/gi, "DIRECT PR PATHWAY ADVISORY")
+    .replace(/\bGUARANTEE PR\b/gi, "PR PATHWAY ADVISORY");
+}
+
 const MASTER_CATEGORY_CONFIGS = {
   express_entry: {
     enTitle: "Express Entry Category Draws & PR Pathways",
@@ -1760,7 +1771,7 @@ async function renderBannerWithPuppeteer(bannerData) {
   const websiteText = bannerData.footerWebsite || bannerData.websiteText || 'www.travelbellsimmigration.com';
   const emailText = bannerData.footerEmail || bannerData.emailText || 'info@travelbellsimmigration.com';
   const phoneText = bannerData.footerPhone || bannerData.phoneText || '+1 (647) 890-1476';
-  const locationText = bannerData.footerLocation || bannerData.locationText || (isFr ? 'Ontario, Canada • Membre CICC Licencié' : 'Ontario, Canada • Licensed CICC Member');
+  const locationText = bannerData.footerLocation || bannerData.locationText || (isFr ? 'Ontario, Canada • Membre CICC Agréé • register.college-ic.ca' : 'Ontario, Canada • Licensed CICC Member • register.college-ic.ca');
   const watermarkStyle = bannerData.watermark || bannerData.backgroundWatermark || 'maple';
   const width = format === 'story' ? 1080 : format === 'landscape' ? 1200 : 1080;
   const height = format === 'story' ? 1920 : format === 'landscape' ? 630 : 1080;
