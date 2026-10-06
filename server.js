@@ -523,6 +523,72 @@ function translateToFrench(text) {
   return result.toUpperCase();
 }
 
+// Multi-Lingual Translation Engine for 6 Target Demographic Languages (EN, FR, PA, HI, TL, ES, AR)
+function translateToLanguage(text, lang = 'en') {
+  if (!text) return '';
+  if (lang === 'en') return text;
+  if (lang === 'fr') return translateToFrench(text);
+  
+  const translations = {
+    pa: {
+      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "ਕੈਨੇਡਾ ਵਰਕ ਪਰਮਿਟ ਖਤਮ? ਚਿੰਤਾ ਨਾ ਕਰੋ, ਅੱਗੇ ਵਧੋ",
+      "EXPRESS ENTRY PR": "ਐਕਸਪ੍ਰੈਸ ਐਂਟਰੀ ਪੀ.ਆਰ",
+      "STUDY VISA UPGRADE": "ਸਟੱਡੀ ਵੀਜ਼ਾ ਅੱਪਗ੍ਰੇਡ",
+      "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "ਅੱਜ ਹੀ ਆਪਣੀ ਆਰਸੀਆਈਸੀ ਸਲਾਹ ਬੁੱਕ ਕਰੋ",
+      "CANADA": "ਕੈਨੇਡਾ",
+      "WORK PERMIT": "ਵਰਕ ਪਰਮਿਟ",
+      "NO LMIA": "ਬਿਨਾਂ LMIA"
+    },
+    hi: {
+      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "कनाडा वर्क परमिट खत्म? बाहर न जाएं, अपग्रेड करें",
+      "EXPRESS ENTRY PR": "एक्सप्रेस एंट्री पीआर",
+      "STUDY VISA UPGRADE": "स्टडी वीजा अपग्रेड",
+      "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "आज ही अपनी RCIC सलाह बुक करें",
+      "CANADA": "कनाडा",
+      "WORK PERMIT": "वर्क परमिट",
+      "NO LMIA": "बिना LMIA"
+    },
+    tl: {
+      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "Magtatapos na ang Work Permit? Huwag Umalis, Mag-Upgrade",
+      "EXPRESS ENTRY PR": "Express Entry PR Pathways",
+      "STUDY VISA UPGRADE": "Study Visa Upgrade",
+      "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "Mag-book ng Opisyal na RCIC Consultation Ngayon",
+      "CANADA": "Canada",
+      "WORK PERMIT": "Work Permit",
+      "NO LMIA": "Walang LMIA Needed"
+    },
+    es: {
+      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "¿Permiso de Trabajo por Vencer? No Salga, Actualice",
+      "EXPRESS ENTRY PR": "Residencia Permanente Express Entry",
+      "STUDY VISA UPGRADE": "Actualización a Visa de Estudio",
+      "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "Reserve su Consulta Oficial RCIC Hoy Mismo",
+      "CANADA": "Canadá",
+      "WORK PERMIT": "Permiso de Trabajo",
+      "NO LMIA": "Sin LMIA"
+    },
+    ar: {
+      "WORK PERMIT ENDING? DON'T EXIT, UPGRADE": "هل تنتهي تصريح عملك؟ لا تغادر، قم بالتحديث الآن",
+      "EXPRESS ENTRY PR": "الإقامة الدائمة عبر الإكسبريس إنتري",
+      "STUDY VISA UPGRADE": "تحديث تأشيرة الدراسة",
+      "BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY": "احجز استشارتك القانونية المعتمدة اليوم",
+      "CANADA": "كندا",
+      "WORK PERMIT": "تصريح عمل",
+      "NO LMIA": "بدون LMIA"
+    }
+  };
+
+  const dict = translations[lang];
+  if (!dict) return text;
+
+  let upper = text.toUpperCase();
+  for (const [enKey, trVal] of Object.entries(dict)) {
+    if (upper.includes(enKey)) {
+      return upper.replace(enKey, trVal);
+    }
+  }
+  return text;
+}
+
 const MASTER_CATEGORY_CONFIGS = {
   express_entry: {
     enTitle: "Express Entry Category Draws & PR Pathways",
@@ -2999,7 +3065,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { autoGenerateBilingualCampaign, translateToFrench, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, server };
+module.exports = { autoGenerateBilingualCampaign, translateToFrench, translateToLanguage, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, server };
 
 
 
