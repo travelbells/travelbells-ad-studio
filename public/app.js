@@ -95,6 +95,7 @@ async function reRenderSingleGraphic(fmt, lang) {
   const showQrCode = document.getElementById('toggle-qr-code')?.value !== 'disabled';
   const showSocialProof = document.getElementById('toggle-social-proof')?.value !== 'disabled';
   const trustBadge = document.getElementById('select-trust-badge')?.value || 'cicc';
+  const themePreset = document.getElementById('select-theme-preset')?.value || 'light_corporate';
   const qrTargetUrl = document.getElementById('qr-target-url')?.value || 'https://bookings.travelbellsimmigration.com';
 
   if (renderBox && (!renderBox.querySelector('img') || renderBox.innerHTML.includes('⚙️'))) {
@@ -118,6 +119,8 @@ async function reRenderSingleGraphic(fmt, lang) {
         showQrCode,
         showSocialProof,
         trustBadge,
+        themePreset,
+        theme: themePreset,
         qrTargetUrl,
         footerCta,
         footerPhone,
