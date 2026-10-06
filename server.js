@@ -1079,14 +1079,14 @@ function generateBannerSVG({
   const bullet4 = rawB4;
 
   const activeHighlightColor = '#C8102E';
-  const ctaText = isFr ? "👉 RÉSERVEZ VOTRE CONSULTATION STRATÉGIQUE RCIC AUJOURD'HUI" : "👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY";
+  let ctaText = translateToLanguage("👉 BOOK YOUR OFFICIAL RCIC STRATEGY CONSULTATION TODAY", targetLang);
   
-  let rcicMemberText = isFr ? "🇨🇦 Membre CICC Licencié" : "🇨🇦 Licensed RCIC Member";
-  if (trustBadge === 'fasttrack') rcicMemberText = isFr ? "⚡ Traitement Accéléré 2026" : "⚡ Fast-Track Processing 2026";
-  else if (trustBadge === 'approval') rcicMemberText = isFr ? "🔥 Taux d'Approbation Élevé" : "🔥 High Approval Rate";
-  else if (trustBadge === 'freecheck') rcicMemberText = isFr ? "🎯 Évaluation Gratuite 15-Min" : "🎯 Free 15-Min Assessment";
+  let rcicMemberText = translateToLanguage("🇨🇦 Licensed RCIC Member", targetLang);
+  if (trustBadge === 'fasttrack') rcicMemberText = translateToLanguage("⚡ Fast-Track Processing 2026", targetLang);
+  else if (trustBadge === 'approval') rcicMemberText = translateToLanguage("🔥 High Approval Rate", targetLang);
+  else if (trustBadge === 'freecheck') rcicMemberText = translateToLanguage("🎯 Free 15-Min Assessment", targetLang);
 
-  const locationText = isFr ? "📍 Ontario, Canada • Membre CICC Licencié" : "📍 Ontario, Canada • Licensed RCIC Member";
+  const locationText = translateToLanguage("📍 Ontario, Canada • Licensed CICC Member • register.college-ic.ca", targetLang);
 
   const rawPhotoParam = customPhotoUrl || photoUrl || 'student';
   let photoSrcRaw = DEFAULT_FALLBACK_BASE64;
