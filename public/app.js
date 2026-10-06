@@ -98,10 +98,30 @@ async function reRenderSingleGraphic(fmt, lang) {
   const themePreset = document.getElementById('select-theme-preset')?.value || 'light_corporate';
   const qrTargetUrl = document.getElementById('qr-target-url')?.value || 'https://bookings.travelbellsimmigration.com';
 
-  if (renderBox && (!renderBox.querySelector('img') || renderBox.innerHTML.includes('⚙️'))) {
-    renderBox.innerHTML = `<div style="padding:40px; text-align:center; color:#64748B;"><div style="font-size:32px; margin-bottom:8px;">⚙️</div><strong>Re-rendering 300 DPI Creative...</strong></div>`;
+  // 1. Instant Fast SVG Preview (< 30ms Latency)
+  try {
+    const fastRes = await fetch('/api/generate-banner', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: headline, headline, tagline: headline, subtitle, badgeText,
+        b1, b2, b3, b4, showBadge, showBullets, showFooter, showQrCode, showSocialProof,
+        trustBadge, themePreset, theme: themePreset, qrTargetUrl,
+        footerCta, footerPhone, footerWebsite, footerEmail, footerLocation,
+        watermark: activeWatermarkStyle, format: fmt, language: lang, lang, customPhotoUrl: activePhotoPreset
+      })
+    });
+    const fastData = await fastRes.json();
+    if (fastData.success && fastData.dataUri) {
+      if (renderBox) renderBox.innerHTML = renderInteractiveGraphicHtml(fastData.dataUri);
+      const studioBox = document.getElementById('studio-banner-svg');
+      if (studioBox) studioBox.innerHTML = `<img src="${fastData.dataUri}" alt="Studio Banner Graphic" style="width: 100%; height: auto; border-radius: 12px; display: block;" />`;
+    }
+  } catch (fastErr) {
+    console.warn("Fast SVG preview note:", fastErr);
   }
 
+  // 2. High-Res 300 DPI Puppeteer PNG Upgrade (Background Processing)
   try {
     const res = await fetch('/api/generate-puppeteer-banner', {
       method: 'POST',
@@ -2166,73 +2186,90 @@ async function switchGraphicLanguage(lang) {
   const langSelect = document.getElementById('input-language');
   if (langSelect) langSelect.value = lang;
 
-  // Master English baseline text from activeBilingualData
-  const masterEn = activeBilingualData?.campaign?.en;
+  // Check if activeBilingualData already has translated content for this language
+  const cachedLangData = activeBilingualData?.campaign?.[lang];
 
-  const titleSource = masterEn?.title || document.getElementById('canvas-headline')?.value || 'Travelbells Immigration';
-  const subtitleSource = masterEn?.subtitle || document.getElementById('canvas-subtitle')?.value || '';
-  const badgeSource = masterEn?.badgeText || document.getElementById('canvas-badge-input')?.value || 'STUDY VISA UPGRADE';
-  const b1Source = masterEn?.bullets?.[0] || document.getElementById('canvas-b1')?.value || '';
-  const b2Source = masterEn?.bullets?.[1] || document.getElementById('canvas-b2')?.value || '';
-  const b3Source = masterEn?.bullets?.[2] || document.getElementById('canvas-b3')?.value || '';
-  const b4Source = masterEn?.bullets?.[3] || document.getElementById('canvas-b4')?.value || '';
-
-  if (lang === 'en' && masterEn) {
-    setVal('canvas-headline', masterEn.title);
-    setVal('canvas-subtitle', masterEn.subtitle);
-    setVal('canvas-badge-input', masterEn.badgeText);
-    if (masterEn.bullets) {
-      setVal('canvas-b1', masterEn.bullets[0] || '');
-      setVal('canvas-b2', masterEn.bullets[1] || '');
-      setVal('canvas-b3', masterEn.bullets[2] || '');
-      setVal('canvas-b4', masterEn.bullets[3] || '');
+  if (cachedLangData) {
+    setVal('canvas-headline', cachedLangData.title);
+    setVal('canvas-subtitle', cachedLangData.subtitle);
+    setVal('canvas-badge-input', cachedLangData.badgeText);
+    if (cachedLangData.bullets) {
+      setVal('canvas-b1', cachedLangData.bullets[0] || '');
+      setVal('canvas-b2', cachedLangData.bullets[1] || '');
+      setVal('canvas-b3', cachedLangData.bullets[2] || '');
+      setVal('canvas-b4', cachedLangData.bullets[3] || '');
     }
   } else {
-    try {
-      const res = await fetch('/api/translate-text', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: titleSource,
-          subtitle: subtitleSource,
-          badgeText: badgeSource,
-          b1: b1Source,
-          b2: b2Source,
-          b3: b3Source,
-          b4: b4Source,
-          targetLang: lang
-        })
-      });
-      const trData = await res.json();
-      if (trData.success) {
-        setVal('canvas-headline', trData.title);
-        setVal('canvas-subtitle', trData.subtitle);
-        setVal('canvas-badge-input', trData.badgeText);
-        setVal('canvas-b1', trData.b1);
-        setVal('canvas-b2', trData.b2);
-        setVal('canvas-b3', trData.b3);
-        setVal('canvas-b4', trData.b4);
+    // Master English baseline text from activeBilingualData or current inputs
+    const masterEn = activeBilingualData?.campaign?.en;
 
-        if (!activeBilingualData) activeBilingualData = { campaign: {} };
-        if (!activeBilingualData.campaign) activeBilingualData.campaign = {};
-        
-        activeBilingualData.campaign[lang] = {
-          title: trData.title,
-          subtitle: trData.subtitle,
-          badgeText: trData.badgeText,
-          bullets: [trData.b1, trData.b2, trData.b3, trData.b4],
-          fullCopy: `🇨🇦 ${trData.title}\n\n${trData.subtitle}\n\n✨ Key Highlights:\n🔴 ${trData.b1}\n🔴 ${trData.b2}\n🔴 ${trData.b3}\n🔴 ${trData.b4}\n\n📩 BOOK YOUR CONSULTATION TODAY:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Licensed RCIC Firm\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp: +1 (647) 890-1476`,
-          tiktokScript: `🎬 [TIKTOK HOOK - ${lang.toUpperCase()}]\nHeadline: ${trData.title}\nSubtitle: ${trData.subtitle}\nCall-To-Action: Link in Bio!`,
-          whatsapp: `🇨🇦 *Travelbells Immigration Update (${lang.toUpperCase()})*\n\n*${trData.title}*\n${trData.subtitle}\n\n👉 Book: https://wa.me/16478901476`,
-          linkedin: `💼 CANADIAN IMMIGRATION ADVISORY | ${trData.title}\n\n${trData.subtitle}\n\n• ${trData.b1}\n• ${trData.b2}\n• ${trData.b3}\n\n🌐 https://www.travelbellsimmigration.com`
-        };
+    const titleSource = masterEn?.title || document.getElementById('canvas-headline')?.value || 'Travelbells Immigration';
+    const subtitleSource = masterEn?.subtitle || document.getElementById('canvas-subtitle')?.value || '';
+    const badgeSource = masterEn?.badgeText || document.getElementById('canvas-badge-input')?.value || 'STUDY VISA UPGRADE';
+    const b1Source = masterEn?.bullets?.[0] || document.getElementById('canvas-b1')?.value || '';
+    const b2Source = masterEn?.bullets?.[1] || document.getElementById('canvas-b2')?.value || '';
+    const b3Source = masterEn?.bullets?.[2] || document.getElementById('canvas-b3')?.value || '';
+    const b4Source = masterEn?.bullets?.[3] || document.getElementById('canvas-b4')?.value || '';
+
+    if (lang === 'en' && masterEn) {
+      setVal('canvas-headline', masterEn.title);
+      setVal('canvas-subtitle', masterEn.subtitle);
+      setVal('canvas-badge-input', masterEn.badgeText);
+      if (masterEn.bullets) {
+        setVal('canvas-b1', masterEn.bullets[0] || '');
+        setVal('canvas-b2', masterEn.bullets[1] || '');
+        setVal('canvas-b3', masterEn.bullets[2] || '');
+        setVal('canvas-b4', masterEn.bullets[3] || '');
       }
-    } catch (err) {
-      console.warn("Translation sync note:", err);
+    } else {
+      try {
+        const res = await fetch('/api/translate-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: titleSource,
+            subtitle: subtitleSource,
+            badgeText: badgeSource,
+            b1: b1Source,
+            b2: b2Source,
+            b3: b3Source,
+            b4: b4Source,
+            targetLang: lang
+          })
+        });
+        const trData = await res.json();
+        if (trData.success) {
+          setVal('canvas-headline', trData.title);
+          setVal('canvas-subtitle', trData.subtitle);
+          setVal('canvas-badge-input', trData.badgeText);
+          setVal('canvas-b1', trData.b1);
+          setVal('canvas-b2', trData.b2);
+          setVal('canvas-b3', trData.b3);
+          setVal('canvas-b4', trData.b4);
+
+          if (!activeBilingualData) activeBilingualData = { campaign: {} };
+          if (!activeBilingualData.campaign) activeBilingualData.campaign = {};
+          
+          activeBilingualData.campaign[lang] = {
+            title: trData.title,
+            subtitle: trData.subtitle,
+            badgeText: trData.badgeText,
+            bullets: [trData.b1, trData.b2, trData.b3, trData.b4],
+            fullCopy: `🇨🇦 ${trData.title}\n\n${trData.subtitle}\n\n✨ Key Highlights:\n🔴 ${trData.b1}\n🔴 ${trData.b2}\n🔴 ${trData.b3}\n🔴 ${trData.b4}\n\n📩 BOOK YOUR CONSULTATION TODAY:\n👉 https://bookings.travelbellsimmigration.com\n\n🏢 Travelbells Immigration Inc. | Licensed RCIC Firm\n🌐 https://www.travelbellsimmigration.com\n📞 WhatsApp: +1 (647) 890-1476`,
+            tiktokScript: `🎬 [TIKTOK HOOK - ${lang.toUpperCase()}]\nHeadline: ${trData.title}\nSubtitle: ${trData.subtitle}\nCall-To-Action: Link in Bio!`,
+            whatsapp: `🇨🇦 *Travelbells Immigration Update (${lang.toUpperCase()})*\n\n*${trData.title}*\n${trData.subtitle}\n\n👉 Book: https://wa.me/16478901476`,
+            linkedin: `💼 CANADIAN IMMIGRATION ADVISORY | ${trData.title}\n\n${trData.subtitle}\n\n• ${trData.b1}\n• ${trData.b2}\n• ${trData.b3}\n\n🌐 https://www.travelbellsimmigration.com`
+          };
+        }
+      } catch (err) {
+        console.warn("Translation sync note:", err);
+      }
     }
   }
 
   updateGraphicDisplay();
+  updateCopyFromBilingualData();
+}
   updateCopyFromBilingualData();
 }
 
