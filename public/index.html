@@ -73,6 +73,15 @@
           <button class="preset-chip" onclick="applyNichePreset('family')" style="background:#FFFFFF; color:#002B49; border:1px solid #CBD5E1; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;">👨‍👩‍👧 Family Sponsorship (Spouse & Parents)</button>
           <button class="preset-chip" onclick="applyNichePreset('visitor')" style="background:#FFFFFF; color:#002B49; border:1px solid #CBD5E1; font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;">⚡ Visitor to Work Permit & LMIA</button>
         </div>
+
+        <!-- 📍 Localized Geo-Targeting & City Demographic Ribbon -->
+        <div class="geo-targeting-ribbon" style="margin-top:10px; background: rgba(15, 23, 42, 0.04); padding: 8px 14px; border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.15); display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span class="preset-label" style="font-weight:800; color: #0F172A; font-size:12px;">📍 Geo-Targeted Canadian Hubs:</span>
+          <button class="preset-chip" onclick="applyGeoPreset('brampton')" style="background:#FFFFFF; color:#0F172A; border:1px solid #CBD5E1; font-weight:700; padding:5px 10px; border-radius:16px; font-size:11px; cursor:pointer;">🍁 Brampton & Peel PGWP Hub</button>
+          <button class="preset-chip" onclick="applyGeoPreset('surrey')" style="background:#FFFFFF; color:#0F172A; border:1px solid #CBD5E1; font-weight:700; padding:5px 10px; border-radius:16px; font-size:11px; cursor:pointer;">🌲 Surrey & Vancouver Trades</button>
+          <button class="preset-chip" onclick="applyGeoPreset('montreal')" style="background:#FFFFFF; color:#0F172A; border:1px solid #CBD5E1; font-weight:700; padding:5px 10px; border-radius:16px; font-size:11px; cursor:pointer;">⚜️ Montreal & Quebec Francophones</button>
+          <button class="preset-chip" onclick="applyGeoPreset('calgary')" style="background:#FFFFFF; color:#0F172A; border:1px solid #CBD5E1; font-weight:700; padding:5px 10px; border-radius:16px; font-size:11px; cursor:pointer;">🌾 Calgary & Alberta AAIP Tech</button>
+        </div>
       </div>
 
       <!-- MAIN DUAL WORKSPACE: Graphics (Left) + Multi-Platform Copy (Right) -->
@@ -103,6 +112,16 @@
             <button class="fmt-pill active" onclick="switchAspectFormat('vertical', this)">📷 1:1 Feed Post (1080×1080)</button>
             <button class="fmt-pill" onclick="switchAspectFormat('story', this)">📱 9:16 Story / TikTok (1080×1920)</button>
             <button class="fmt-pill" onclick="switchAspectFormat('landscape', this)">💼 16:9 Banner (1200×630)</button>
+          </div>
+
+          <!-- Advanced AI Voiceover & Lead Magnet Action Bar -->
+          <div class="voiceover-lead-bar" style="margin-bottom:12px; background: rgba(16, 185, 129, 0.05); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.25); display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="playAIVoiceoverPreview()" style="background:#047857; color:#FFFFFF; font-weight:700; border:none; font-size:12px;">
+              🎙️ Play Native AI Voiceover Preview
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleCRSCalculatorLeadOverlay()" style="background:#3B82F6; color:#FFFFFF; font-weight:700; border:none; font-size:12px;">
+              🧮 Toggle Interactive CRS Lead Calculator Overlay
+            </button>
           </div>
 
           <!-- Human Photo Preset & Image Importer Selector Bar -->

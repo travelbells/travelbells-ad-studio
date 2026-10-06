@@ -2580,5 +2580,82 @@ async function downloadCampaignZipBundle() {
   }
 }
 
+// 📍 Localized Geo-Targeting Preset Function
+function applyGeoPreset(city) {
+  const geoConfigs = {
+    brampton: {
+      tagline: "Brampton & Peel PGWP Work Permit Expiry - Upgrade your status with OINP & Accredited Programs",
+      badge: "BRAMPTON PGWP UPGRADE",
+      photo: "student"
+    },
+    surrey: {
+      tagline: "Surrey & Vancouver Skilled Trades - PNP Nomination & Express Entry PR Pathways",
+      badge: "SURREY BC PNP TRADES",
+      photo: "professional"
+    },
+    montreal: {
+      tagline: "Mobilité Francophone Montréal & Québec - Permis de travail sans EIMT et Résidence Permanente",
+      badge: "MOUNT-ROYAL FRANCOPHONE",
+      photo: "francophone"
+    },
+    calgary: {
+      tagline: "Calgary & Alberta AAIP Accelerated Tech Stream - Direct PR for Skilled Professionals",
+      badge: "CALGARY AAIP TECH STREAM",
+      photo: "graduate"
+    }
+  };
+
+  const cfg = geoConfigs[city];
+  if (cfg) {
+    const input = document.getElementById('quick-tagline-input');
+    if (input) input.value = cfg.tagline;
+    setPresetBadge(cfg.badge);
+    generate1ClickBilingualCampaign();
+  }
+}
+
+// 🎙️ Native Web Speech AI Voiceover Synthesizer Player
+function playAIVoiceoverPreview() {
+  const headline = document.getElementById('canvas-headline')?.value || 'Work Permit Ending? Don\'t Exit, Upgrade';
+  const subtitle = document.getElementById('canvas-subtitle')?.value || 'Your time in Canada doesn\'t have to stop here.';
+  const textToSpeak = `${headline}. ${subtitle}`;
+
+  if (!('speechSynthesis' in window)) {
+    alert("Speech Synthesis is not supported in this browser.");
+    return;
+  }
+
+  window.speechSynthesis.cancel(); // Stop any ongoing speech
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+  const langMap = {
+    en: 'en-US',
+    fr: 'fr-FR',
+    pa: 'hi-IN',
+    hi: 'hi-IN',
+    tl: 'en-US',
+    es: 'es-ES',
+    ar: 'ar-SA'
+  };
+
+  utterance.lang = langMap[activeGraphicLang] || 'en-US';
+  utterance.rate = 1.0;
+  utterance.pitch = 1.0;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+// 🧮 Interactive CRS Calculator Lead Magnet Overlay Toggle
+function toggleCRSCalculatorLeadOverlay() {
+  const currentBadge = document.getElementById('canvas-badge-input')?.value || '';
+  if (currentBadge.includes('CRS CALCULATOR')) {
+    setPresetBadge('CUSTOM IMMIGRATION ADVISORY');
+    alert("🧮 Interactive CRS Calculator Overlay Removed");
+  } else {
+    setPresetBadge('🧮 FREE CRS SCORE CALCULATOR & ASSESSMENT');
+    alert("🧮 Interactive CRS Calculator Overlay Applied to Banner!");
+  }
+}
+
 
 
