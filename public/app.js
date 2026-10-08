@@ -2855,19 +2855,60 @@ async function executeAiCommand() {
     if (data.success && data.parsed) {
       const { category, language, region, themePreset, autoPublish } = data.parsed;
 
-      // Apply Niche Category & Geotag Preset
-      applyNichePreset(category || 'students');
-      applyGeoPreset(region || 'brampton');
+      // 1. Put user's custom instruction into tagline input
+      const taglineInput = document.getElementById('quick-tagline-input');
+      if (taglineInput) taglineInput.value = commandText;
 
-      // Set Theme Preset (Defaults to Editorial News for 100% Humanized Look!)
+      // 2. Update active language & UI tabs cleanly
+      const targetLang = language || 'en';
+      activeGraphicLang = targetLang;
+      const allLangs = ['en', 'fr', 'pa', 'hi', 'tl', 'es', 'ar'];
+      allLangs.forEach(l => {
+        document.getElementById(`tab-lang-${l}`)?.classList.toggle('active', l === targetLang);
+      });
+
+      // 3. Set Theme Preset & Region
       const themeSelect = document.getElementById('select-theme-preset');
       if (themeSelect) themeSelect.value = themePreset || 'editorial_news';
 
-      // Switch Language (EN, FR, PA, HI, TL, ES, AR)
-      await switchGraphicLanguage(language || 'pa');
+      // 4. Generate Single Direct Campaign for User Command Text
+      const campaignRes = await fetch('/api/auto-generate-campaign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tagline: commandText,
+          prompt: commandText,
+          category: category || 'students',
+          language: targetLang,
+          highRes: true,
+          usePuppeteer: true
+        })
+      });
+      const campaignData = await campaignRes.json();
+
+      if (campaignData.success && (campaignData.campaign || campaignData.graphics)) {
+        activeBilingualData = campaignData;
+        const camp = campaignData.campaign;
+        const langObj = (camp && camp[targetLang]) ? camp[targetLang] : camp?.en;
+
+        if (langObj) {
+          setVal('canvas-headline', langObj.title);
+          setVal('canvas-subtitle', langObj.subtitle);
+          setVal('canvas-badge-input', langObj.badgeText);
+          if (langObj.bullets) {
+            setVal('canvas-b1', langObj.bullets[0] || '');
+            setVal('canvas-b2', langObj.bullets[1] || '');
+            setVal('canvas-b3', langObj.bullets[2] || '');
+            setVal('canvas-b4', langObj.bullets[3] || '');
+          }
+        }
+
+        updateCopyFromBilingualData();
+        updateGraphicDisplay();
+      }
 
       if (statusBadge) {
-        statusBadge.innerText = `✅ Creative Generated: ${language.toUpperCase()} | ${region.toUpperCase()} | ${category.toUpperCase()}`;
+        statusBadge.innerText = `✅ Creative Generated: ${targetLang.toUpperCase()} | ${(region || 'BRAMPTON').toUpperCase()} | ${(category || 'STUDENTS').toUpperCase()}`;
         statusBadge.style.color = '#10B981';
       }
 
