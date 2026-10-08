@@ -2524,15 +2524,20 @@ function parseUniversalPrompt(rawInput) {
   const note = (rawInput || '').trim();
   const lower = note.toLowerCase();
 
+  // Strip conversational filler prefixes (e.g., "create a image for headline...")
+  const cleanInput = note
+    .replace(/\b(?:create|make|generate|build|draw)\s+(?:a|an)?\s*(?:image|ad|creative|banner|graphic|poster)?\s*(?:for|about|with)?\s*(?:headline|title)?\b/gi, '')
+    .trim();
+
   // 1. Check if explicit custom bullet lines or dictation keywords were provided
-  let customLines = note
-    .split(/\n|•|\*|(?:\d+\.|\d+\))|\b(?:bullet\s*\d*|point\s*\d*|line\s*\d*|full\s*stop|headline\s*\d*)\b/gi)
+  let customLines = cleanInput
+    .split(/\n|•|\*|(?:\d+\.|\d+\))|\b(?:bullet|point|line)\s*(?:\d+|one|two|to|too|three|tree|four|for|1|2|3|4)?\b|\b(?:full\s*stop)\b/gi)
     .map(l => l.replace(/^[-–—\s*•\d\.\)]+/, '').trim())
-    .filter(l => l.length >= 2 && !['headline', 'title', 'subject'].includes(l.toLowerCase()));
+    .filter(l => l.length >= 2 && !['headline', 'title', 'subject', 'bullet', 'create', 'image'].includes(l.toLowerCase()));
 
   // 2. Intelligently Classify Topic Category with Precise Precedence
   let detectedCategory = 'general';
-  if (lower.includes('student') || lower.includes('study') || lower.includes('pgwp') || lower.includes('college') || lower.includes('university') || lower.includes('upgrade to study') || lower.includes('study visa')) {
+  if (lower.includes('student') || lower.includes('study') || lower.includes('pgwp') || lower.includes('college') || lower.includes('university') || lower.includes('upgrade to study') || lower.includes('study visa') || lower.includes('course') || lower.includes('dsw') || lower.includes('ece')) {
     detectedCategory = 'students';
   } else if (lower.includes('family') || lower.includes('spousal sponsorship') || lower.includes('family sponsorship') || lower.includes('parent') || lower.includes('super visa') || lower.includes('reunification')) {
     detectedCategory = 'family';
@@ -2616,32 +2621,32 @@ function parseUniversalPrompt(rawInput) {
   const def = categoryDefaults[detectedCategory];
 
   // If user provided custom bullet lines or spoken bullets (bullet 1, bullet 2, etc.)
-  if (customLines.length >= 1) {
+  if (customLines.length >= 2) {
     const formatBullet = (str) => {
       let s = str.trim();
       if (s.length > 200) s = s.substring(0, 197) + "...";
       return s.charAt(0).toUpperCase() + s.slice(1);
     };
 
-    let titleText = def.title;
-    if (lower.includes('calgary') || lower.includes('alberta')) {
-      titleText = `CALGARY & ALBERTA ${def.title}`;
-    } else if (lower.includes('surrey') || lower.includes('vancouver')) {
-      titleText = `SURREY & VANCOUVER ${def.title}`;
-    } else if (lower.includes('montreal') || lower.includes('quebec')) {
-      titleText = `MONTREAL & QUEBEC ${def.title}`;
-    } else if (lower.includes('brampton') || lower.includes('peel')) {
-      titleText = `BRAMPTON & PEEL ${def.title}`;
+    // First chunk is custom headline if it describes topic
+    let customTitle = customLines[0].toUpperCase();
+    if (customTitle.length > 60) customTitle = customTitle.substring(0, 57) + "...";
+
+    let titleText = customTitle;
+    let b1Val = customLines[1] ? formatBullet(customLines[1]) : def.b1;
+    let b2Val = customLines[2] ? formatBullet(customLines[2]) : def.b2;
+    let b3Val = customLines[3] ? formatBullet(customLines[3]) : def.b3;
+    let b4Val = customLines[4] ? formatBullet(customLines[4]) : def.b4;
+
+    let badgeVal = `${customTitle.slice(0, 20)} PR`.toUpperCase();
+    if (badgeVal.includes('CREATE') || badgeVal.includes('IMAGE') || badgeVal.length < 5) {
+      badgeVal = def.badge;
     }
-    let b1Val = customLines[0] ? formatBullet(customLines[0]) : def.b1;
-    let b2Val = customLines[1] ? formatBullet(customLines[1]) : def.b2;
-    let b3Val = customLines[2] ? formatBullet(customLines[2]) : def.b3;
-    let b4Val = customLines[3] ? formatBullet(customLines[3]) : def.b4;
 
     return {
       title: titleText,
       subtitle: def.subtitle,
-      badge: def.badge,
+      badge: badgeVal,
       b1: b1Val,
       b2: b2Val,
       b3: b3Val,
