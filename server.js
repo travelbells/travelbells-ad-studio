@@ -544,7 +544,12 @@ function translateToLanguage(text, lang = 'en') {
       "CALGARY & ALBERTA AAIP ACCELERATED TECH STREAM": "ਕੈਲਗਰੀ ਅਤੇ ਅਲਬਰਟਾ ਏਏਆਈਪੀ ਟੈਕ ਸਟ੍ਰੀਮ",
       "BRAMPTON & PEEL PGWP WORK PERMIT EXPIRY": "ਬ੍ਰੈਂਪਟਨ ਪੀਜੀਡਬਲਯੂਪੀ ਵਰਕ ਪਰਮਿਟ ਅੱਪਗ੍ਰੇਡ",
       "SURREY & VANCOUVER SKILLED TRADES": "ਸਰੀ ਅਤੇ ਵੈਨਕੂਵਰ ਸਕਿਲਡ ਟਰੇਡਜ਼",
+      "MONTREAL & QUEBEC FRANCOPHONE MOBILITY PILOT - NO LMIA WORK PERMIT": "ਮਾਂਟਰੀਅਲ ਅਤੇ ਕਿਊਬੈਕ ਫ੍ਰੈਂਕੋਫੋਨ ਪਾਇਲਟ - ਬਿਨਾਂ LMIA ਵਰਕ ਪਰਮਿਟ",
       "MONTREAL & QUEBEC FRANCOPHONE MOBILITY PILOT": "ਮਾਂਟਰੀਅਲ ਅਤੇ ਕਿਊਬੈਕ ਫ੍ਰੈਂਕੋਫੋਨ ਪਾਇਲਟ",
+      "Work Permit Without LMIA for French Speakers Across Canada": "ਫ੍ਰੈਂਚ ਬੋਲਣ ਵਾਲਿਆਂ ਲਈ ਬਿਨਾਂ LMIA ਕੈਨੇਡਾ ਵਰਕ ਪਰਮਿਟ",
+      "No LMIA required for French speaking applicants": "ਫ੍ਰੈਂਚ ਬੋਲਣ ਵਾਲੇ ਬਿਨੈਕਾਰਾਂ ਲਈ ਬਿਨਾਂ LMIA ਵਰਕ ਪਰਮਿਟ",
+      "Fast-track processing & provincial nominations": "ਫਾਸਟ-ਟਰੈਕ ਪ੍ਰੋਸੈਸਿੰਗ ਅਤੇ ਸੂਬਾਈ ਨਾਮਜ਼ਦਗੀ (PNP)",
+      "FMCSP FRANCOPHONE PILOT - NO LMIA": "ਫ੍ਰੈਂਕੋਫੋਨ ਪਾਇਲਟ - ਬਿਨਾਂ LMIA",
       "FAMILY SPONSORSHIP: SPOUSE, PARENTS & DEPENDENT PR": "ਪਰਿਵਾਰਕ ਸਪਾਂਸਰਸ਼ਿਪ: ਪਤਨੀ, ਮਾਪੇ ਅਤੇ ਬੱਚੇ ਪੀ.ਆਰ",
       "VISITOR VISA TO WORK PERMIT & LMIA TRANSITION": "ਵਿਜ਼ੀਟਰ ਵੀਜ਼ਾ ਤੋਂ ਵਰਕ ਪਰਮਿਟ ਅਤੇ LMIA",
       "REGULATED RCIC LEGAL GUIDANCE & APPLICATION SUPPORT ACROSS CANADA": "ਕੈਨੇਡਾ ਭਰ ਵਿੱਚ ਰੈਗੂਲੇਟਿਡ RCIC ਕਾਨੂੰਨੀ ਸਲਾਹ ਅਤੇ ਅਰਜ਼ੀ ਸਹਾਇਤਾ",
@@ -2514,11 +2519,87 @@ async function renderBannerWithPuppeteer(bannerData) {
   }
 }
 
-// Universal Dynamic AI Copy Engine — Parses ANY arbitrary user prompt/message into clean ad copy
+// Universal Dynamic AI Copy Engine — Parses ANY arbitrary user prompt/message into 100% relevant ad copy
 function parseUniversalPrompt(rawInput) {
   const note = (rawInput || '').trim();
-  if (!note) {
-    return {
+  const lower = note.toLowerCase();
+
+  // 1. Check if explicit custom bullet lines were provided (e.g. multi-line prompt)
+  let customLines = note.split(/\n|•|\*|(?:\d+\.|\d+\))/).map(l => l.replace(/^[-–—\s*•\d\.\)]+/, '').trim()).filter(l => l.length > 5);
+
+  // 2. Intelligently Classify Topic Category with Precise Precedence
+  let detectedCategory = 'general';
+  if (lower.includes('student') || lower.includes('study') || lower.includes('pgwp') || lower.includes('college') || lower.includes('university') || lower.includes('upgrade to study') || lower.includes('study visa')) {
+    detectedCategory = 'students';
+  } else if (lower.includes('family') || lower.includes('spousal sponsorship') || lower.includes('family sponsorship') || lower.includes('parent') || lower.includes('super visa') || lower.includes('reunification')) {
+    detectedCategory = 'family';
+  } else if (lower.includes('visitor') || lower.includes('tourist') || lower.includes('convert visitor') || lower.includes('visitor visa')) {
+    detectedCategory = 'visitor';
+  } else if (lower.includes('francophone') || lower.includes('mobilité') || lower.includes('french speaker')) {
+    detectedCategory = 'francophone';
+  } else if (lower.includes('asylum') || lower.includes('refugee') || lower.includes('irb hearing') || lower.includes('protection claim')) {
+    detectedCategory = 'asylum';
+  } else if (lower.includes('worker') || lower.includes('express entry') || lower.includes('oinp') || lower.includes('pnp') || lower.includes('skilled') || lower.includes('trade')) {
+    detectedCategory = 'workers';
+  }
+
+  // 3. Category Default Specifications
+  const categoryDefaults = {
+    family: {
+      title: "SPOUSE & PARENTS FAMILY SPONSORSHIP",
+      subtitle: "In-Land & Outland Spousal Sponsorship, Super Visa & Open Work Permit",
+      badge: "FAMILY SPONSORSHIP PR",
+      b1: "In-land and outland spousal & common-law partner sponsorship filing",
+      b2: "Simultaneous Spousal Open Work Permit (SOWP) filing for in-land applicants",
+      b3: "Parents & Grandparents Super Visa with multi-entry up to 5 years",
+      b4: "Comprehensive relationship proof dossier & licensed RCIC legal representation"
+    },
+    students: {
+      title: "WORK PERMIT ENDING? SHIFT GEARS WITH STUDY VISA",
+      subtitle: "Maintain Legal Status in Canada via Accredited DLI College & University Programs",
+      badge: "STUDY VISA UPGRADE",
+      b1: "Accredited Diploma & Master's Degree options across Canada",
+      b2: "Flexible admission options for low IELTS / CELPIP scores",
+      b3: "Spouse Open Work Permit (SOWP) eligibility for accompanying family",
+      b4: "Maintain legal status & transition to Permanent Residency (PR)"
+    },
+    workers: {
+      title: "SKILLED WORKER EXPRESS ENTRY & OINP DRAWS",
+      subtitle: "Fast-Track Canadian Permanent Residency for Skilled Professionals",
+      badge: "EXPRESS ENTRY & PNP",
+      b1: "Comprehensive CRS score optimization and targeted draw matching",
+      b2: "Employer job offer & Provincial Nomination (PNP) assessment",
+      b3: "Category-based selection for Healthcare, STEM, and Trades",
+      b4: "Complete legal representation by licensed RCIC consultants"
+    },
+    visitor: {
+      title: "VISITOR VISA TO WORK PERMIT TRANSITION",
+      subtitle: "Convert Tourist Status Inside Canada with Approved LMIA or Exemptions",
+      badge: "VISITOR TO WORK PERMIT",
+      b1: "Legal conversion from visitor status to employer-supported work permit inside Canada",
+      b2: "Strategic pairing with LMIA-exempt pathways or approved employer LMIAs",
+      b3: "Maintained status protection during IRCC application processing",
+      b4: "Full Employer Compliance Audit protection and work permit processing"
+    },
+    francophone: {
+      title: "MOBILITÉ FRANCOPHONE WORK PERMIT & PR",
+      subtitle: "LMIA-Exempt Work Permit & Targeted PR Draws for French Speakers",
+      badge: "MOBILITÉ FRANCOPHONE",
+      b1: "100% LMIA-Exempt C16 work permit for French speakers outside Quebec",
+      b2: "Fast-track processing for qualifying job offers in Ontario, BC & Alberta",
+      b3: "Spouse Open Work Permit & dependent children included",
+      b4: "Direct targeted Express Entry Francophone PR draws eligibility"
+    },
+    asylum: {
+      title: "CANADIAN REFUGEE & ASYLUM CLAIM GUIDANCE",
+      subtitle: "In-Canada Protection Claims, Work Permit & Legal Support",
+      badge: "REFUGEE PROTECTION",
+      b1: "In-Canada refugee claim drafting & IRB Hearing preparation",
+      b2: "Open Work Permit & Interim Federal Health Program (IFHP) coverage",
+      b3: "Pre-Removal Risk Assessment (PRRA) & Humanitarian (H&C) applications",
+      b4: "Full legal representation by experienced RCIC counsel"
+    },
+    general: {
       title: "CANADIAN IMMIGRATION & WORK PERMIT PATHWAYS",
       subtitle: "Accredited Programs & Regulated RCIC Legal Guidance Across Canada",
       badge: "CANADIAN IMMIGRATION",
@@ -2526,73 +2607,51 @@ function parseUniversalPrompt(rawInput) {
       b2: "Employer job offer & Provincial Nomination (PNP) assessment",
       b3: "Spouse Open Work Permit (SOWP) eligibility for accompanying family",
       b4: "Complete legal representation by licensed RCIC consultants"
+    }
+  };
+
+  const def = categoryDefaults[detectedCategory];
+
+  // If user provided a multi-line custom prompt with explicit bullets (>= 3 lines), use custom lines!
+  if (customLines.length >= 3) {
+    const formatBullet = (str) => {
+      let s = str.trim();
+      if (s.length > 200) s = s.substring(0, 197) + "...";
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    };
+    return {
+      title: customLines[0].toUpperCase(),
+      subtitle: formatBullet(customLines[1] || def.subtitle),
+      badge: `${customLines[0].slice(0, 25)} PR`.toUpperCase(),
+      b1: formatBullet(customLines[0]),
+      b2: formatBullet(customLines[1]),
+      b3: formatBullet(customLines[2] || def.b3),
+      b4: formatBullet(customLines[3] || def.b4)
     };
   }
 
-  // 1. Check if user typed explicit lines / bullets
-  let customLines = note.split(/\n|•|\*|(?:\d+\.|\d+\))/).map(l => l.replace(/^[-–—\s*•\d\.\)]+/, '').trim()).filter(l => l.length > 5);
+  let finalTitle = def.title;
 
-  // 2. Break prompt into clauses by punctuation (commas, semicolons, exclamations, periods)
-  const clauses = note.split(/[,;!?\n]/).map(c => c.trim()).filter(c => c.length > 2);
-  const firstClause = clauses[0] || note;
-
-  // Clean title construction
-  let cleanTitle = firstClause
-    .replace(/\b(i want to|i am a|seeking|looking for|how to|can i|please|help me with|for)\b/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toUpperCase();
-
-  if (cleanTitle.length < 5) cleanTitle = note.substring(0, 180).toUpperCase();
-  if (cleanTitle.length > 180) cleanTitle = cleanTitle.substring(0, 177) + "...";
-
-  // Badge construction (short 2-5 words, max 50 chars)
-  const words = cleanTitle.replace(/IN CANADA|CANADIAN|FOR YOUR|FOR/g, '').trim().split(/\s+/);
-  let badgeText = words.slice(0, 5).join(' ');
-  if (badgeText.length > 50) badgeText = badgeText.substring(0, 47) + "...";
-  if (badgeText.length < 3) badgeText = "IMMIGRATION";
-  badgeText = `${badgeText} PR`.toUpperCase();
-
-  // Subtitle construction
-  let cleanSubtitle = clauses.length > 1 ? clauses.slice(1).join(' • ') : "Regulated RCIC Legal Guidance & Application Support Across Canada";
-  if (cleanSubtitle.length > 300) cleanSubtitle = cleanSubtitle.substring(0, 297) + "...";
-
-  // Bullets construction — Ensure Bullet 1 never duplicates the Headline wording
-  let defaultB1 = "Targeted PR pathways & Work Permit options across Canada";
-  if (customLines[0]) {
-    defaultB1 = customLines[0];
-  } else if (clauses.length > 1 && clauses[1] && clauses[1].length > 4) {
-    defaultB1 = clauses[1];
-  } else if (clauses.length > 2 && clauses[2] && clauses[2].length > 4) {
-    defaultB1 = clauses[2];
+  // Preserve explicit regional geo-location terms if typed by user
+  if (lower.includes('calgary') || lower.includes('alberta')) {
+    finalTitle = `CALGARY & ALBERTA ${def.title}`;
+  } else if (lower.includes('surrey') || lower.includes('vancouver')) {
+    finalTitle = `SURREY & VANCOUVER ${def.title}`;
+  } else if (lower.includes('montreal') || lower.includes('quebec')) {
+    finalTitle = `MONTREAL & QUEBEC ${def.title}`;
+  } else if (lower.includes('brampton') || lower.includes('peel')) {
+    finalTitle = `BRAMPTON & PEEL ${def.title}`;
   }
 
-  // Prevent any word duplication with cleanTitle
-  const titleLower = cleanTitle.toLowerCase();
-  const b1Lower = defaultB1.toLowerCase();
-  if (b1Lower.includes(titleLower) || (titleLower.length > 10 && b1Lower.includes(titleLower.substring(0, 10)))) {
-    defaultB1 = "Targeted PR pathways & Work Permit options across Canada";
-  }
-
-  let b1 = defaultB1;
-  let b2 = customLines[1] || (clauses[2] ? clauses[2] : "Employer job offer & Provincial Nomination (PNP) assessment");
-  let b3 = customLines[2] || (clauses[3] ? clauses[3] : "Spouse Open Work Permit (SOWP) eligibility for accompanying family");
-  let b4 = customLines[3] || "Complete legal representation by licensed RCIC consultants";
-
-  const formatBullet = (str) => {
-    let s = str.trim();
-    if (s.length > 200) s = s.substring(0, 197) + "...";
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
-
+  // Otherwise return the 100% relevant topic default preset!
   return {
-    title: cleanTitle,
-    subtitle: formatBullet(cleanSubtitle),
-    badge: badgeText,
-    b1: formatBullet(b1),
-    b2: formatBullet(b2),
-    b3: formatBullet(b3),
-    b4: formatBullet(b4)
+    title: finalTitle,
+    subtitle: def.subtitle,
+    badge: def.badge,
+    b1: def.b1,
+    b2: def.b2,
+    b3: def.b3,
+    b4: def.b4
   };
 }
 
@@ -2621,14 +2680,16 @@ function autoGenerateBilingualCampaign(body = {}) {
   let b3_FR = translateToFrench(b3_EN);
   let b4_FR = translateToFrench(b4_EN);
 
-  // Explicit property overrides from request body if passed directly
-  if (title) title_EN = title;
-  if (subtitle) subtitle_EN = subtitle;
-  if (badgeText) badge_EN = badgeText;
-  if (b1) b1_EN = b1;
-  if (b2) b2_EN = b2;
-  if (b3) b3_EN = b3;
-  if (b4) b4_EN = b4;
+  // Explicit property overrides from request body if forceOverride is true
+  if (params.forceOverride) {
+    if (title) title_EN = title;
+    if (subtitle) subtitle_EN = subtitle;
+    if (badgeText) badge_EN = badgeText;
+    if (b1) b1_EN = b1;
+    if (b2) b2_EN = b2;
+    if (b3) b3_EN = b3;
+    if (b4) b4_EN = b4;
+  }
 
   const result = {
     tagline: rawNote,
@@ -3349,11 +3410,26 @@ Travelbells Immigration Inc. | Licensed RCIC CICC Member Firm`;
 const PORT_TO_LISTEN = process.env.PORT || 3007;
 
 if (require.main === module) {
-  server.listen(PORT_TO_LISTEN, () => {
-    console.log(`====================================================`);
-    console.log(`🚀 Travelbells Ad Studio Server running on port ${PORT_TO_LISTEN}`);
-    console.log(`🌐 Local UI Access: http://127.0.0.1:${PORT_TO_LISTEN}`);
-  });
+  function startServer(port) {
+    server.listen(port, () => {
+      console.log(`====================================================`);
+      console.log(`🚀 Travelbells Ad Studio Server running on port ${port}`);
+      console.log(`🌐 Local UI Access: http://localhost:${port}`);
+      console.log(`====================================================`);
+    }).on('error', (err) => {
+      if (err.code === 'EADDRINUSE' || err.code === 'EPERM') {
+        if (port < 3025) {
+          console.log(`Port ${port} busy or restricted, trying ${port + 1}...`);
+          startServer(port + 1);
+        } else {
+          console.error('Server listen error:', err);
+        }
+      } else {
+        console.error('Server error:', err);
+      }
+    });
+  }
+  startServer(PORT_TO_LISTEN);
 }
 
 module.exports = { autoGenerateBilingualCampaign, translateToFrench, translateToLanguage, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, parseAiCommand, server };

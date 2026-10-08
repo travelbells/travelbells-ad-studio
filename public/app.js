@@ -763,14 +763,6 @@ async function generate1ClickBilingualCampaign() {
 
   // STEP 2: FULL BILINGUAL & 300 DPI HIGH-RES GENERATION (~3-4s)
   try {
-    const customTitle = document.getElementById('canvas-headline')?.value;
-    const customSubtitle = document.getElementById('canvas-subtitle')?.value;
-    const customBadge = document.getElementById('canvas-badge-input')?.value;
-    const customB1 = document.getElementById('canvas-b1')?.value;
-    const customB2 = document.getElementById('canvas-b2')?.value;
-    const customB3 = document.getElementById('canvas-b3')?.value;
-    const customB4 = document.getElementById('canvas-b4')?.value;
-
     const res = await fetch('/api/auto-generate-campaign', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -780,14 +772,7 @@ async function generate1ClickBilingualCampaign() {
         category,
         highRes: true,
         usePuppeteer: true,
-        customPhotoUrl: photoToUse,
-        title: customTitle,
-        subtitle: customSubtitle,
-        badgeText: customBadge,
-        b1: customB1,
-        b2: customB2,
-        b3: customB3,
-        b4: customB4
+        customPhotoUrl: photoToUse
       })
     });
     const data = await res.json();
@@ -2268,8 +2253,6 @@ async function switchGraphicLanguage(lang) {
   }
 
   updateGraphicDisplay();
-  updateCopyFromBilingualData();
-}
   updateCopyFromBilingualData();
 }
 
