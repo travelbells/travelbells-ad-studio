@@ -2524,8 +2524,11 @@ function parseUniversalPrompt(rawInput) {
   const note = (rawInput || '').trim();
   const lower = note.toLowerCase();
 
-  // 1. Check if explicit custom bullet lines were provided (e.g. multi-line prompt)
-  let customLines = note.split(/\n|•|\*|(?:\d+\.|\d+\))/).map(l => l.replace(/^[-–—\s*•\d\.\)]+/, '').trim()).filter(l => l.length > 5);
+  // 1. Check if explicit custom bullet lines or dictation keywords were provided
+  let customLines = note
+    .split(/\n|•|\*|(?:\d+\.|\d+\))|\b(?:bullet\s*\d*|point\s*\d*|line\s*\d*|full\s*stop|headline\s*\d*)\b/gi)
+    .map(l => l.replace(/^[-–—\s*•\d\.\)]+/, '').trim())
+    .filter(l => l.length >= 2 && !['headline', 'title', 'subject'].includes(l.toLowerCase()));
 
   // 2. Intelligently Classify Topic Category with Precise Precedence
   let detectedCategory = 'general';
@@ -2612,21 +2615,37 @@ function parseUniversalPrompt(rawInput) {
 
   const def = categoryDefaults[detectedCategory];
 
-  // If user provided a multi-line custom prompt with explicit bullets (>= 3 lines), use custom lines!
-  if (customLines.length >= 3) {
+  // If user provided custom bullet lines or spoken bullets (bullet 1, bullet 2, etc.)
+  if (customLines.length >= 1) {
     const formatBullet = (str) => {
       let s = str.trim();
       if (s.length > 200) s = s.substring(0, 197) + "...";
       return s.charAt(0).toUpperCase() + s.slice(1);
     };
+
+    let titleText = def.title;
+    if (lower.includes('calgary') || lower.includes('alberta')) {
+      titleText = `CALGARY & ALBERTA ${def.title}`;
+    } else if (lower.includes('surrey') || lower.includes('vancouver')) {
+      titleText = `SURREY & VANCOUVER ${def.title}`;
+    } else if (lower.includes('montreal') || lower.includes('quebec')) {
+      titleText = `MONTREAL & QUEBEC ${def.title}`;
+    } else if (lower.includes('brampton') || lower.includes('peel')) {
+      titleText = `BRAMPTON & PEEL ${def.title}`;
+    }
+    let b1Val = customLines[0] ? formatBullet(customLines[0]) : def.b1;
+    let b2Val = customLines[1] ? formatBullet(customLines[1]) : def.b2;
+    let b3Val = customLines[2] ? formatBullet(customLines[2]) : def.b3;
+    let b4Val = customLines[3] ? formatBullet(customLines[3]) : def.b4;
+
     return {
-      title: customLines[0].toUpperCase(),
-      subtitle: formatBullet(customLines[1] || def.subtitle),
-      badge: `${customLines[0].slice(0, 25)} PR`.toUpperCase(),
-      b1: formatBullet(customLines[0]),
-      b2: formatBullet(customLines[1]),
-      b3: formatBullet(customLines[2] || def.b3),
-      b4: formatBullet(customLines[3] || def.b4)
+      title: titleText,
+      subtitle: def.subtitle,
+      badge: def.badge,
+      b1: b1Val,
+      b2: b2Val,
+      b3: b3Val,
+      b4: b4Val
     };
   }
 
@@ -2729,14 +2748,15 @@ function parseAiCommand(commandText) {
 
   const text = commandText.toLowerCase();
 
-  // 1. Language Detection
+  // 1. Precise Whole-Word Language Detection
   let language = 'en';
-  if (text.includes('punjabi') || text.includes('ਪੰਜਾਬੀ') || text.includes(' pa ') || text.includes('in punjabi')) language = 'pa';
-  else if (text.includes('hindi') || text.includes('हिंदी') || text.includes(' hi ') || text.includes('in hindi')) language = 'hi';
-  else if (text.includes('tagalog') || text.includes('filipino') || text.includes('tl') || text.includes('philippines')) language = 'tl';
-  else if (text.includes('spanish') || text.includes('español') || text.includes('es') || text.includes('in spanish')) language = 'es';
-  else if (text.includes('arabic') || text.includes('عربي') || text.includes('ar') || text.includes('in arabic')) language = 'ar';
-  else if (text.includes('french') || text.includes('français') || text.includes('fr') || text.includes('in french')) language = 'fr';
+  if (/\b(?:punjabi|ਪੰਜਾਬੀ|in punjabi|lang:pa)\b/i.test(text)) language = 'pa';
+  else if (/\b(?:hindi|हिंदी|in hindi|lang:hi)\b/i.test(text)) language = 'hi';
+  else if (/\b(?:tagalog|filipino|in tagalog|lang:tl)\b/i.test(text)) language = 'tl';
+  else if (/\b(?:spanish|español|in spanish|lang:es)\b/i.test(text)) language = 'es';
+  else if (/\b(?:arabic|عربي|in arabic|lang:ar)\b/i.test(text)) language = 'ar';
+  else if (/\b(?:french|français|in french|lang:fr)\b/i.test(text)) language = 'fr';
+  else if (/\b(?:english|in english|lang:en)\b/i.test(text)) language = 'en';
 
   // 2. Category / Topic Detection
   let category = 'students';
@@ -3432,7 +3452,7 @@ if (require.main === module) {
   startServer(PORT_TO_LISTEN);
 }
 
-module.exports = { autoGenerateBilingualCampaign, translateToFrench, translateToLanguage, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, parseAiCommand, server };
+module.exports = { autoGenerateBilingualCampaign, parseUniversalPrompt, translateToFrench, translateToLanguage, generateBannerSVG, renderBannerWithPuppeteer, getPuppeteerBrowser, createZipArchive, parseAiCommand, server };
 
 
 
