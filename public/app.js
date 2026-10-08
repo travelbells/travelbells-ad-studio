@@ -2749,6 +2749,8 @@ function toggleCRSCalculatorLeadOverlay() {
 // 🎙️ Speech Recognition AI Voice & Command Engine
 let isVoiceRecording = false;
 let speechRecognitionInstance = null;
+let voiceSilenceTimer = null;
+let initialInputText = '';
 
 function toggleVoiceRecording() {
   const micBtn = document.getElementById('mic-toggle-btn');
@@ -2765,49 +2767,94 @@ function toggleVoiceRecording() {
 
   if (isVoiceRecording) {
     if (speechRecognitionInstance) speechRecognitionInstance.stop();
+    if (voiceSilenceTimer) clearTimeout(voiceSilenceTimer);
     isVoiceRecording = false;
     if (micBtn) micBtn.style.background = '#C8102E';
     if (micLabel) micLabel.innerText = 'Speak Command';
     if (statusBadge) {
-      statusBadge.innerText = 'Oral or Written Command';
-      statusBadge.style.color = '#38BDF8';
+      statusBadge.innerText = '✅ Speech Captured! Click "⚡ Run AI Command" or press Enter';
+      statusBadge.style.color = '#10B981';
     }
     return;
   }
 
   try {
+    // 1. Dynamic Language Locale Matching based on Active Language Tab
+    const langLocaleMap = {
+      en: 'en-US',
+      fr: 'fr-CA',
+      pa: 'pa-IN',
+      hi: 'hi-IN',
+      tl: 'tl-PH',
+      es: 'es-ES',
+      ar: 'ar-SA'
+    };
+    const activeLang = activeGraphicLang || document.getElementById('input-language')?.value || 'en';
+    const speechLocale = langLocaleMap[activeLang] || 'en-US';
+
     speechRecognitionInstance = new SpeechRecognition();
-    speechRecognitionInstance.continuous = false;
+    // 2. Enable continuous listening so pauses mid-sentence don't kill speech input
+    speechRecognitionInstance.continuous = true;
     speechRecognitionInstance.interimResults = true;
-    speechRecognitionInstance.lang = 'en-US';
+    speechRecognitionInstance.lang = speechLocale;
+
+    initialInputText = inputEl ? inputEl.value.trim() : '';
 
     speechRecognitionInstance.onstart = () => {
       isVoiceRecording = true;
       if (micBtn) micBtn.style.background = '#EF4444';
-      if (micLabel) micLabel.innerText = 'Listening...';
+      if (micLabel) micLabel.innerText = `Listening (${activeLang.toUpperCase()})...`;
       if (statusBadge) {
-        statusBadge.innerText = '🔴 Listening... Speak now!';
+        statusBadge.innerText = `🔴 Listening (${activeLang.toUpperCase()})... Speak now!`;
         statusBadge.style.color = '#EF4444';
       }
     };
 
+    // 3. Non-Destructive Appending in onresult
     speechRecognitionInstance.onresult = (e) => {
-      let transcript = '';
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        transcript += e.results[i][0].transcript;
+      let finalTranscript = '';
+      let interimTranscript = '';
+
+      for (let i = 0; i < e.results.length; i++) {
+        const item = e.results[i];
+        if (item.isFinal) {
+          finalTranscript += item[0].transcript + ' ';
+        } else {
+          interimTranscript += item[0].transcript;
+        }
       }
-      if (inputEl) inputEl.value = transcript;
+
+      const combinedText = (finalTranscript + interimTranscript).trim();
+      const updatedValue = initialInputText ? `${initialInputText} ${combinedText}` : combinedText;
+
+      if (inputEl) inputEl.value = updatedValue;
+
+      // 4. Stable 3.5-Second Silence Buffer (Prevents Premature Disconnects)
+      if (voiceSilenceTimer) clearTimeout(voiceSilenceTimer);
+      voiceSilenceTimer = setTimeout(() => {
+        if (isVoiceRecording && speechRecognitionInstance) {
+          speechRecognitionInstance.stop();
+        }
+      }, 3500);
     };
 
     speechRecognitionInstance.onerror = (err) => {
       console.warn("Speech recognition note:", err);
+      // Auto-recover from no-speech timeout without showing fatal error
+      if (err.error === 'no-speech') {
+        if (statusBadge) {
+          statusBadge.innerText = '🎙️ Waiting for speech... Click mic to start';
+          statusBadge.style.color = '#38BDF8';
+        }
+      } else {
+        if (statusBadge) {
+          statusBadge.innerText = 'Voice note. Type or speak command';
+          statusBadge.style.color = '#F59E0B';
+        }
+      }
       isVoiceRecording = false;
       if (micBtn) micBtn.style.background = '#C8102E';
       if (micLabel) micLabel.innerText = 'Speak Command';
-      if (statusBadge) {
-        statusBadge.innerText = 'Voice Error. Type instruction below';
-        statusBadge.style.color = '#F59E0B';
-      }
     };
 
     speechRecognitionInstance.onend = () => {
@@ -2815,11 +2862,8 @@ function toggleVoiceRecording() {
       if (micBtn) micBtn.style.background = '#C8102E';
       if (micLabel) micLabel.innerText = 'Speak Command';
       if (statusBadge) {
-        statusBadge.innerText = 'Command Captured! Processing...';
+        statusBadge.innerText = '✅ Speech Captured! Click "⚡ Run AI Command"';
         statusBadge.style.color = '#10B981';
-      }
-      if (inputEl && inputEl.value.trim().length > 3) {
-        executeAiCommand();
       }
     };
 
